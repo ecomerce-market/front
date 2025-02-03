@@ -22,9 +22,12 @@ import { MdMailOutline } from "react-icons/md"; //메일
 import { GoLock } from "react-icons/go"; //lock
 import { TbMenu2 } from "react-icons/tb"; //메뉴
 import { PiCheckCircle } from "react-icons/pi"; //체크서클
+import { IoBasketSharp } from "react-icons/io5"; //장바구니;
+import { IoChatboxEllipsesOutline } from "react-icons/io5"; //chat
+import { BiSolidDownArrow } from "react-icons/bi"; //downarrow
 
 const Icons = () => {
-  return <div></div>;
+    return <div></div>;
 };
 
 export default Icons;
