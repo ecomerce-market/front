@@ -1,6 +1,7 @@
 .navBarWrapper {
     display: flex;
-    padding: 20px 165px 0;
+    padding: 0 165px;
+    justify-content: space-between;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     .category {
@@ -8,7 +9,6 @@
         justify-content: center;
         align-items: center;
         gap: 8px;
-        padding-right: 235px;
 
         .categoryIcon {
             font-size: 17px;
@@ -21,7 +21,10 @@
 
     .subCategory {
         display: flex;
+        justify-content: center;
+        align-items: center;
         gap: 80px;
+        flex-grow: 1;
     }
 
     .subCategory p {
