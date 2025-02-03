@@ -1,0 +1,26 @@
+.sideMenuWrapper {
+    width: 140px;
+    height: auto;
+
+    .sideMenuTitle {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--black-800);
+    }
+
+    .menuList {
+        list-style: none;
+        padding: 0;
+        margin-top: 25px;
+        border: 1px solid var(--black-100);
+
+        .menuContent {
+            font-size: 10px;
+            color: var(--black-600);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}
