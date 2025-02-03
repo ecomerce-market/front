@@ -1,21 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 전역 색상 변수 설정 */
+  --main-color: #0dbd88; /* MAIN 1 */
+  --main-second-color: #61cead; /* MAIN 2 */
+  --main-third-color: #61cead; /* MAIN 3 */
+  --main-fourth-color: #eaf8f4; /* MAIN 4 */
+  --main-fifth-color: #f2f9f7; /* MAIN 5 */
+
+  /* 이펙트 컬러러 */
+  --red-color: #da3a44;
+  --blue-color: #1d62ec;
+  --yellow-color: #f3cb3c;
+
+  /* 글씨 색상 */
+  --black: #000000;
+  --black-900: #191919;
+  --black-800: #333333;
+  --black-700: #4c4c4c;
+  --black-600: #666666;
+  --black-500: #7f7f7f;
+  --black-400: #999999;
+  --black-300: #b2b2b2;
+  --black-200: #cccccc;
+  --black-100: #e5e5e5;
+  --black-50: #f6f6f6;
+  --black-10: #fafafa;
+  --white: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* 전역 폰트 (배민 한나 프로체, 배민 주아체) */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "BMHANNAPro", "BMJUA", sans-serif;
 }

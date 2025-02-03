@@ -1,0 +1,8 @@
+.inputField {
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--black-200);
+}
+
+.inputField:focus {
+  border: 1px solid var(--black-800);
+}
