@@ -1,0 +1,30 @@
+.navBarWrapper {
+    display: flex;
+    padding: 20px 165px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .category {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding-right: 235px;
+
+        .categoryIcon {
+            font-size: 17px;
+        }
+
+        .categorytitle {
+            font-size: 13px;
+        }
+    }
+
+    .subCategory {
+        display: flex;
+        gap: 80px;
+    }
+
+    .subCategory p {
+        font-size: 12px;
+    }
+}
