@@ -5,7 +5,7 @@ interface OneBtnProps {
   bgcolor?: string;
   color?: string;
   onClick?: () => void;
-  fontSize: string;
+  fontSize?: string;
   padding?: string;
   border?: string;
   borderSize?: string;
@@ -42,7 +42,10 @@ const OneBtn: React.FC<OneBtnProps> = ({
         //패딩, 기본 26,10
         padding: padding || "26px 10px",
         //보더 사이즈 솔리드고정 색상
-        border: `${borderSize}px solid var(${border})`,
+        border:
+          borderSize && border
+            ? `${borderSize}px solid var(${border})`
+            : "none",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
