@@ -9,13 +9,32 @@
         justify-content: center;
         align-items: center;
         gap: 8px;
+        cursor: pointer;
+        position: relative;
 
         .categoryIcon {
+            display: flex;
+            align-items: center;
             font-size: 17px;
+
+            &.active {
+                color: var(--main-color);
+            }
         }
 
-        .categorytitle {
+        .categoryTitle {
             font-size: 13px;
+
+            &.active {
+                color: var(--main-color);
+                font-weight: bold;
+            }
+        }
+
+        .categoryContent {
+            position: absolute;
+            top: 45px;
+            left: 0;
         }
     }
 
@@ -28,6 +47,7 @@
     }
 
     .subCategory p {
+        cursor: pointer;
         font-size: 12px;
     }
 }
