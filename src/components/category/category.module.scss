@@ -1,7 +1,7 @@
 .container {
     display: flex;
     width: 500px;
-    height: 500px;
+    height: 400px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
@@ -40,6 +40,7 @@
             }
         }
     }
+
     .content {
         flex: 1;
         padding: 16px;
