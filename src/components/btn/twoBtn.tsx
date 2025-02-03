@@ -5,6 +5,8 @@ interface TwoBtnPros {
   rightTitle: string;
   leftOnClick?: () => void;
   rightOnClick?: () => void;
+  leftBgColor: string;
+  rightBgColor: string;
 }
 
 const TwoBtn: React.FC<TwoBtnPros> = ({
@@ -12,6 +14,8 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
   rightTitle,
   leftOnClick,
   rightOnClick,
+  leftBgColor,
+  rightBgColor,
 }) => {
   return (
     <div
@@ -25,13 +29,13 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
       <OneBtn
         title={leftTitle}
         width={"155"}
-        bgcolor="--white"
+        bgcolor={leftBgColor}
         onClick={leftOnClick}
       />
       <OneBtn
         title={rightTitle}
         width={"155"}
-        bgcolor="--main-color"
+        bgcolor={rightBgColor}
         onClick={rightOnClick}
       />
     </div>
