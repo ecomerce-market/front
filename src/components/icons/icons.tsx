@@ -6,7 +6,7 @@ import { CiSquarePlus } from "react-icons/ci"; //더보기?
 import { CiBookmark } from "react-icons/ci"; //북마크
 import { FiUser } from "react-icons/fi"; //유저
 import { LuSend } from "react-icons/lu"; //전송
-import { LuBell } from "react-icons/lu"; //벨벨
+import { LuBell } from "react-icons/lu"; //벨
 import { IoMdHeartEmpty } from "react-icons/io"; //하트
 import { FiMessageCircle } from "react-icons/fi"; //말풍선
 import { FiMapPin } from "react-icons/fi"; //map-pin
@@ -27,7 +27,7 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5"; //chat
 import { BiSolidDownArrow } from "react-icons/bi"; //downarrow
 
 const Icons = () => {
-    return <div></div>;
+  return <div></div>;
 };
 
 export default Icons;
