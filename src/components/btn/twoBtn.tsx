@@ -1,47 +1,66 @@
+import { ReactNode } from "react";
 import OneBtn from "./oneBtn";
 
 interface TwoBtnPros {
-    leftIcon?: string;
-    rightIcon?: string;
-    leftTitle: string;
-    rightTitle: string;
-    leftOnClick?: () => void;
-    rightOnClick?: () => void;
+
+  leftTitle: ReactNode;
+  rightTitle: ReactNode;
+  leftOnClick?: () => void;
+  rightOnClick?: () => void; 
+  leftIcon?: string;
+  rightIcon?: string;
+  leftBgColor: string;
+  rightBgColor: string;
+  leftBorder: string;
+  rightBorder: string;
 }
 
 const TwoBtn: React.FC<TwoBtnPros> = ({
-    leftIcon,
-    rightIcon,
-    leftTitle,
-    rightTitle,
-    leftOnClick,
-    rightOnClick,
+  leftTitle,
+  rightTitle,
+  leftOnClick,
+  rightOnClick,
+  leftBgColor,
+  rightBgColor, 
+  leftIcon,
+  rightIcon,
+  leftBorder,
+  rightBorder,
 }) => {
-    return (
-        <div
-            style={{
-                width: "320px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignContent: "center",
-            }}
-        >
-            <OneBtn
-                icon={leftIcon}
-                title={leftTitle}
-                width={"155"}
-                bgcolor="--white"
-                onClick={leftOnClick}
-            />
-            <OneBtn
-                icon={rightIcon}
-                title={rightTitle}
-                width={"155"}
-                bgcolor="--main-color"
-                onClick={rightOnClick}
-            />
-        </div>
-    );
+  return (
+    <div
+      style={{
+        width: "320px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignContent: "center",
+      }}
+    >
+      <OneBtn  
+        icon={leftIcon}
+        title={leftTitle}
+        width={"155"}
+        bgcolor={leftBgColor}
+        onClick={leftOnClick}
+        borderSize="1"
+        border={leftBorder}
+        height={"47"}
+        fontWeight="bold"
+      />
+      <OneBtn
+        title={rightTitle}
+        icon={rightIcon}
+        width={"155"}
+        bgcolor={rightBgColor}
+        onClick={rightOnClick}
+        borderSize="1"
+        border={rightBorder}
+        height={"47"}
+        color="--white"
+        fontWeight="bold"
+      />
+    </div>
+  );
 };
 
 export default TwoBtn;
