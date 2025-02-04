@@ -9,6 +9,8 @@ import TwoBtn from "@/components/btn/twoBtn";
 const cx = cn.bind(styles);
 
 const myInfoDetail = () => {
+    const inputSize = { width: "280", height: "30" };
+
     return (
         <div className={cx("myInfoDetailWrapper")}>
             <PersonalInfo
@@ -36,41 +38,42 @@ const myInfoDetail = () => {
                     <div className={cx("submitForm")}>
                         <p>
                             <p>아이디</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
                             <p>현재 비밀번호</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
                             <p>새 비밀번호</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
                             <p>새 비밀번호 확인</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
                             <p>이름</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
                             <p>이메일</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
-                            <p>휻대폰</p>
-                            <TextInput />
+                            <p>휴대폰</p>
+                            <TextInput {...inputSize} />
                         </p>
                         <p>
                             <p>생년월일</p>
-                            <TextInput />
+                            <TextInput {...inputSize} />
                         </p>
                     </div>
                     <div className={cx("submitBtn")}>
                         <TwoBtn
                             leftTitle={"탈퇴하기"}
                             rightTitle={"회원정보 수정"}
+                            rightColor={"--white"}
                         />
                     </div>
                 </div>
