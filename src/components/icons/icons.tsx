@@ -25,9 +25,10 @@ import { PiCheckCircle } from "react-icons/pi"; //체크서클
 import { IoBasketSharp } from "react-icons/io5"; //장바구니;
 import { IoChatboxEllipsesOutline } from "react-icons/io5"; //chat
 import { BiSolidDownArrow } from "react-icons/bi"; //downarrow
+import { FaCamera } from "react-icons/fa6"; //카메라
 
 const Icons = () => {
-  return <div></div>;
+    return <div></div>;
 };
 
 export default Icons;
