@@ -42,6 +42,7 @@ const TextInput: React.FC<TextInputProps> = ({
             {icon && (
                 <div
                     style={{
+                        fontSize: "18px",
                         position: "absolute",
                         right: "10px",
                         top: "50%",
