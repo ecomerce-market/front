@@ -36,44 +36,47 @@ const myInfoDetail = () => {
                 <div className={cx("checkInfo")}>
                     <h1 className={cx("mainTitle")}>개인 정보 수정</h1>
                     <div className={cx("submitForm")}>
-                        <p>
+                        <div>
                             <p>아이디</p>
                             <TextInput {...inputSize} />
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <p>현재 비밀번호</p>
                             <TextInput {...inputSize} />
-                        </p>
+                        </div>
                         <p>
                             <p>새 비밀번호</p>
                             <TextInput {...inputSize} />
                         </p>
-                        <p>
+                        <div>
                             <p>새 비밀번호 확인</p>
                             <TextInput {...inputSize} />
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <p>이름</p>
                             <TextInput {...inputSize} />
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <p>이메일</p>
                             <TextInput {...inputSize} />
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <p>휴대폰</p>
                             <TextInput {...inputSize} />
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <p>생년월일</p>
                             <TextInput {...inputSize} />
-                        </p>
+                        </div>
                     </div>
                     <div className={cx("submitBtn")}>
                         <TwoBtn
                             leftTitle={"탈퇴하기"}
                             rightTitle={"회원정보 수정"}
-                            rightColor={"--white"}
+                            leftBgColor={"--white"}
+                            rightBgColor={"--main-color"}
+                            leftBorder={"--black-100"}
+                            rightBorder={"--main-color"}
                         />
                     </div>
                 </div>
