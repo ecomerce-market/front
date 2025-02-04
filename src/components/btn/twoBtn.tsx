@@ -2,10 +2,13 @@ import { ReactNode } from "react";
 import OneBtn from "./oneBtn";
 
 interface TwoBtnPros {
+
   leftTitle: ReactNode;
   rightTitle: ReactNode;
   leftOnClick?: () => void;
-  rightOnClick?: () => void;
+  rightOnClick?: () => void; 
+  leftIcon?: string;
+  rightIcon?: string;
   leftBgColor: string;
   rightBgColor: string;
   leftBorder: string;
@@ -18,7 +21,9 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
   leftOnClick,
   rightOnClick,
   leftBgColor,
-  rightBgColor,
+  rightBgColor, 
+  leftIcon,
+  rightIcon,
   leftBorder,
   rightBorder,
 }) => {
@@ -31,7 +36,8 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
         alignContent: "center",
       }}
     >
-      <OneBtn
+      <OneBtn  
+        icon={leftIcon}
         title={leftTitle}
         width={"155"}
         bgcolor={leftBgColor}
@@ -43,6 +49,7 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
       />
       <OneBtn
         title={rightTitle}
+        icon={rightIcon}
         width={"155"}
         bgcolor={rightBgColor}
         onClick={rightOnClick}
