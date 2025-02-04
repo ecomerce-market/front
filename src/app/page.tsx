@@ -1,19 +1,9 @@
-import ReviewCard from "@/components/productCard/review/reviewCard";
+import CartCard from "@/components/productCard/cart/cartCard";
 
 export default function Home() {
   return (
     <div>
-      <ReviewCard
-        lateDate="7"
-        title={"감자 2KG"}
-        discountRate={20}
-        price={"32100"}
-        discountPrice={"30000"}
-        purchase={1}
-        btntitle={"후기 작성하기"}
-        btnwidth={"155"}
-        btnHeight={"47"}
-      />
+      <h1>HEY GAYOUNG WE CAN WIN</h1>
     </div>
   );
 }
