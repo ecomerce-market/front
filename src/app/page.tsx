@@ -1,10 +1,5 @@
-import Etc from "@/components/btn/etc";
-import DetailProductCard from "@/components/product/detail/product";
+import PickProductCard from "@/components/productCard/pick/pickProductCard";
 
 export default function Home() {
-  return (
-    <div>
-      <Etc />
-    </div>
-  );
+  return <div></div>;
 }

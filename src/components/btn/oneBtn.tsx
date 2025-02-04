@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 interface OneBtnProps {
-  title: string;
+  title: ReactNode;
   width: string;
   height?: string;
   bgcolor?: string;
@@ -41,7 +43,7 @@ const OneBtn: React.FC<OneBtnProps> = ({
         borderRadius: "5px",
         //패딩, 기본 26,10
         padding: padding || "26px 10px",
-        //보더 사이즈 솔리드고정 색상
+        //보더 사이즈 솔리드고정 색상 borderColor 아님 주의
         border:
           borderSize && border
             ? `${borderSize}px solid var(${border})`

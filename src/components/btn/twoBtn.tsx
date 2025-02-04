@@ -1,12 +1,15 @@
+import { ReactNode } from "react";
 import OneBtn from "./oneBtn";
 
 interface TwoBtnPros {
-  leftTitle: string;
-  rightTitle: string;
+  leftTitle: ReactNode;
+  rightTitle: ReactNode;
   leftOnClick?: () => void;
   rightOnClick?: () => void;
   leftBgColor: string;
   rightBgColor: string;
+  leftBorder: string;
+  rightBorder: string;
 }
 
 const TwoBtn: React.FC<TwoBtnPros> = ({
@@ -16,6 +19,8 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
   rightOnClick,
   leftBgColor,
   rightBgColor,
+  leftBorder,
+  rightBorder,
 }) => {
   return (
     <div
@@ -31,12 +36,21 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
         width={"155"}
         bgcolor={leftBgColor}
         onClick={leftOnClick}
+        borderSize="1"
+        border={leftBorder}
+        height={"47"}
+        fontWeight="bold"
       />
       <OneBtn
         title={rightTitle}
         width={"155"}
         bgcolor={rightBgColor}
         onClick={rightOnClick}
+        borderSize="1"
+        border={rightBorder}
+        height={"47"}
+        color="--white"
+        fontWeight="bold"
       />
     </div>
   );
