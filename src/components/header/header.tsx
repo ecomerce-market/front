@@ -3,7 +3,7 @@ import styles from "./header.module.scss";
 import cn from "classnames/bind";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { IoBasketSharp } from "react-icons/io5";
-import { IoMdHeartEmpty } from "react-icons/io";
+import { IoIosSearch, IoMdHeartEmpty } from "react-icons/io";
 import TextInput from "../input/textInput";
 
 const cx = cn.bind(styles);
@@ -31,7 +31,11 @@ const header = () => {
                     />
                 </div>
                 <div className={cx("searchBar")}>
-                    <TextInput />
+                    <TextInput
+                        width={"290"}
+                        height={"30"}
+                        icon={<IoIosSearch />}
+                    />
                 </div>
                 <div className={cx("subMenu")}>
                     <IoMdHeartEmpty />
