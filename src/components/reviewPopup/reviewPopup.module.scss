@@ -1,0 +1,78 @@
+.reviewPopupWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    width: 606px;
+    min-height: 623px;
+    height: auto;
+    border: 1px solid var(--black-400);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+    .reviewPopupLogo {
+        .reviewPopupHeader {
+            width: 100x;
+            height: 44px;
+        }
+
+        .end {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: var(--main-color);
+            cursor: pointer;
+        }
+    }
+
+    .reviewPopupBody {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .bodyContent {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .bodyTitle {
+                font-size: 32px;
+                margin: 30px 0 5px;
+            }
+
+            .bodyImg {
+                margin: 0 auto;
+                width: 157px;
+                height: 202px;
+            }
+
+            .productTitle {
+                margin: 20px 0;
+            }
+        }
+
+        .reviewWriteArea {
+            .writeReview {
+                width: 378px;
+                height: 138px;
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid var(--black-200);
+                border-radius: 5px;
+                resize: none;
+            }
+
+            .photoUpload {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding-bottom: 20px;
+            }
+        }
+    }
+}
