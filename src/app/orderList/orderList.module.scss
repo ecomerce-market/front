@@ -1,0 +1,42 @@
+.orderListWrapper {
+    .myInfoMain {
+        display: grid;
+        grid-template-columns: 150px auto;
+
+        .sideMenu {
+            margin-left: 150px;
+        }
+    }
+
+    .orderListSection {
+        margin: 0 auto;
+
+        .orderListTitle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 517px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--black);
+
+            .mainTitle {
+                font-size: 24px;
+                margin: 5px 0;
+            }
+
+            .subTitle {
+                font-size: 15px;
+                margin: 5px 0;
+            }
+        }
+
+        .wishListCard {
+            font-size: 15px;
+            margin: 5px 0;
+
+            .total {
+                margin: 5px 0 30px;
+            }
+        }
+    }
+}
