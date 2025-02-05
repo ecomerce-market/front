@@ -1,0 +1,118 @@
+.orderDetailWrapper {
+    .myInfoMain {
+        display: grid;
+        grid-template-columns: 150px auto;
+
+        .sideMenu {
+            margin-left: 150px;
+        }
+    }
+
+    .orderDetailSection {
+        margin: 0 auto;
+
+        .orderDetailTitle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 600px;
+            padding-bottom: 10px;
+
+            .mainTitle {
+                font-size: 24px;
+                margin: 5px 0;
+            }
+        }
+
+        .orderDetailForm {
+            .productSection {
+                .productNum {
+                    display: flex;
+                    justify-content: space-between;
+                    border-bottom: 1px solid var(--black-500);
+                    padding: 15px 0 5px;
+                    margin-bottom: 30px;
+                }
+                .productNum h2 {
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 16px;
+                }
+                .productNum div {
+                    display: flex;
+                    align-items: center;
+                    font-size: 12px;
+                    gap: 5px;
+
+                    .ask {
+                        text-decoration: none;
+                        color: var(--main-color);
+                    }
+                }
+                .productList {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 20px;
+                }
+            }
+
+            .trackingSection {
+                display: flex;
+                flex-direction: column;
+                margin-top: 50px;
+
+                .trackingTitle {
+                    padding-bottom: 20px;
+                    font-size: 16px;
+                    border-bottom: 1px solid var(--black-500);
+                }
+
+                .trackingInfo {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+
+                .deliveryType {
+                    font-size: 12px;
+                    color: var(--balck-800);
+                }
+
+                .deliveryStatus {
+                    font-size: 14px;
+                    color: var(--balck-800);
+                }
+            }
+
+            .paymentSection {
+                display: flex;
+                flex-direction: column;
+                margin-top: 50px;
+
+                .paymentTitle {
+                    padding-bottom: 20px;
+                    font-size: 16px;
+                    border-bottom: 1px solid var(--black-500);
+                }
+
+                .paymentInfo {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+
+                    .infoLabel {
+                        font-size: 12px;
+                        color: var(--balck-800);
+                    }
+
+                    .infoValue {
+                        font-size: 14px;
+                        color: var(--balck-800);
+                    }
+                }
+            }
+        }
+    }
+}

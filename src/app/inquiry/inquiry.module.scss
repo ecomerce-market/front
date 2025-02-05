@@ -1,0 +1,68 @@
+.inquiryWrapper {
+    .myInfoMain {
+        display: grid;
+        grid-template-columns: 150px auto;
+
+        .sideMenu {
+            margin-left: 150px;
+        }
+    }
+
+    .inquirySection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+
+        .inquiryHeader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .mainTitle {
+                font-size: 24px;
+                margin: 5px 0;
+                width: 527px;
+                border-bottom: 2px solid var(--black-800);
+                padding-bottom: 10px;
+            }
+
+            .inquiryTitle {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                width: 517px;
+                border-bottom: 1px solid var(--black-500);
+                font-size: 12px;
+                padding: 0 10px 0;
+            }
+
+            .inquiryTitle div {
+                display: flex;
+                gap: 50px;
+            }
+        }
+        .inquiryList {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 517px;
+            border-bottom: 1px solid var(--black-500);
+            font-size: 12px;
+            padding: 0 10px;
+        }
+
+        .inquiryList div {
+            display: flex;
+            gap: 50px;
+        }
+    }
+    .inquiryBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 100px;
+    }
+}
