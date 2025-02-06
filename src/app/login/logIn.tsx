@@ -20,6 +20,7 @@ const LogIn = () => {
     e.preventDefault();
     console.log("로그인 정보:", form);
     // 로그인 API 여따 쓰면 될듯
+    // 로그인 완료 시 사이트 경로 이동, 어디로 할건지?? 홈이 가장 무난한듯
   };
 
   return (
@@ -43,6 +44,7 @@ const LogIn = () => {
             name="pw"
             value={form.pw}
             onChange={handleChange}
+            type="password"
           />
         </div>
 

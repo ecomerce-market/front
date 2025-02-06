@@ -12,6 +12,7 @@ interface TextInputProps {
   name?: string;
   padding?: string;
   icon?: React.ReactNode;
+  type?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -24,12 +25,13 @@ const TextInput: React.FC<TextInputProps> = ({
   icon,
   padding,
   name,
+  type,
 }) => {
   return (
     <div style={{ position: "relative" }}>
       <input
         name={name}
-        type="text"
+        type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
