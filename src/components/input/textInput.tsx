@@ -27,6 +27,7 @@ const TextInput: React.FC<TextInputProps> = ({
   name,
   type,
 }) => {
+<<<<<<< HEAD
   return (
     <div style={{ position: "relative" }}>
       <input
@@ -56,6 +57,39 @@ const TextInput: React.FC<TextInputProps> = ({
           }}
         >
           {icon}
+=======
+    return (
+        <div style={{ position: "relative" }}>
+            <input
+                type="text"
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                className={styles.inputField}
+                style={{
+                    width: width ? `${width}px` : undefined,
+                    height: height ? `${height}px` : undefined,
+                    backgroundColor: bgcolor,
+                    borderRadius: "10px",
+                    padding: "10px",
+                    outline: "none",
+                    fontSize: "14px",
+                }}
+            />
+            {icon && (
+                <div
+                    style={{
+                        fontSize: "18px",
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                    }}
+                >
+                    {icon}
+                </div>
+            )}
+>>>>>>> 74f9211d60acf9afa80d10df243493eb7137719d
         </div>
       )}
     </div>

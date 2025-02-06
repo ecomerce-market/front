@@ -1,0 +1,59 @@
+.addressManagementWrapper {
+    .myInfoMain {
+        display: grid;
+        grid-template-columns: 150px auto;
+
+        .sideMenu {
+            margin-left: 150px;
+        }
+    }
+
+    .addressSection {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+
+        .addressHeader {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            .mainTitle {
+                font-size: 24px;
+                margin: 5px 0;
+            }
+
+            .subTitle {
+                font-size: 15px;
+                margin: 5px 0;
+            }
+
+            .content {
+                font-size: 15px;
+                margin: 5px 0;
+                padding-left: 10px;
+            }
+        }
+
+        .submitForm {
+            margin-top: 15px;
+            gap: 100px;
+            border-top: 2px solid var(--black);
+            border-bottom: 1px solid var(--black-700);
+
+            .mainAddress {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 90px;
+                height: 25px;
+                font-size: 14px;
+                background-color: var(--black-100);
+                padding: 0 5px;
+                border-radius: 20px;
+                margin: 10px 0 0 30px;
+            }
+        }
+    }
+}

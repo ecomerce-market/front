@@ -43,14 +43,18 @@ const myInfo = () => {
                     <div className={cx("submitForm")}>
                         <div className={cx("submitInput")}>
                             <p>아이디</p>
-                            <TextInput />
+                            <TextInput width={"280"} height={"30"} />
                         </div>
                         <div className={cx("submitInput")}>
                             <div className={cx("password")}>
                                 <p>비밀번호</p>
                                 <p className={cx("require")}>*</p>
                             </div>
-                            <TextInput />
+                            <TextInput
+                                width={"280"}
+                                height={"30"}
+                                placeholder={"비밀번호를 입력해주세요."}
+                            />
                         </div>
                     </div>
                     <div className={cx("submitBtn")}>

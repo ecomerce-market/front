@@ -1,0 +1,33 @@
+.reviewWrapper {
+    .myInfoMain {
+        display: grid;
+        grid-template-columns: 150px auto;
+
+        .sideMenu {
+            margin-left: 150px;
+        }
+    }
+
+    .reviewWrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+
+        .review {
+            font-size: 24px;
+            margin: 5px 0;
+        }
+
+        .reviewdetail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px;
+            gap: 10px;
+            width: 574px;
+            border-top: 2px solid var(--black);
+        }
+    }
+}
