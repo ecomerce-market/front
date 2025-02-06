@@ -1,0 +1,57 @@
+.formWrapper {
+  h2 {
+    font-size: 32px;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-items: start;
+  align-items: center;
+  width: 494px;
+  margin: 0 auto;
+
+  .tabBar {
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--black-200);
+    .phone {
+      text-align: center;
+      width: 120px;
+      color: var(--black-400);
+      &:hover {
+        color: var(--main-color);
+      }
+      &:focus {
+        color: var(--main-color);
+      }
+      &:active {
+        color: var(--main-color);
+      }
+    }
+    .email {
+      color: var(--black-400);
+    }
+  }
+
+  .phoneWrapper {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 80px 0;
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  .OneBtn {
+    &:disabled {
+      color: var(--black-200);
+      background: var(--white);
+    }
+  }
+}
