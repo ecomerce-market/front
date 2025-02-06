@@ -5,6 +5,7 @@ import styles from "./login.module.scss";
 import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
 import OneBtn from "@/components/btn/oneBtn";
+import Link from "next/link";
 
 const cx = cn.bind(styles);
 
@@ -30,7 +31,7 @@ const LogIn = () => {
         <div className={cx("inputWrapper")}>
           <TextInput
             height="46"
-            width="320"
+            width="332"
             placeholder="아이디를 입력해주세요"
             name="id"
             value={form.id}
@@ -39,7 +40,7 @@ const LogIn = () => {
 
           <TextInput
             height="46"
-            width="320"
+            width="332"
             placeholder="비밀번호를 입력해주세요"
             name="pw"
             value={form.pw}
@@ -52,20 +53,27 @@ const LogIn = () => {
           <OneBtn
             color="--white"
             bgcolor="--main-color"
-            type="submit"
             title="로그인"
-            width="320"
+            width="350"
             height="46"
           />
           <OneBtn
             color="--main-color"
             bgcolor="--white"
             title="회원가입"
-            width="320"
+            width="350"
             height="46"
+            border="--main-color"
+            borderSize="1"
           />
         </div>
       </form>
+
+      <div className={cx("sidebar")}>
+        <Link href={"/"}>아이디 찾기</Link>
+        <span>l</span>
+        <Link href={"/"}>비밀번호 찾기</Link>
+      </div>
     </div>
   );
 };

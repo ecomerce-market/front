@@ -23,18 +23,17 @@ const TextInput: React.FC<TextInputProps> = ({
   height,
   bgcolor,
   icon,
-  padding,
   name,
   type,
 }) => {
-<<<<<<< HEAD
   return (
     <div style={{ position: "relative" }}>
       <input
-        name={name}
-        type={type}
+        // 여기 비밀번호 인풋 때문에 type은 프롭스로 뺀건데 비밀번호 인풋 타입 password로 안해도 되나요요?
+        type="text"
         placeholder={placeholder}
         value={value}
+        name={name}
         onChange={onChange}
         className={styles.inputField}
         style={{
@@ -42,7 +41,7 @@ const TextInput: React.FC<TextInputProps> = ({
           height: height ? `${height}px` : undefined,
           backgroundColor: bgcolor,
           borderRadius: "10px",
-          padding: padding || "10px",
+          padding: "10px",
           outline: "none",
           fontSize: "14px",
         }}
@@ -50,6 +49,7 @@ const TextInput: React.FC<TextInputProps> = ({
       {icon && (
         <div
           style={{
+            fontSize: "18px",
             position: "absolute",
             right: "10px",
             top: "50%",
@@ -57,39 +57,6 @@ const TextInput: React.FC<TextInputProps> = ({
           }}
         >
           {icon}
-=======
-    return (
-        <div style={{ position: "relative" }}>
-            <input
-                type="text"
-                placeholder={placeholder}
-                value={value}
-                onChange={onChange}
-                className={styles.inputField}
-                style={{
-                    width: width ? `${width}px` : undefined,
-                    height: height ? `${height}px` : undefined,
-                    backgroundColor: bgcolor,
-                    borderRadius: "10px",
-                    padding: "10px",
-                    outline: "none",
-                    fontSize: "14px",
-                }}
-            />
-            {icon && (
-                <div
-                    style={{
-                        fontSize: "18px",
-                        position: "absolute",
-                        right: "10px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                    }}
-                >
-                    {icon}
-                </div>
-            )}
->>>>>>> 74f9211d60acf9afa80d10df243493eb7137719d
         </div>
       )}
     </div>

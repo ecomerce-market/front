@@ -27,6 +27,20 @@
   --white: #ffffff;
 }
 
+@font-face {
+  font-family: "BMHANNAPro";
+  src: url("/font/BMHANNAPro.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BMJUA";
+  src: url("/font/BMJUA.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* 전역 폰트 (배민 한나 프로체, 배민 주아체) */
 body {
   font-family: "BMHANNAPro", "BMJUA", sans-serif;
