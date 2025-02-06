@@ -13,6 +13,8 @@ interface OneBtnProps {
   borderSize?: string;
   fontWeight?: string;
   icon?: string;
+  type?: "submit" | "reset" | "button";
+  disabled?: boolean;
 }
 
 const OneBtn: React.FC<OneBtnProps> = ({
@@ -28,11 +30,15 @@ const OneBtn: React.FC<OneBtnProps> = ({
   borderSize,
   fontWeight,
   icon,
+  type,
+  disabled,
 }) => {
   return (
     <div>
       {icon}{" "}
       <button
+        disabled={disabled}
+        type={type}
         onClick={onClick} // 추가
         style={{
           // 가로

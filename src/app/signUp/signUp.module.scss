@@ -1,0 +1,32 @@
+.signUpWrapper {
+  padding-top: 30px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 379;
+  gap: 10px;
+  .form {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    .label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .error {
+      color: var(--red-color);
+    }
+  }
+}
+
+.address {
+  width: 320px;
+  display: flex;
+  gap: 4px;
+}
+.addressExtra {
+  padding-top: 10px;
+}
