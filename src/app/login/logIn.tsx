@@ -57,15 +57,17 @@ const LogIn = () => {
             width="350"
             height="46"
           />
-          <OneBtn
-            color="--main-color"
-            bgcolor="--white"
-            title="회원가입"
-            width="350"
-            height="46"
-            border="--main-color"
-            borderSize="1"
-          />
+          <Link href={"/"}>
+            <OneBtn
+              color="--main-color"
+              bgcolor="--white"
+              title="회원가입"
+              width="350"
+              height="46"
+              border="--main-color"
+              borderSize="1"
+            />
+          </Link>
         </div>
       </form>
 
