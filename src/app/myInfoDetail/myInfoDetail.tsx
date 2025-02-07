@@ -40,19 +40,28 @@ const myInfoDetail = () => {
                     <div className={cx("submitForm")}>
                         <div>
                             <p>아이디</p>
-                            <TextInput {...inputSize} />
+                            <TextInput {...inputSize} readOnly />
                         </div>
                         <div>
                             <p>현재 비밀번호</p>
-                            <TextInput {...inputSize} />
+                            <TextInput
+                                {...inputSize}
+                                placeholder={"비밀번호를 입력해주세요"}
+                            />
                         </div>
-                        <p>
+                        <div>
                             <p>새 비밀번호</p>
-                            <TextInput {...inputSize} />
-                        </p>
+                            <TextInput
+                                {...inputSize}
+                                placeholder={"새 비밀번호를 입력해주세요"}
+                            />
+                        </div>
                         <div>
                             <p>새 비밀번호 확인</p>
-                            <TextInput {...inputSize} />
+                            <TextInput
+                                {...inputSize}
+                                placeholder={"새 비밀번호를 다시 입력해주세요"}
+                            />
                         </div>
                         <div>
                             <p>이름</p>

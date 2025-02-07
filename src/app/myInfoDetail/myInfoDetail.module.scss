@@ -31,6 +31,12 @@
             border-top: 2px solid var(--black);
             border-bottom: 1px solid var(--black-700);
         }
+
+        .submitForm div {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 5px;
+        }
         .submitForm p {
             margin: 5px;
         }

@@ -10,6 +10,7 @@ interface TextInputProps {
     bgcolor?: string;
     border?: string;
     icon?: React.ReactNode;
+    readOnly?: boolean;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -20,6 +21,7 @@ const TextInput: React.FC<TextInputProps> = ({
     height,
     bgcolor,
     icon,
+    readOnly,
 }) => {
     return (
         <div style={{ position: "relative" }}>
@@ -29,6 +31,7 @@ const TextInput: React.FC<TextInputProps> = ({
                 value={value}
                 onChange={onChange}
                 className={styles.inputField}
+                readOnly={readOnly}
                 style={{
                     width: width ? `${width}px` : undefined,
                     height: height ? `${height}px` : undefined,

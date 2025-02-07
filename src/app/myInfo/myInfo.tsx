@@ -45,7 +45,7 @@ const myInfo = () => {
                     <div className={cx("submitForm")}>
                         <div className={cx("submitInput")}>
                             <p>아이디</p>
-                            <TextInput width={"280"} height={"30"} />
+                            <TextInput width={"280"} height={"30"} readOnly />
                         </div>
                         <div className={cx("submitInput")}>
                             <div className={cx("password")}>
@@ -63,6 +63,7 @@ const myInfo = () => {
                         <OneBtn
                             title={"확인"}
                             width={"320"}
+                            height={"46"}
                             bgcolor={"--main-color"}
                             color={"--white"}
                         />
