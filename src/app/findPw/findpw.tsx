@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "./findId.module.scss";
+import styles from "../findId/findId.module.scss";
 import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
 import OneBtn from "@/components/btn/oneBtn";
@@ -9,13 +9,13 @@ import Popup from "@/components/popup/popup";
 
 const cx = cn.bind(styles);
 
-type FindIdType = {
+type FindPwType = {
   name: string;
   phone: string;
 };
 
-const FindId = () => {
-  const [formState, setFormState] = useState<FindIdType>({
+const FindPw = () => {
+  const [formState, setFormState] = useState<FindPwType>({
     name: "",
     phone: "",
   });
@@ -65,14 +65,14 @@ const FindId = () => {
     e.preventDefault();
 
     if (validateName(formState.name) && !errors.phone) {
-      console.log("전송할 아이디 데이터:", formState);
+      console.log("전송할 비밀번호 찾기 데이터:", formState);
     }
   };
 
   return (
     <>
       <form className={cx("formWrapper")} onSubmit={handleSubmit}>
-        <h2>아이디 찾기</h2>
+        <h2>비밀번호 찾기</h2>
         <div className={cx("tabBar")}>
           <span className={cx("phone")}>휴대폰 인증</span>
           <span className={cx("email")}>이메일 인증</span>
@@ -125,4 +125,4 @@ const FindId = () => {
   );
 };
 
-export default FindId;
+export default FindPw;

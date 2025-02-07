@@ -34,7 +34,7 @@ const CompletedId = () => {
           color="--main-second-color"
           border="--main-second-color"
           borderSize="1"
-          onClick={() => moveLogin("/")}
+          onClick={() => moveLogin("/findPw")}
         />
 
         <OneBtn

@@ -74,7 +74,7 @@ const LogIn = () => {
       <div className={cx("sidebar")}>
         <Link href={"/findId"}>아이디 찾기</Link>
         <span>l</span>
-        <Link href={"/"}>비밀번호 찾기</Link>
+        <Link href={"/findPw"}>비밀번호 찾기</Link>
       </div>
     </div>
   );

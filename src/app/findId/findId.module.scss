@@ -1,5 +1,6 @@
 .formWrapper {
   h2 {
+    padding-top: 20px;
     font-size: 32px;
   }
   display: flex;
@@ -14,7 +15,7 @@
     display: flex;
     justify-content: center;
     gap: 40px;
-
+    padding-top: 20px;
     border-bottom: 2px solid var(--black-200);
     .phone {
       text-align: center;
