@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 
 const cx = cn.bind(styles);
 
+type userId = {
+  id: string;
+};
+
 const CompletedId = () => {
   const router = useRouter();
 
