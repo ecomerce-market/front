@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { ReactNode } from "react";
 
 interface OneBtnProps {
@@ -15,6 +16,7 @@ interface OneBtnProps {
   icon?: string;
   type?: "submit" | "reset" | "button";
   disabled?: boolean;
+  className?: string;
 }
 
 const OneBtn: React.FC<OneBtnProps> = ({
@@ -32,11 +34,13 @@ const OneBtn: React.FC<OneBtnProps> = ({
   icon,
   type,
   disabled,
+  className,
 }) => {
   return (
     <div>
       {icon}{" "}
       <button
+        className={className}
         disabled={disabled}
         type={type}
         onClick={onClick} // 추가

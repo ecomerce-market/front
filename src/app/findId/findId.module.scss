@@ -14,24 +14,28 @@
     display: flex;
     justify-content: center;
     gap: 40px;
-    padding-bottom: 5px;
+
     border-bottom: 2px solid var(--black-200);
     .phone {
       text-align: center;
       width: 120px;
       color: var(--black-400);
+      padding-bottom: 10px;
+
       &:hover {
         color: var(--main-color);
-      }
-      &:focus {
-        color: var(--main-color);
-      }
-      &:active {
-        color: var(--main-color);
+        border-bottom: 2px solid var(--main-color);
+        cursor: pointer;
       }
     }
     .email {
+      text-align: center;
+      width: 120px;
       color: var(--black-400);
+      &:hover {
+        border-bottom: 1px solid var(--main-color);
+        cursor: pointer;
+      }
     }
   }
 
@@ -47,11 +51,24 @@
       gap: 8px;
     }
   }
+}
 
-  .OneBtn {
-    &:disabled {
-      color: var(--black-200);
-      background: var(--white);
-    }
-  }
+.disabled {
+  color: var(--white);
+  background: var(--black-100);
+  border: 1px solid black;
+}
+.error {
+  padding: 0;
+  margin: 0;
+  font-size: 10px;
+  color: var(--red-color);
+}
+
+.popupWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* X, Y축 모두 -50% 이동 */
+  text-align: center;
 }
