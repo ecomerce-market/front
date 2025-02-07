@@ -114,13 +114,13 @@ const FindId = () => {
       </form>
 
       {/* 서버에서 에러뜨면 나올 팝업 */}
-      <div className={cx("popupWrapper")}>
+      {/* <div className={cx("popupWrapper")}>
         <Popup
           title={"가입하신 정보를 확인해주세요."}
           rightBtn={"확인"}
           rightBtnHref={"/findId"}
         />
-      </div>
+      </div> */}
     </>
   );
 };
