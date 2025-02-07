@@ -25,11 +25,13 @@ const myInfoDetail = () => {
                     <SideMenu
                         title={"마이컬리"}
                         content={[
-                            "주문내역",
-                            "찜한상품",
-                            "배송지 관리",
-                            "상품 후기",
-                            "결제수단",
+                            { label: "주문내역", path: "/orderList" },
+                            { label: "찜한상품", path: "/wishList" },
+                            {
+                                label: "배송지 관리",
+                                path: "/addressManagement",
+                            },
+                            { label: "상품 후기", path: "/review" },
                         ]}
                     />
                 </div>

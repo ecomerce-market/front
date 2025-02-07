@@ -21,6 +21,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            &.active {
+                background-color: var(--black-100);
+                color: var(--main-color);
+            }
+
+            &:hover {
+                background-color: var(--black-100);
+            }
         }
     }
 }
