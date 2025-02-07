@@ -78,6 +78,11 @@ button {
   cursor: pointer;
 }
 
+/* disabled상태일때 호버 없애야할듯 */
 button:hover {
   background-color: #218838; /* 버튼 hover 효과 */
+}
+
+a {
+  text-decoration: none;
 }

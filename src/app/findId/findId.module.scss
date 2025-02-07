@@ -66,9 +66,10 @@
 }
 
 .popupWrapper {
+  background-color: transparent;
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* X, Y축 모두 -50% 이동 */
+  transform: translate(-50%, -50%);
   text-align: center;
 }

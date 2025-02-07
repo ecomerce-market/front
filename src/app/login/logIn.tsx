@@ -57,7 +57,7 @@ const LogIn = () => {
             width="350"
             height="46"
           />
-          <Link href={"/"}>
+          <Link href={"/signUp"}>
             <OneBtn
               color="--main-color"
               bgcolor="--white"
@@ -72,7 +72,7 @@ const LogIn = () => {
       </form>
 
       <div className={cx("sidebar")}>
-        <Link href={"/"}>아이디 찾기</Link>
+        <Link href={"/findId"}>아이디 찾기</Link>
         <span>l</span>
         <Link href={"/"}>비밀번호 찾기</Link>
       </div>
