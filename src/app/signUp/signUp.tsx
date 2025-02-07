@@ -10,18 +10,20 @@ interface SignUpFormData {
   email: string;
   phone: string;
   birth: string;
-  pwChecked: string;
+  address: string;
+  extraAddr: string;
 }
 
 const SignUp = () => {
   const [formData, setFormData] = useState<SignUpFormData>({
     loginId: "",
     loginPw: "",
-    pwChecked: "",
     name: "",
     email: "",
     phone: "",
     birth: "",
+    address: "",
+    extraAddr: "",
   });
 
   const [errors, setErrors] = useState<Partial<SignUpFormData>>({});
@@ -37,17 +39,12 @@ const SignUp = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(
-            formData && {
-              address: "",
-              extraAddr: "",
-            }
-          ),
+          body: JSON.stringify(formData),
         }
       );
       console.log(formData);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         // 201 상태 코드 체크
         const data = await response.json();
         alert(data.message);
@@ -62,7 +59,6 @@ const SignUp = () => {
       alert("서버 오류가 발생했습니다.");
     }
   };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -97,7 +93,7 @@ const SignUp = () => {
 
         <div className="form-group">
           <label htmlFor="pwChecked">비밀번호 확인</label>
-          <TextInput
+          {/* <TextInput
             type="password"
             name="pwChecked"
             value={formData.pwChecked}
@@ -105,7 +101,7 @@ const SignUp = () => {
           />
           {errors.pwChecked && (
             <span className="error">{errors.pwChecked}</span>
-          )}
+          )} */}
         </div>
 
         <div className="form-group">
@@ -149,6 +145,25 @@ const SignUp = () => {
           {errors.birth && <span className="error">{errors.birth}</span>}
         </div>
 
+        <div className="form-group">
+          <label htmlFor="address">상세주소</label>
+          <TextInput
+            type="text" // 전화번호 형식에 맞게 type을 tel로 변경
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="extraAddr">상세주소</label>
+          <TextInput
+            type="text" // 전화번호 형식에 맞게 type을 tel로 변경
+            name="extraAddr"
+            value={formData.extraAddr}
+            onChange={handleChange}
+          />
+        </div>
         <button type="submit">가입하기</button>
       </form>
     </div>
