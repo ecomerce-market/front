@@ -1,5 +1,6 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import axios, { AxiosError } from "axios";
 import styles from "./myInfo.module.scss";
 import cn from "classnames/bind";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
@@ -13,52 +14,95 @@ const MyInfo = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [userInfo, setUserInfo] = useState({
+        grade: "",
+        username: "",
+        credit: "",
+        expiringCredit: "",
+        coupon: "",
+    });
+
+    // 사용자 프로필 정보 조회 API (이름, 등급, 적립금, 소멸예정 적립금, 쿠폰)
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const token = localStorage.getItem("jwt");
+                const response = await axios.get(
+                    "http://localhost:3001/api/v1/users/profiles",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (response.status === 200) {
+                    setUserInfo({
+                        grade: response.data.grade,
+                        username: response.data.username,
+                        credit: response.data.credit.toLocaleString(),
+                        expiringCredit:
+                            response.data.expiringCredit.toLocaleString(),
+                        coupon: response.data.coupon.toString(),
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to fetch user info:", err);
+            }
+        };
+        fetchUserInfo();
+    }, []);
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         setError("");
     };
 
+    // 비밀번호 일치 여부 확인 API
     const handleSubmit = async () => {
         setIsLoading(true);
         setError("");
 
         try {
             const token = localStorage.getItem("jwt");
-            const response = await fetch(
+
+            const response = await axios.post(
                 "http://localhost:3001/api/v1/users/passwords",
+                { password },
                 {
-                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ password }),
                 }
             );
-
+            // 로그인 API 연결되면 테스트 후 아래 문구들 수정 예정
             if (response.status === 200) {
-                console.log("Password verified successfully");
-            } else if (response.status === 400) {
-                setError("비밀번호가 일치하지 않습니다.");
+                console.log("비밀번호가 일치합니다.");
             } else {
                 setError("오류가 발생했습니다. 다시 시도해주세요.");
             }
-        } catch (err) {
-            setError("서버 연결에 실패했습니다. 다시 시도해주세요.");
-            console.error("Error verifying password:", err);
-        } finally {
-            setIsLoading(false);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.response?.status === 400) {
+                    setError("비밀번호가 일치하지 않습니다.");
+                } else {
+                    setError("서버 연결에 실패했습니다. 다시 시도해주세요.");
+                }
+            } else {
+                setError("알 수 없는 오류가 발생했습니다.");
+            }
         }
     };
+
     return (
         <div className={cx("myInfoWrapper")}>
             <PersonalInfo
-                grade={"일반"}
-                username={"김철수"}
-                credit={"3,000"}
-                expiringCredit={"50"}
-                coupon={"4"}
+                grade={userInfo.grade}
+                username={userInfo.username}
+                credit={userInfo.credit}
+                expiringCredit={userInfo.expiringCredit}
+                coupon={userInfo.coupon}
             />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
@@ -86,22 +130,35 @@ const MyInfo = () => {
                     </div>
                     <div className={cx("submitForm")}>
                         <div className={cx("submitInput")}>
-                            <p>아이디</p>
-                            <TextInput width={"280"} height={"30"} readOnly />
+                            <span>아이디</span>
+                            <div>
+                                {" "}
+                                <TextInput
+                                    width={"280"}
+                                    height={"42"}
+                                    readOnly
+                                />
+                            </div>
                         </div>
                         <div className={cx("submitInput")}>
                             <div className={cx("password")}>
-                                <p>비밀번호</p>
-                                <p className={cx("require")}>*</p>
+                                <span>비밀번호</span>
+                                <span className={cx("require")}>*</span>
                             </div>
-                            <TextInput
-                                width={"280"}
-                                height={"30"}
-                                placeholder={"비밀번호를 입력해주세요."}
-                                onChange={handlePasswordChange}
-                            />
+                            <div>
+                                <TextInput
+                                    width={"280"}
+                                    height={"42"}
+                                    placeholder={"비밀번호를 입력해주세요."}
+                                    onChange={handlePasswordChange}
+                                />
+                                {error && (
+                                    <span className={cx("errorMessage")}>
+                                        {error}
+                                    </span>
+                                )}
+                            </div>
                         </div>
-                        {error && <p className={cx("errorMessage")}>{error}</p>}
                     </div>
                     <div className={cx("submitBtn")}>
                         <OneBtn

@@ -28,7 +28,6 @@
         .description {
             color: var(--gray-600);
             font-size: 15px;
-            margin-bottom: 30px;
         }
 
         .submitForm {
@@ -43,9 +42,11 @@
                 display: grid;
                 grid-template-columns: 140px 1fr;
                 align-items: center;
+                margin-bottom: 0;
 
                 .password {
                     display: flex;
+                    align-items: center;
                     gap: 4px;
 
                     .require {
@@ -61,4 +62,9 @@
             margin-top: 40px;
         }
     }
+}
+.errorMessage {
+    color: var(--red-color);
+    font-size: 12px;
+    margin-top: 5px;
 }
