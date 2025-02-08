@@ -37,7 +37,7 @@ const myInfo = () => {
                     <h1 className={cx("mainTitle")}>개인 정보 수정</h1>
                     <div>
                         <h2 className={cx("subTitle")}>비밀번호 재확인</h2>
-                        <p className={cx("content")}>
+                        <p className={cx("description")}>
                             회원님의 정보를 안전하게 보호하기 위해 비밀번호를
                             다시 한번 확인해주세요.
                         </p>
