@@ -22,6 +22,8 @@
     flex-direction: column;
     gap: 5px;
     margin-bottom: 10px;
+    position: relative;
+
     .form-address {
       display: flex;
       justify-content: space-between;
@@ -35,4 +37,23 @@
   padding-bottom: 30px;
   width: 180xp;
   margin: 0 auto;
+}
+
+.error {
+  color: var(--red-color);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.postcode-container {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 400px;
+  height: 100px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
 }

@@ -3,10 +3,11 @@
 import TextInput from "@/components/input/textInput";
 import dynamic from "next/dynamic";
 import { useSignUpValidation } from "@/hooks/signUp/useSignUpValidation";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import OneBtn from "@/components/btn/oneBtn";
 import styles from "./signUp.module.scss";
 import cn from "classnames/bind";
+import { useRouter } from "next/navigation";
 const cx = cn.bind(styles);
 
 interface SignUpFormData {
@@ -26,6 +27,18 @@ const DaumPostcode = dynamic(() => import("react-daum-postcode"), {
 });
 
 const SignUp = () => {
+  const {
+    errors,
+    formatPhoneNumber,
+    formatBirthDate,
+    validateId,
+    validatePassword,
+    validatePasswordMatch,
+    validateName,
+    validateEmail,
+    validateAll,
+  } = useSignUpValidation();
+
   const [formData, setFormData] = useState<SignUpFormData>({
     loginId: "",
     loginPw: "",
@@ -38,8 +51,9 @@ const SignUp = () => {
     pwChecked: "",
   });
 
-  const [errors, setErrors] = useState<Partial<SignUpFormData>>({});
+  // const [errors, setErrors] = useState<Partial<SignUpFormData>>({});
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const handleComplete = (data: any) => {
     setFormData((prev) => ({ ...prev, address: data.address })); // 주소 업데이트
@@ -48,13 +62,6 @@ const SignUp = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!idRegex.test(formData.loginId)) {
-      setErrors((prev) => ({
-        ...prev,
-        signUpId: "아이디는 특수기호 제외 8자 이상 입력해주세요.",
-      }));
-      return false;
-    }
 
     try {
       const response = await fetch(
@@ -70,12 +77,13 @@ const SignUp = () => {
       console.log(formData);
 
       if (response.status === 200) {
-        // 201 상태 코드 체크
+        // 201 상태 코드 체크 200으로 설정되어있음 주의
         const data = await response.json();
-        alert(data.message);
+        alert("회원가입 완료");
+        router.push("/"); // 로그인 성공 시 홈으로 이동
       } else if (response.status === 400) {
         const errorData = await response.json();
-        alert(`회원가입 실패: ${errorData.message}`);
+        alert(errorData.message);
       } else {
         alert("회원가입에 실패했습니다.");
       }
@@ -88,13 +96,29 @@ const SignUp = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { name, value } = e.target;
+    console.log(`입력 변경됨: ${name} = ${value}`);
+
+    let formattedValue = value;
+    if (name === "phone") {
+      formattedValue = formatPhoneNumber(value);
+    } else if (name === "birth") {
+      formattedValue = formatBirthDate(value);
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: formattedValue,
     }));
-  };
 
-  const idRegex = /^[A-Za-z0-9]{8,}$/;
+    console.log("현재 에러 상태:", errors);
+
+    if (name === "loginId") validateId(value);
+    if (name === "loginPw") validatePassword(value);
+
+    if (name === "pwChecked") validatePasswordMatch(formData.loginPw, value);
+    if (name === "name") validateName(value);
+    if (name === "email") validateEmail(value);
+  };
 
   return (
     <div className={cx("signup-container")}>
@@ -109,6 +133,7 @@ const SignUp = () => {
             value={formData.loginId}
             onChange={handleChange}
           />
+          {errors.signUpId && <p className={cx("error")}>{errors.signUpId}</p>}
         </div>
 
         <div className={cx("form-group")}>
@@ -120,6 +145,7 @@ const SignUp = () => {
             value={formData.loginPw}
             onChange={handleChange}
           />
+          {errors.signUpPw && <p className={cx("error")}>{errors.signUpPw}</p>}
         </div>
 
         <div className={cx("form-group")}>
@@ -131,8 +157,8 @@ const SignUp = () => {
             value={formData.pwChecked}
             onChange={handleChange}
           />
-          {errors.pwChecked && (
-            <span className="error">{errors.pwChecked}</span>
+          {errors.signUpPwChecked && (
+            <p className={cx("error")}>{errors.signUpPwChecked}</p>
           )}
         </div>
 
@@ -145,6 +171,7 @@ const SignUp = () => {
             value={formData.name}
             onChange={handleChange}
           />
+          {errors.name && <p className={cx("error")}>{errors.name}</p>}
         </div>
 
         <div className={cx("form-group")}>
@@ -156,13 +183,14 @@ const SignUp = () => {
             value={formData.email}
             onChange={handleChange}
           />
+          {errors.email && <p className={cx("error")}>{errors.email}</p>}
         </div>
 
         <div className={cx("form-group")}>
           <label htmlFor="phone">전화번호</label>
           <TextInput
             width="235"
-            type="tel"
+            type="text"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
@@ -173,7 +201,7 @@ const SignUp = () => {
           <label htmlFor="birth">생년월일</label>
           <TextInput
             width="235"
-            type="date"
+            type="text"
             name="birth"
             value={formData.birth}
             onChange={handleChange}
@@ -206,8 +234,12 @@ const SignUp = () => {
               type="button"
               padding="10px"
             />
-            {isOpen && <DaumPostcode onComplete={handleComplete} />}
           </div>
+          {isOpen && (
+            <div className={cx("postcode-container")}>
+              <DaumPostcode onComplete={handleComplete} />
+            </div>
+          )}
         </div>
 
         <div className={cx("form-group")}>
