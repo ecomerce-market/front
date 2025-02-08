@@ -1,7 +1,10 @@
 "use client";
 
 import TextInput from "@/components/input/textInput";
+import dynamic from "next/dynamic";
+import { useSignUpValidation } from "@/hooks/signUp/useSignUpValidation";
 import { useState, FormEvent } from "react";
+import OneBtn from "@/components/btn/oneBtn";
 
 interface SignUpFormData {
   loginId: string;
@@ -12,7 +15,12 @@ interface SignUpFormData {
   birth: string;
   address: string;
   extraAddr: string;
+  pwChecked: string;
 }
+
+const DaumPostcode = dynamic(() => import("react-daum-postcode"), {
+  ssr: false,
+});
 
 const SignUp = () => {
   const [formData, setFormData] = useState<SignUpFormData>({
@@ -24,9 +32,16 @@ const SignUp = () => {
     birth: "",
     address: "",
     extraAddr: "",
+    pwChecked: "",
   });
 
   const [errors, setErrors] = useState<Partial<SignUpFormData>>({});
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleComplete = (data: any) => {
+    setFormData((prev) => ({ ...prev, address: data.address })); // 주소 업데이트
+    setIsOpen(false); // 검색창 닫기
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,12 +74,19 @@ const SignUp = () => {
       alert("서버 오류가 발생했습니다.");
     }
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handlePreventDefault = (e: React.ChangeEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsOpen(true);
   };
 
   return (
@@ -93,7 +115,7 @@ const SignUp = () => {
 
         <div className="form-group">
           <label htmlFor="pwChecked">비밀번호 확인</label>
-          {/* <TextInput
+          <TextInput
             type="password"
             name="pwChecked"
             value={formData.pwChecked}
@@ -101,7 +123,7 @@ const SignUp = () => {
           />
           {errors.pwChecked && (
             <span className="error">{errors.pwChecked}</span>
-          )} */}
+          )}
         </div>
 
         <div className="form-group">
@@ -117,7 +139,7 @@ const SignUp = () => {
         <div className="form-group">
           <label htmlFor="email">이메일</label>
           <TextInput
-            type="email" // 이메일 입력 시 유효성 체크를 위해 type을 email로 변경
+            type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -127,7 +149,7 @@ const SignUp = () => {
         <div className="form-group">
           <label htmlFor="phone">전화번호</label>
           <TextInput
-            type="tel" // 전화번호 형식에 맞게 type을 tel로 변경
+            type="tel"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
@@ -146,19 +168,30 @@ const SignUp = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="address">상세주소</label>
+          <label htmlFor="address">주소</label>
           <TextInput
-            type="text" // 전화번호 형식에 맞게 type을 tel로 변경
+            type="text"
             name="address"
             value={formData.address}
             onChange={handleChange}
           />
+
+          {/* 버튼 기본값은 submit이다. 그래서 타입을 변경해줘야햇다. */}
+          <OneBtn
+            title={"검색"}
+            width={""}
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            type="button"
+          />
+          {isOpen && <DaumPostcode onComplete={handleComplete} />}
         </div>
 
         <div className="form-group">
           <label htmlFor="extraAddr">상세주소</label>
           <TextInput
-            type="text" // 전화번호 형식에 맞게 type을 tel로 변경
+            type="text"
             name="extraAddr"
             value={formData.extraAddr}
             onChange={handleChange}
