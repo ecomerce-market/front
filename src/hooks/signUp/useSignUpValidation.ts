@@ -11,9 +11,11 @@ export const useSignUpValidation = () => {
         ...prev,
         signUpId: "아이디는 특수기호 제외 8자 이상 입력해주세요.",
       }));
+      console.log("id에러", errors);
       return false;
     }
     setErrors((prev) => ({ ...prev, signUpId: "" }));
+    console.log("id 유효성검사통과", errors);
     return true;
   };
 
