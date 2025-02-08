@@ -13,7 +13,8 @@ interface TextInputProps {
     padding?: string;
     icon?: React.ReactNode;
     type?: string;
-    readOnly?: boolean;
+    readOnly?: boolean | undefined;
+    fontSize?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -25,20 +26,21 @@ const TextInput: React.FC<TextInputProps> = ({
     bgcolor,
     icon,
     name,
-    type,
     readOnly,
+    fontSize,
+    type,
 }) => {
     return (
         <div style={{ position: "relative" }}>
             <input
                 // 여기 비밀번호 인풋 때문에 type은 프롭스로 뺀건데 비밀번호 인풋 타입 password로 안해도 되나요요?
-                type="text"
+                type={type}
+                readOnly={readOnly}
                 placeholder={placeholder}
                 value={value}
                 name={name}
                 onChange={onChange}
                 className={styles.inputField}
-                readOnly={readOnly}
                 style={{
                     width: width ? `${width}px` : undefined,
                     height: height ? `${height}px` : undefined,
