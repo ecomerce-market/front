@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { ChangeEvent, useState } from "react";
 import styles from "./myInfo.module.scss";
 import cn from "classnames/bind";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
@@ -8,7 +9,48 @@ import OneBtn from "@/components/btn/oneBtn";
 
 const cx = cn.bind(styles);
 
-const myInfo = () => {
+const MyInfo = () => {
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+        setError("");
+    };
+
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        setError("");
+
+        try {
+            const token = localStorage.getItem("jwt");
+            const response = await fetch(
+                "http://localhost:3001/api/v1/users/passwords",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ password }),
+                }
+            );
+
+            if (response.status === 200) {
+                console.log("Password verified successfully");
+            } else if (response.status === 400) {
+                setError("비밀번호가 일치하지 않습니다.");
+            } else {
+                setError("오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        } catch (err) {
+            setError("서버 연결에 실패했습니다. 다시 시도해주세요.");
+            console.error("Error verifying password:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     return (
         <div className={cx("myInfoWrapper")}>
             <PersonalInfo
@@ -56,7 +98,11 @@ const myInfo = () => {
                                 width={"280"}
                                 height={"30"}
                                 placeholder={"비밀번호를 입력해주세요."}
+                                onChange={handlePasswordChange}
                             />
+                            {error && (
+                                <p className={cx("errorMessage")}>{error}</p>
+                            )}
                         </div>
                     </div>
                     <div className={cx("submitBtn")}>
@@ -66,6 +112,8 @@ const myInfo = () => {
                             height={"46"}
                             bgcolor={"--main-color"}
                             color={"--white"}
+                            onClick={handleSubmit}
+                            disabled={isLoading}
                         />
                     </div>
                 </div>
@@ -74,4 +122,4 @@ const myInfo = () => {
     );
 };
 
-export default myInfo;
+export default MyInfo;
