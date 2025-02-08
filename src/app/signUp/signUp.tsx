@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 import { useSignUpValidation } from "@/hooks/signUp/useSignUpValidation";
 import { useState, FormEvent } from "react";
 import OneBtn from "@/components/btn/oneBtn";
+import styles from "./signUp.module.scss";
+import cn from "classnames/bind";
+const cx = cn.bind(styles);
 
 interface SignUpFormData {
   loginId: string;
@@ -45,6 +48,13 @@ const SignUp = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!idRegex.test(formData.loginId)) {
+      setErrors((prev) => ({
+        ...prev,
+        signUpId: "아이디는 특수기호 제외 8자 이상 입력해주세요.",
+      }));
+      return false;
+    }
 
     try {
       const response = await fetch(
@@ -84,39 +94,39 @@ const SignUp = () => {
     }));
   };
 
-  const handlePreventDefault = (e: React.ChangeEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsOpen(true);
-  };
+  const idRegex = /^[A-Za-z0-9]{8,}$/;
 
   return (
-    <div className="signup-container">
+    <div className={cx("signup-container")}>
       <h1>회원가입</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="loginId">아이디</label>
           <TextInput
             type="text"
+            width="235"
             name="loginId"
             value={formData.loginId}
             onChange={handleChange}
           />
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="loginPw">비밀번호</label>
           <TextInput
             type="password"
+            width="235"
             name="loginPw"
             value={formData.loginPw}
             onChange={handleChange}
           />
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="pwChecked">비밀번호 확인</label>
           <TextInput
             type="password"
+            width="235"
             name="pwChecked"
             value={formData.pwChecked}
             onChange={handleChange}
@@ -126,9 +136,10 @@ const SignUp = () => {
           )}
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="name">이름</label>
           <TextInput
+            width="235"
             type="text"
             name="name"
             value={formData.name}
@@ -136,19 +147,21 @@ const SignUp = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="email">이메일</label>
           <TextInput
             type="email"
+            width="235"
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="phone">전화번호</label>
           <TextInput
+            width="235"
             type="tel"
             name="phone"
             value={formData.phone}
@@ -156,9 +169,10 @@ const SignUp = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="birth">생년월일</label>
           <TextInput
+            width="235"
             type="date"
             name="birth"
             value={formData.birth}
@@ -167,37 +181,48 @@ const SignUp = () => {
           {errors.birth && <span className="error">{errors.birth}</span>}
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group-address")}>
           <label htmlFor="address">주소</label>
-          <TextInput
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
+          <div className={cx("form-address")}>
+            <TextInput
+              type="text"
+              width="180"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              readOnly={true}
+              placeholder={"검색 버튼으로 입력해주세요"}
+            />
 
-          {/* 버튼 기본값은 submit이다. 그래서 타입을 변경해줘야햇다. */}
-          <OneBtn
-            title={"검색"}
-            width={""}
-            onClick={() => {
-              setIsOpen(true);
-            }}
-            type="button"
-          />
-          {isOpen && <DaumPostcode onComplete={handleComplete} />}
+            {/* 버튼 기본값은 submit이다. 그래서 타입을 변경해줘야햇다. */}
+            <OneBtn
+              title={"검색"}
+              width={"50"}
+              fontSize="12"
+              height={"38"}
+              onClick={() => {
+                setIsOpen(true);
+              }}
+              type="button"
+              padding="10px"
+            />
+            {isOpen && <DaumPostcode onComplete={handleComplete} />}
+          </div>
         </div>
 
-        <div className="form-group">
+        <div className={cx("form-group")}>
           <label htmlFor="extraAddr">상세주소</label>
           <TextInput
             type="text"
             name="extraAddr"
+            width="235"
             value={formData.extraAddr}
             onChange={handleChange}
           />
         </div>
-        <button type="submit">가입하기</button>
+        <div className={cx("signUpBtnWrapper")}>
+          <OneBtn title={"가입하기"} width={"250"} height="20" />
+        </div>
       </form>
     </div>
   );
