@@ -30,22 +30,15 @@
 }
 
 @font-face {
-    font-family: "BMHANNAPro";
-    src: url("/font/BMHANNAPro.ttf") format("truetype");
+    font-family: "GmarketSansTTFMedium";
+    src: url("/font/GmarketSansTTFMedium.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
-@font-face {
-    font-family: "BMJUA";
-    src: url("/font/BMJUA.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* 전역 폰트 (배민 한나 프로체, 배민 주아체) */
+/* 전역 폰트 (GmarketSansTTFMedium) */
 body {
-    font-family: "BMHANNAPro", "BMJUA", sans-serif;
+    font-family: "GmarketSansTTFMedium";
 }
 
 /* 404페이지 */
