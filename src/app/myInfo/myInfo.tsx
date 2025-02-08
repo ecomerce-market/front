@@ -100,10 +100,8 @@ const MyInfo = () => {
                                 placeholder={"비밀번호를 입력해주세요."}
                                 onChange={handlePasswordChange}
                             />
-                            {error && (
-                                <p className={cx("errorMessage")}>{error}</p>
-                            )}
                         </div>
+                        {error && <p className={cx("errorMessage")}>{error}</p>}
                     </div>
                     <div className={cx("submitBtn")}>
                         <OneBtn
