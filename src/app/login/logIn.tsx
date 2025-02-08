@@ -6,22 +6,57 @@ import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
 import OneBtn from "@/components/btn/oneBtn";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const cx = cn.bind(styles);
 
+type LoginFormDataType = {
+  loginId: string;
+  loginPw: string;
+};
+
 const LogIn = () => {
-  const [form, setForm] = useState({ id: "", pw: "" });
+  const router = useRouter();
+  const [form, setForm] = useState<LoginFormDataType>({
+    loginId: "",
+    loginPw: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("로그인 정보:", form);
-    // 로그인 API 여따 쓰면 될듯
-    // 로그인 완료 시 사이트 경로 이동, 어디로 할건지?? 홈이 가장 무난한듯
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/v1/users/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+      const responseData = await response.json();
+
+      if (response.status === 200) {
+        alert("로그인 성공");
+        router.push("/");
+      } else if (responseData.code === "E000") {
+        alert("잘못된 정보입니다.");
+      } else if (responseData.code === "E002") {
+        alert("사용자를 찾을 수 없습니다.");
+      } else if (responseData.code === "E003") {
+        alert("비밀번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      console.error("에러 발생:", error);
+      alert("서버와의 연결에 실패했습니다. 나중에 다시 시도해주세요.");
+    }
   };
 
   return (
@@ -33,8 +68,8 @@ const LogIn = () => {
             height="46"
             width="332"
             placeholder="아이디를 입력해주세요"
-            name="id"
-            value={form.id}
+            name="loginId"
+            value={form.loginId}
             onChange={handleChange}
           />
 
@@ -42,8 +77,8 @@ const LogIn = () => {
             height="46"
             width="332"
             placeholder="비밀번호를 입력해주세요"
-            name="pw"
-            value={form.pw}
+            name="loginPw"
+            value={form.loginPw}
             onChange={handleChange}
             type="password"
           />
