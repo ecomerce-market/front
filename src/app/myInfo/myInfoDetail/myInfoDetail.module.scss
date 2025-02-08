@@ -19,26 +19,46 @@
         .submitForm {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             gap: 12px;
-            padding: 30px 0;
+            padding: 30px;
             border-top: 2px solid var(--black);
             border-bottom: 1px solid var(--black-700);
+
+            & > div {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                gap: 20px;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+
+                & > div {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    grid-template-columns: 1fr;
+                    padding-bottom: 0;
+                }
+            }
+
+            span:not(.errorMessage) {
+                margin: 5px;
+            }
         }
 
-        .submitForm div {
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 5px;
-        }
-        .submitForm p {
-            margin: 5px;
-        }
         .submitBtn {
             display: flex;
             justify-content: center;
             padding-top: 50px;
         }
     }
+}
+
+.errorMessage {
+    color: var(--red-color);
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
 }
