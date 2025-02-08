@@ -1,53 +1,57 @@
 .navBarWrapper {
-  display: flex;
-  padding: 0 165px;
-  justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  .category {
     display: flex;
-    justify-content: center;
+    padding: 0 165px 10px;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-    .categoryIcon {
-      display: flex;
-      align-items: center;
-      font-size: 17px;
+    .category {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        position: relative;
 
-      &.active {
-        color: var(--main-color);
-      }
+        .categoryIcon {
+            display: flex;
+            align-items: center;
+            font-size: 17px;
+
+            &.active {
+                color: var(--main-color);
+            }
+        }
+
+        .categoryTitle {
+            font-size: 13px;
+
+            &.active {
+                color: var(--main-color);
+                font-weight: bold;
+            }
+        }
+
+        .categoryContent {
+            position: absolute;
+            top: 45px;
+            left: 0;
+        }
     }
 
-    .categoryTitle {
-      font-size: 13px;
-
-      &.active {
-        color: var(--main-color);
-        font-weight: bold;
-      }
+    .subCategory {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 80px;
+        flex-grow: 1;
     }
 
-    .categoryContent {
-      position: absolute;
-      top: 45px;
-      left: 0;
+    .subCategory p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 12px;
     }
-  }
-
-  .subCategory {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-    flex-grow: 1;
-  }
-
-  .subCategory p {
-    cursor: pointer;
-    font-size: 12px;
-  }
 }
