@@ -1,0 +1,51 @@
+.loginContainer {
+  width: 424px;
+  height: 526px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  justify-content: center;
+  align-content: center;
+
+  .inputWrapper {
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btnWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .sidebar {
+    padding-top: 40px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    span {
+      color: var(--black-400);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    a {
+      color: var(--black-400);
+      text-decoration: none;
+      font-size: 14px;
+    }
+  }
+}

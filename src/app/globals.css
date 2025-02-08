@@ -27,7 +27,62 @@
   --white: #ffffff;
 }
 
+@font-face {
+  font-family: "BMHANNAPro";
+  src: url("/font/BMHANNAPro.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BMJUA";
+  src: url("/font/BMJUA.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* 전역 폰트 (배민 한나 프로체, 배민 주아체) */
 body {
   font-family: "BMHANNAPro", "BMJUA", sans-serif;
+}
+
+/* 404페이지 */
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #d4edda; /* 연한 초록색 */
+  color: #155724; /* 진한 초록색 */
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: white;
+  background-color: #28a745; /* 초록색 버튼 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* disabled상태일때 호버 없애야할듯 */
+button:hover {
+  background-color: #218838; /* 버튼 hover 효과 */
+}
+
+a {
+  text-decoration: none;
 }

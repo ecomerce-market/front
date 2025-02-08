@@ -1,0 +1,76 @@
+.formWrapper {
+  h2 {
+    padding-top: 20px;
+    font-size: 32px;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-items: start;
+  align-items: center;
+  width: 494px;
+  margin: 0 auto;
+
+  .tabBar {
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding-top: 20px;
+    border-bottom: 2px solid var(--black-200);
+    .phone {
+      text-align: center;
+      width: 120px;
+      color: var(--black-400);
+      padding-bottom: 10px;
+
+      &:hover {
+        color: var(--main-color);
+        border-bottom: 2px solid var(--main-color);
+        cursor: pointer;
+      }
+    }
+    .email {
+      text-align: center;
+      width: 120px;
+      color: var(--black-400);
+      &:hover {
+        border-bottom: 1px solid var(--main-color);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .phoneWrapper {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 80px 0;
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+}
+
+.disabled {
+  color: var(--white);
+  background: var(--black-100);
+  border: 1px solid black;
+}
+.error {
+  padding: 0;
+  margin: 0;
+  font-size: 10px;
+  color: var(--red-color);
+}
+
+.popupWrapper {
+  background-color: transparent;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}

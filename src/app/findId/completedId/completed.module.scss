@@ -1,0 +1,45 @@
+.completedIdWrapper {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 400px;
+  justify-content: center;
+  p {
+    font-size: 32px;
+    font-weight: 400;
+    text-align: center;
+  }
+  .massageWrapper {
+    .mainMassege {
+      font-size: 18px;
+      line-height: 21.6px;
+      text-align: center;
+      text-underline-position: from-font;
+    }
+    .subMassege {
+      color: var(--black-300);
+      font-size: 14px;
+      line-height: 15.6px;
+      letter-spacing: -0.05em;
+      text-align: center;
+    }
+  }
+
+  .findedID {
+    padding: 40px 0;
+    text-align: center;
+    width: 100%;
+    border-top: 2px solid var(--black-200);
+    border-bottom: 2px solid var(--black-200);
+  }
+
+  .btnWrapper {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}
