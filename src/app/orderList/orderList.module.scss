@@ -1,7 +1,11 @@
 .orderListWrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+
     .myInfoMain {
         display: grid;
-        grid-template-columns: 150px auto;
+        grid-template-columns: 200px 1fr;
+        margin-top: 50px;
 
         .sideMenu {
             margin-left: 150px;
@@ -30,9 +34,9 @@
             }
         }
 
-        .wishListCard {
-            font-size: 15px;
-            margin: 5px 0;
+        .orderListCard {
+            // font-size: 15px;
+            // margin: 5px 0;
 
             .total {
                 margin: 5px 0 30px;
