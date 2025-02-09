@@ -15,7 +15,13 @@ type BannerProps = {
 const Banner: React.FC<BannerProps> = ({ src, alt, width, height }) => {
   return (
     <div className={cx("bannerWrapper")}>
-      <Image src={src} alt={alt} width={width} height={height} />
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        priority={true}
+      />
     </div>
   );
 };

@@ -20,6 +20,8 @@ interface ProductCardProps {
   price: string;
   // 후기
   review: string;
+  src: string;
+  alt?: string;
 }
 
 const cx = cn.bind(styles);
@@ -27,6 +29,7 @@ const cx = cn.bind(styles);
 const ProductCard = (props: ProductCardProps) => {
   const {
     width,
+    src,
     height,
     title,
     detail,
@@ -34,6 +37,7 @@ const ProductCard = (props: ProductCardProps) => {
     discountPrice,
     price,
     review,
+    alt,
   } = props;
 
   // discount와 discountPrice가 없는 경우 "price"에 discountPrice 스타일 적용
@@ -43,8 +47,8 @@ const ProductCard = (props: ProductCardProps) => {
     <div className={cx("productCardWrapper")} style={{ width }}>
       <div className={cx("imageWrapper")}>
         <img
-          src="/images/example.png"
-          alt="상품 이미지"
+          src={src}
+          alt={alt}
           className={cx("titleImage")}
           style={{ width, height }}
         />
