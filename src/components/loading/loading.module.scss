@@ -1,0 +1,30 @@
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--white);
+  color: var(--main-color);
+  font-size: 24px;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.loadingText {
+  font-weight: bold;
+  letter-spacing: 2px;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

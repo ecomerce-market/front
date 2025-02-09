@@ -1,0 +1,50 @@
+.mainWrapper {
+  width: 100%;
+  position: relative;
+
+  .swiperContainer {
+    width: 100%;
+    position: relative;
+
+    .swiper {
+      width: 100%;
+      height: 100%;
+
+      :global {
+        .swiper-button-prev,
+        .swiper-button-next {
+          display: none;
+        }
+
+        .swiper-pagination {
+          position: absolute;
+          right: 10%;
+          bottom: 5%;
+          width: auto;
+          left: auto;
+          background: var(--black-200);
+          padding: 4px 10px;
+          border-radius: 12px;
+          color: var(--white);
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .swiper-pagination-current,
+          .swiper-pagination-total {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .swiperSlide {
+      width: 100%;
+      height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
