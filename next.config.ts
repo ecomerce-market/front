@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  transpilePackages: ["swiper"],
 };
 
 export default nextConfig;
