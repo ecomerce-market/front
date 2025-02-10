@@ -1,53 +1,55 @@
 .myInfoWrapper {
-    .myInfoMain {
-        display: grid;
-        grid-template-columns: 150px auto;
+    max-width: 1200px;
+    margin: 0 auto;
 
-        .sideMenu {
-            margin-left: 150px;
+    .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        margin-top: 50px;
+
+        .content {
+            max-width: 700px;
         }
     }
 
     .checkInfo {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin: 0 auto;
-
         .mainTitle {
             font-size: 24px;
-            margin: 5px 0;
+            font-weight: 500;
+            margin-bottom: 20px;
         }
 
         .subTitle {
             font-size: 20px;
-            margin: 5px 0;
+            margin-bottom: 10px;
         }
 
-        .content {
+        .description {
+            color: var(--gray-600);
             font-size: 15px;
-            margin: 5px 0;
         }
 
         .submitForm {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
+            gap: 12px;
             padding: 30px 0;
-            gap: 5px;
             border-top: 2px solid var(--black);
             border-bottom: 1px solid var(--black-700);
 
             .submitInput {
                 display: grid;
-                grid-template-columns: 100px 1fr;
+                grid-template-columns: 140px 1fr;
                 align-items: center;
-                gap: 15px;
+                margin-bottom: 0;
 
                 .password {
                     display: flex;
+                    align-items: center;
+                    gap: 4px;
 
                     .require {
                         color: var(--red-color);
@@ -55,10 +57,16 @@
                 }
             }
         }
+
         .submitBtn {
             display: flex;
             justify-content: center;
-            padding-top: 50px;
+            margin-top: 40px;
         }
     }
+}
+.errorMessage {
+    color: var(--red-color);
+    font-size: 12px;
+    margin-top: 5px;
 }
