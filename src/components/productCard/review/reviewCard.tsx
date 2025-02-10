@@ -8,15 +8,16 @@ const cx = cn.bind(styles);
 
 interface reviewCardProps {
     title: string;
-    discountRate: number;
+    discountRate?: number;
     price: string;
-    discountPrice: string;
+    discountPrice?: string;
     purchase: number;
     btntitle: ReactNode;
     btnwidth: string;
     btnColor: string;
     color: string;
     borderColor?: string;
+    borderSize?: string;
     btnHeight: string;
     lateDate?: string;
 }
@@ -33,7 +34,6 @@ const ReviewCard: React.FC<reviewCardProps> = ({
     borderColor,
     btnColor,
     lateDate,
-    purchase,
 }) => {
     return (
         <div className={cx("pickProductCardWrapper")}>
@@ -47,35 +47,20 @@ const ReviewCard: React.FC<reviewCardProps> = ({
             <div className={cx("detailWrapper")}>
                 <span className={cx("title")}>{title}</span>
                 <div className={cx("priceWrapper")}>
-                    {/* 할인율 있을때랑 할인율이 없을 때 구별 */}
-                    {discountRate ? (
+                    {discountRate && discountPrice ? (
                         <>
-                            <div>
-                                <span className={cx("discountRate")}>
-                                    {discountRate}%
-                                </span>{" "}
-                                <span className={cx("discountPrice")}>
-                                    {discountPrice}원
-                                </span>
-                                <span className={cx("price")}>{price}원~</span>
-                            </div>
-                            <div>
-                                <span className={cx("purchase")}>
-                                    {purchase}개 구매
-                                </span>
-                            </div>
+                            <span className={cx("discountRate")}>
+                                {discountRate}%
+                            </span>
+                            <span className={cx("discountPrice")}>
+                                {discountPrice}원
+                            </span>{" "}
+                            <span className={cx("originalPrice")}>
+                                {price}원~
+                            </span>
                         </>
                     ) : (
-                        <>
-                            <div>
-                                <span className={cx("price")}>{price}원~</span>
-                            </div>
-                            <div>
-                                <span className={cx("purchase")}>
-                                    {purchase}개 구매
-                                </span>
-                            </div>
-                        </>
+                        <span className={cx("singlePrice")}>{price}원</span>
                     )}
                 </div>
                 <div className={cx("btn")}>
@@ -87,6 +72,7 @@ const ReviewCard: React.FC<reviewCardProps> = ({
                         width={btnwidth}
                         height={btnHeight}
                         border={borderColor}
+                        borderSize="1"
                     />
                 </div>
             </div>
