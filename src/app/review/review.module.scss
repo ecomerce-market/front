@@ -1,11 +1,14 @@
 .reviewWrapper {
-    .myInfoMain {
-        display: grid;
-        grid-template-columns: 150px auto;
+    max-width: 1200px;
+    margin: 0 auto;
 
-        .sideMenu {
-            margin-left: 150px;
-        }
+    .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        margin-top: 50px;
     }
 
     .reviewWrapper {

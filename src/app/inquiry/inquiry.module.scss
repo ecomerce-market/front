@@ -1,68 +1,113 @@
 .inquiryWrapper {
-    .myInfoMain {
-        display: grid;
-        grid-template-columns: 150px auto;
+    max-width: 1200px;
+    margin: 0 auto;
 
-        .sideMenu {
-            margin-left: 150px;
-        }
+    .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        margin-top: 50px;
     }
 
     .inquirySection {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
+        flex: 1;
 
         .inquiryHeader {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
             .mainTitle {
                 font-size: 24px;
-                margin: 5px 0;
-                width: 527px;
                 border-bottom: 2px solid var(--black-800);
                 padding-bottom: 10px;
             }
 
             .inquiryTitle {
                 display: flex;
-                flex-direction: row;
-                justify-content: space-between;
                 align-items: center;
-                width: 517px;
+                justify-content: space-between;
+                gap: 100px;
+                padding: 10px;
                 border-bottom: 1px solid var(--black-500);
-                font-size: 12px;
-                padding: 0 10px 0;
-            }
 
-            .inquiryTitle div {
+                div {
+                    display: flex;
+                    gap: 50px;
+
+                    p {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    p:first-child {
+                        width: 60px;
+                    }
+                }
+            }
+        }
+
+        .inquiryItem {
+            border-bottom: 1px solid var(--black-500);
+        }
+
+        .inquiryList {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 100px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+
+            div {
                 display: flex;
                 gap: 50px;
+
+                p {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                p:first-child {
+                    width: 60px;
+                }
+            }
+
+            .answerState {
+                &.completed {
+                    color: var(--main-color);
+                }
+                &.waiting {
+                    color: var(--black-500);
+                }
             }
         }
-        .inquiryList {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            width: 517px;
-            border-bottom: 1px solid var(--black-500);
-            font-size: 12px;
-            padding: 0 10px;
-        }
 
-        .inquiryList div {
-            display: flex;
-            gap: 50px;
+        .inquiryContent {
+            padding: 20px;
+            font-size: 14px;
+
+            &.question {
+                background-color: var(--black-50);
+            }
+
+            &.answer {
+                background-color: var(--black-100);
+                border-top: 1px solid var(--black-100);
+            }
         }
     }
+
     .inquiryBtn {
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-top: 100px;
+        padding-top: 50px;
     }
+}
+.noInquiries {
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

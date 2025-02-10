@@ -12,18 +12,16 @@ const cx = cn.bind(styles);
 const notice = () => {
     return (
         <div className={cx("inquiryDetailWrapper")}>
-            <PersonalInfo
-                grade={"일반"}
-                username={"김철수"}
-                credit={"3,000"}
-                expiringCredit={"50"}
-                coupon={"4"}
-            />
+            <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
                     <SideMenu
                         title={"마이컬리"}
-                        content={["1:1 문의", "공지사항", "자주하는 질문"]}
+                        content={[
+                            { label: "1:1 문의", path: "/inquiry" },
+                            { label: "공지사항", path: "/notice" },
+                            { label: "자주하는 질문", path: "/faq" },
+                        ]}
                     />
                 </div>
                 <div className={cx("inquiryDetailSection")}>

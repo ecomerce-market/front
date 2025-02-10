@@ -7,26 +7,27 @@ import PersonalInfo from "@/components/personalnfo/personalInfo";
 import SideMenu from "@/components/sideMenu/sideMenu";
 import TextInput from "@/components/input/textInput";
 import OneBtn from "@/components/btn/oneBtn";
+import Link from "next/link";
 
 const cx = cn.bind(styles);
 
 const MyInfo = () => {
+    const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [userInfo, setUserInfo] = useState({
-        grade: "",
-        username: "",
-        credit: "",
-        expiringCredit: "",
-        coupon: "",
-    });
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState(false); //
 
-    // 사용자 프로필 정보 조회 API (이름, 등급, 적립금, 소멸예정 적립금, 쿠폰)
+    //사용자 정보 API 연결
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const token = localStorage.getItem("jwt");
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setError("로그인이 필요합니다.");
+                    return;
+                }
+
                 const response = await axios.get(
                     "http://localhost:3001/api/v1/users/profiles",
                     {
@@ -36,39 +37,41 @@ const MyInfo = () => {
                     }
                 );
 
-                if (response.status === 200) {
-                    setUserInfo({
-                        grade: response.data.grade,
-                        username: response.data.username,
-                        credit: response.data.credit.toLocaleString(),
-                        expiringCredit:
-                            response.data.expiringCredit.toLocaleString(),
-                        coupon: response.data.coupon.toString(),
-                    });
+                if (response.status === 200 && response.data.data?.loginId) {
+                    setUserId(response.data.data.loginId);
+                } else {
+                    setError("사용자 정보를 불러오는데 실패했습니다.");
                 }
-            } catch (err) {
-                console.error("Failed to fetch user info:", err);
+            } catch (error) {
+                console.error(error);
+                setError("서버 요청 실패");
             }
         };
+
         fetchUserInfo();
     }, []);
 
+    // 비밀번호 입력 값 변경 시 상태 업데이트
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         setError("");
     };
 
-    // 비밀번호 일치 여부 확인 API
+    // 비밀번호 확인 API 연결
     const handleSubmit = async () => {
         setIsLoading(true);
         setError("");
 
         try {
-            const token = localStorage.getItem("jwt");
+            const token = localStorage.getItem("token");
+            if (!token) {
+                setError("로그인이 필요합니다.");
+                return;
+            }
 
             const response = await axios.post(
                 "http://localhost:3001/api/v1/users/passwords",
-                { password },
+                { loginPw: password },
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -76,34 +79,32 @@ const MyInfo = () => {
                     },
                 }
             );
-            // 로그인 API 연결되면 테스트 후 아래 문구들 수정 예정
+
             if (response.status === 200) {
-                console.log("비밀번호가 일치합니다.");
+                setIsPasswordCorrect(true);
             } else {
-                setError("오류가 발생했습니다. 다시 시도해주세요.");
+                setError("비밀번호가 일치하지 않습니다.");
             }
         } catch (error) {
-            if (error instanceof AxiosError) {
-                if (error.response?.status === 400) {
+            if (error instanceof AxiosError && error.response) {
+                if (error.response.status === 400) {
                     setError("비밀번호가 일치하지 않습니다.");
+                } else if (error.response.status === 401) {
+                    setError("인증이 실패했습니다. 다시 로그인 해주세요.");
                 } else {
                     setError("서버 연결에 실패했습니다. 다시 시도해주세요.");
                 }
             } else {
                 setError("알 수 없는 오류가 발생했습니다.");
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div className={cx("myInfoWrapper")}>
-            <PersonalInfo
-                grade={userInfo.grade}
-                username={userInfo.username}
-                credit={userInfo.credit}
-                expiringCredit={userInfo.expiringCredit}
-                coupon={userInfo.coupon}
-            />
+            <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
                     <SideMenu
@@ -132,10 +133,10 @@ const MyInfo = () => {
                         <div className={cx("submitInput")}>
                             <span>아이디</span>
                             <div>
-                                {" "}
                                 <TextInput
                                     width={"280"}
                                     height={"42"}
+                                    value={userId}
                                     readOnly
                                 />
                             </div>
@@ -149,6 +150,7 @@ const MyInfo = () => {
                                 <TextInput
                                     width={"280"}
                                     height={"42"}
+                                    type="password"
                                     placeholder={"비밀번호를 입력해주세요."}
                                     onChange={handlePasswordChange}
                                 />
@@ -161,15 +163,28 @@ const MyInfo = () => {
                         </div>
                     </div>
                     <div className={cx("submitBtn")}>
-                        <OneBtn
-                            title={"확인"}
-                            width={"320"}
-                            height={"46"}
-                            bgcolor={"--main-color"}
-                            color={"--white"}
-                            onClick={handleSubmit}
-                            disabled={isLoading}
-                        />
+                        {isPasswordCorrect ? (
+                            <Link href="/myInfo/myInfoDetail">
+                                <OneBtn
+                                    title={"확인"}
+                                    width={"320"}
+                                    height={"46"}
+                                    bgcolor={"--main-color"}
+                                    color={"--white"}
+                                    disabled={isLoading}
+                                />
+                            </Link>
+                        ) : (
+                            <OneBtn
+                                title={"확인"}
+                                width={"320"}
+                                height={"46"}
+                                bgcolor={"--main-color"}
+                                color={"--white"}
+                                onClick={handleSubmit}
+                                disabled={isLoading}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

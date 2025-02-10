@@ -8,23 +8,19 @@ const cx = cn.bind(styles);
 const review = () => {
     return (
         <div className={cx("reviewWrapper")}>
-            <PersonalInfo
-                grade={"일반"}
-                username={"김철수"}
-                credit={"3,000"}
-                expiringCredit={"50"}
-                coupon={"4"}
-            />
+            <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
                     <SideMenu
                         title={"마이컬리"}
                         content={[
-                            "주문내역",
-                            "찜한상품",
-                            "배송지 관리",
-                            "상품 후기",
-                            "결제수단",
+                            { label: "주문내역", path: "/orderList" },
+                            { label: "찜한상품", path: "/wishList" },
+                            {
+                                label: "배송지 관리",
+                                path: "/addressManagement",
+                            },
+                            { label: "상품 후기", path: "/review" },
                         ]}
                     />
                 </div>
@@ -46,16 +42,15 @@ const review = () => {
                         />
                         <ReviewCard
                             title={"감자 2kg"}
-                            discountPrice={"23,000"}
-                            discountRate={30}
                             price={"25,000"}
-                            btntitle={"후기 작성하기"}
+                            btntitle={"후기 보러가기"}
                             btnwidth={"155"}
                             btnHeight={"47"}
                             purchase={3}
                             btnColor={"--white"}
                             color={"--black"}
-                            borderColor={"--black-100"}
+                            borderColor={"--black-300"}
+                            borderSize="1"
                         />
                     </div>
                 </div>

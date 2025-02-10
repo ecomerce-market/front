@@ -1,8 +1,10 @@
 .myInfoWrapper {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
 
     .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
         display: grid;
         grid-template-columns: 200px 1fr;
         gap: 40px;
