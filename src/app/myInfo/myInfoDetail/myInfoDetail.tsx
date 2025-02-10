@@ -11,15 +11,14 @@ import axios from "axios";
 const cx = cn.bind(styles);
 
 interface UserData {
-    grade: string;
-    username: string;
-    credit: string;
-    expiringCredit: string;
-    coupon: string;
+    tier: string;
     name: string;
     email: string;
+    loginId: string;
     phone: string;
-    birthDate: string;
+    birth: string;
+    points: number;
+    couponCnt: number;
 }
 
 interface FormField {
@@ -90,6 +89,7 @@ const FormField = ({
 
 const MyInfoDetail = () => {
     const inputSize = { width: "280", height: "40" };
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [userData, setUserData] = useState<UserData | null>(null);
     const [formState, setFormState] = useState<FormState>({
         username: "",
@@ -112,7 +112,7 @@ const MyInfoDetail = () => {
 
     // 이메일 유효성 검사
     const validateEmail = (email: string) => {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA0-9]{2,}$/;
         return regex.test(email);
     };
 
@@ -122,11 +122,40 @@ const MyInfoDetail = () => {
         return regex.test(phone.replace(/\D/g, ""));
     };
 
-    // 생년월일 유효성 검사
     const validateBirthDate = (birthDate: string) => {
         const regex =
             /^(19|20)\d{2}\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/;
         return regex.test(birthDate);
+    };
+
+    // 🔹 비밀번호 확인 검사
+    const validateNewPasswordMatch = (
+        password: string,
+        confirmPassword: string
+    ) => {
+        if (password !== confirmPassword) {
+            setErrors((prev) => ({
+                ...prev,
+                signUpPwChecked: "비밀번호가 일치하지 않습니다.",
+            }));
+            return false;
+        }
+        setErrors((prev) => ({ ...prev, signUpPwChecked: "" }));
+        return true;
+    };
+
+    // 🔹 이름 유효성 검사 (한글/영문만 가능)
+    const validateName = (name: string) => {
+        const nameRegex = /^[A-Za-z가-힣]+$/;
+        if (!nameRegex.test(name)) {
+            setErrors((prev) => ({
+                ...prev,
+                name: "이름은 한글 또는 영문만 입력 가능합니다.",
+            }));
+            return false;
+        }
+        setErrors((prev) => ({ ...prev, name: "" }));
+        return true;
     };
 
     // 전화번호 형식 변환
@@ -226,29 +255,70 @@ const MyInfoDetail = () => {
             required: true,
         },
     ];
+
     // 개인 정보 조회 API
     useEffect(() => {
-        const token = localStorage.getItem("jwtToken");
-        axios
-            .get("http://localhost:3001/api/v1/users/profiles", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                setUserData(response.data);
-                const userBirthDate = response.data.birthDate.split("-");
+        const token = localStorage.getItem("token");
+        if (!token) {
+            return;
+        }
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/api/v1/users/profiles",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                const userData = response.data.data || response.data;
+                if (!userData) {
+                    throw new Error("사용자 데이터가 없습니다.");
+                }
+                const formattedPhone = userData.phone
+                    ? formatPhoneNumber(userData.phone)
+                    : "";
+                const formattedBirth = userData.birth
+                    ? userData.birth.replace(/-/g, "/")
+                    : "";
+                setUserData({
+                    tier: userData.tier || "",
+                    name: userData.name || "",
+                    email: userData.email || "",
+                    loginId: userData.loginId || "",
+                    phone: formattedPhone,
+                    birth: formattedBirth,
+                    points: userData.points || 0,
+                    couponCnt: userData.couponCnt || 0,
+                });
+                setFormState((prev) => {
+                    const newState = {
+                        ...prev,
+                        username: userData.loginId || "",
+                        name: userData.name || "",
+                        email: userData.email || "",
+                        phone: formattedPhone,
+                        birthDate: formattedBirth,
+                        errors: {},
+                    };
+
+                    return newState;
+                });
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                }
                 setFormState((prev) => ({
                     ...prev,
-                    username: response.data.username,
-                    birthDate: `${userBirthDate[0]}/${userBirthDate[1]}/${userBirthDate[2]}`,
-                    phone: response.data.phone,
-                    name: response.data.name,
-                    email: response.data.email,
-                    errors: {},
+                    errors: {
+                        form: "사용자 정보를 불러오는데 실패했습니다.",
+                    },
                 }));
-            })
-            .catch((error) => {
-                console.error("Error fetching user data:", error);
-            });
+            }
+        };
+
+        fetchUserData();
     }, []);
 
     // 폼 전체 유효성 검사
@@ -262,7 +332,12 @@ const MyInfoDetail = () => {
             if (!formState.currentPassword) {
                 errors.currentPassword = "현재 비밀번호를 입력해주세요.";
             }
-            if (formState.newPassword !== formState.confirmPassword) {
+            if (
+                !validateNewPasswordMatch(
+                    formState.newPassword,
+                    formState.confirmPassword
+                )
+            ) {
                 errors.confirmPassword = "새 비밀번호가 일치하지 않습니다.";
             }
             if (formState.newPassword === formState.currentPassword) {
@@ -278,10 +353,12 @@ const MyInfoDetail = () => {
         }
 
         // 필수 필드 validation
-        // 이름 errorMessage가 안나와서 확인필요
         if (!formState.name.trim()) {
             errors.name = "이름을 입력해주세요.";
+        } else if (!validateName(formState.name.trim())) {
+            errors.name = "이름은 한글 또는 영문만 입력 가능합니다.";
         }
+
         if (!validateEmail(formState.email)) {
             errors.email = "이메일 형식이 올바르지 않습니다.";
         }
@@ -301,46 +378,103 @@ const MyInfoDetail = () => {
         if (!validateForm()) {
             return;
         }
-
-        const token = localStorage.getItem("jwtToken");
-        const updateData = {
-            name: formState.name,
-            email: formState.email,
-            phone: formState.phone.replace(/\D/g, ""),
-            birthDate: formState.birthDate.replace(/\//g, "-"),
-            ...(formState.currentPassword && {
-                currentPassword: formState.currentPassword,
-                newPassword: formState.newPassword,
-            }),
-        };
-
-        // 개인 정보 수정 API
+        const token = localStorage.getItem("token");
+        if (!token) {
+            return;
+        }
         try {
-            await axios.patch(
+            if (formState.currentPassword) {
+                try {
+                    const response = await axios.post(
+                        "http://localhost:3001/api/v1/users/passwords",
+                        { loginPw: formState.currentPassword },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json",
+                            },
+                            timeout: 5000,
+                        }
+                    );
+
+                    console.log(response);
+                } catch (error) {
+                    if (axios.isAxiosError(error)) {
+                        if (error.code === "ERR_NETWORK") {
+                            setFormState((prev) => ({
+                                ...prev,
+                                errors: {
+                                    form: "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
+                                },
+                            }));
+                        } else if (error.response?.status === 400) {
+                            setFormState((prev) => ({
+                                ...prev,
+                                errors: {
+                                    ...prev.errors,
+                                    currentPassword:
+                                        "현재 비밀번호가 올바르지 않습니다.",
+                                },
+                            }));
+                        } else {
+                            setFormState((prev) => ({
+                                ...prev,
+                                errors: {
+                                    form: "비밀번호 확인 중 오류가 발생했습니다.",
+                                },
+                            }));
+                        }
+                    }
+                    return;
+                }
+            }
+
+            const updateData: any = {
+                name: formState.name,
+                email: formState.email,
+                phone: formState.phone.replace(/\D/g, ""),
+                birthDate: formState.birthDate.replace(/\//g, "-"),
+            };
+
+            if (formState.currentPassword && formState.newPassword) {
+                updateData.loginPw = formState.newPassword;
+            }
+
+            const response = await axios.patch(
                 "http://localhost:3001/api/v1/users/profiles",
                 updateData,
                 {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                    timeout: 5000,
                 }
             );
+
+            console.log(response.data);
             setFormState((prev) => ({ ...prev, errors: {} }));
             alert("회원정보가 성공적으로 수정되었습니다.");
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response?.status === 401) {
-                setFormState((prev) => ({
-                    ...prev,
-                    errors: {
-                        ...prev.errors,
-                        currentPassword: "현재 비밀번호가 틀립니다.",
-                    },
-                }));
-            } else {
-                setFormState((prev) => ({
-                    ...prev,
-                    errors: {
-                        form: "회원정보 수정 중 오류가 발생했습니다.",
-                    },
-                }));
+            console.error(error);
+
+            if (axios.isAxiosError(error)) {
+                if (error.code === "ERR_NETWORK") {
+                    setFormState((prev) => ({
+                        ...prev,
+                        errors: {
+                            form: "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
+                        },
+                    }));
+                } else {
+                    setFormState((prev) => ({
+                        ...prev,
+                        errors: {
+                            form: "회원정보 수정 중 오류가 발생했습니다.",
+                        },
+                    }));
+                }
             }
         }
     };
@@ -348,25 +482,25 @@ const MyInfoDetail = () => {
     // 입력 필드 변경 처리
     const handleInputChange =
         (name: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
             if (name === "birthDate") {
-                handleBirthDateChange(e.target.value);
+                handleBirthDateChange(value);
+            } else if (name === "phone") {
+                setFormState((prev) => ({
+                    ...prev,
+                    [name]: formatPhoneNumber(value),
+                }));
             } else {
                 setFormState((prev) => ({
                     ...prev,
-                    [name]: e.target.value,
+                    [name]: value,
                 }));
             }
         };
 
     return (
         <div className={cx("myInfoDetailWrapper")}>
-            <PersonalInfo
-                grade={userData?.grade ?? ""}
-                username={userData?.username || ""}
-                credit={userData?.credit || ""}
-                expiringCredit={userData?.expiringCredit || ""}
-                coupon={userData?.coupon || ""}
-            />
+            <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
                     <SideMenu

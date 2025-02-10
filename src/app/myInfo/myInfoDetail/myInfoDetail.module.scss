@@ -1,8 +1,10 @@
 .myInfoDetailWrapper {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
 
     .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
         display: grid;
         grid-template-columns: 200px 1fr;
         gap: 40px;
@@ -29,10 +31,8 @@
             & > div {
                 display: grid;
                 grid-template-columns: 1fr 2fr;
-                gap: 20px;
                 width: 100%;
-                align-items: center;
-                justify-content: center;
+                place-items: center;
 
                 & > div {
                     display: flex;
