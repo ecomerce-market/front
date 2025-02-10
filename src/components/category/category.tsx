@@ -13,6 +13,7 @@ const Category = () => {
   const [selected, setSelected] = useState<any | null>(null); // 선택된 카테고리
   const [mainCategories, setMainCategories] = useState<any[]>([]); // 대분류
   const [subCategories, setSubCategories] = useState<any[]>([]); // 중분류
+  const [categoryVisible, setCategoryVisible] = useState(true);
 
   useEffect(() => {
     const getCategoryData = async () => {
@@ -33,7 +34,7 @@ const Category = () => {
         console.log("대분류:", mainCats);
         console.log("중분류:", subCats);
       } catch (error) {
-        console.error("카테고리 데이터를 불러오는 중 오류 발생:", error);
+        console.error("카테고리 404:", error);
       }
     };
 
@@ -45,8 +46,13 @@ const Category = () => {
   };
 
   const handleSubcategoryClick = (category: any) => {
-    console.log("카테코리", category);
+    console.log("카테고리", category);
+
+    // 페이지 이동
     router.push(`/main/collection/${category._id}`);
+
+    // 카테고리 창 숨기기
+    setCategoryVisible(false);
   };
 
   const filteredSubCategories = subCategories.filter((subCat) => {
@@ -54,43 +60,47 @@ const Category = () => {
   });
 
   return (
-    <div className={cx("container")}>
-      {/* 대분류 */}
-      <div className={cx("sidebar")}>
-        <h2 className={cx("title")}>카테고리</h2>
-        <ul>
-          {mainCategories.map((cat) => (
-            <li
-              key={cat._id}
-              className={cx("categoryItem", {
-                active: selected && selected._id === cat._id,
-              })}
-              onClick={() => handleCategoryClick(cat)}
-            >
-              {cat.name}
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* 중분류 */}
-      {selected && (
-        <div className={cx("content")}>
-          <h2 className={cx("title")}>{selected.name}</h2>
+    <>
+      {categoryVisible && (
+        <div className={cx("container")}>
+          {/* 대분류 */}
+          <div className={cx("sidebar")}>
+            <h2 className={cx("title")}>카테고리</h2>
+            <ul>
+              {mainCategories.map((cat) => (
+                <li
+                  key={cat._id}
+                  className={cx("categoryItem", {
+                    active: selected && selected._id === cat._id,
+                  })}
+                  onClick={() => handleCategoryClick(cat)}
+                >
+                  {cat.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* 중분류 */}
+          {selected && (
+            <div className={cx("content")}>
+              <h2 className={cx("title")}>{selected.name}</h2>
 
-          <ul className={cx("subcategories")}>
-            {filteredSubCategories.map((sub: any) => (
-              <li
-                onClick={() => handleSubcategoryClick(sub)}
-                key={sub._id}
-                className={cx("subcategoryItem")}
-              >
-                {sub.name}
-              </li>
-            ))}
-          </ul>
+              <ul className={cx("subcategories")}>
+                {filteredSubCategories.map((sub: any) => (
+                  <li
+                    onClick={() => handleSubcategoryClick(sub)}
+                    key={sub._id}
+                    className={cx("subcategoryItem")}
+                  >
+                    {sub.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 };
 
