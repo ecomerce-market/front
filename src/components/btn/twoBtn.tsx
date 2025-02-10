@@ -8,6 +8,8 @@ interface TwoBtnPros {
     rightOnClick?: () => void;
     leftIcon?: string;
     rightIcon?: string;
+    leftColor?: string;
+    rightColor?: string;
     leftBgColor: string;
     rightBgColor: string;
     leftBorder: string;
@@ -44,6 +46,7 @@ const TwoBtn: React.FC<TwoBtnPros> = ({
                 borderSize="1"
                 border={leftBorder}
                 height={"47"}
+                color="--black"
                 fontWeight="bold"
             />
             <OneBtn
