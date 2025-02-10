@@ -57,7 +57,7 @@ const TextInput: React.FC<TextInputProps> = ({
                         fontSize: "18px",
                         position: "absolute",
                         right: "10px",
-                        top: "50%",
+                        top: "60%",
                         transform: "translateY(-50%)",
                     }}
                 >

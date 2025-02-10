@@ -1,61 +1,72 @@
 .headerWrapper {
-  padding: 0 150px 30px;
-  .userServices {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    padding: 0 150px 30px;
 
-    a {
-      text-decoration: none;
-      color: var(--main-color);
-    }
+    .userServices {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 10px 0;
 
-    .signup {
-      color: var(--main-color);
-    }
-    .signup,
-    .login,
-    .customerManagement {
-      font-size: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        a {
+            text-decoration: none;
+            color: var(--main-color);
+        }
 
-    .signup::after,
-    .login::after {
-      content: "|";
-      margin: 0 5px;
-    }
+        .signup {
+            color: var(--main-color);
+        }
+        .login,
+        .customerManagement {
+            color: var(--black-700);
+        }
+        .signup,
+        .login,
+        .customerManagement {
+            font-size: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .customerManagement::after {
-      content: "";
-    }
-  }
-  .headerMain {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+        .signup::after,
+        .login::after {
+            content: "|";
+            margin: 0 5px;
+        }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      .logo1 {
-        width: 59px;
-        height: 26px;
-      }
+        .customerManagement::after {
+            content: "";
+        }
 
-      .logo2 {
-        width: 47px;
-        height: 17px;
-      }
+        .customerManagement {
+            display: flex;
+            gap: 3px;
+        }
     }
+    .headerMain {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-    .subMenu {
-      display: flex;
-      font-size: 24px;
-      gap: 20px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            .logo1 {
+                width: 59px;
+                height: 26px;
+            }
+
+            .logo2 {
+                width: 47px;
+                height: 17px;
+            }
+        }
+
+        .subMenu {
+            display: flex;
+            font-size: 24px;
+            gap: 20px;
+        }
     }
-  }
 }

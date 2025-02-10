@@ -4,6 +4,7 @@ import cn from "classnames/bind";
 import { FiXCircle } from "react-icons/fi";
 import { FaCamera } from "react-icons/fa6";
 import TwoBtn from "../btn/twoBtn";
+import Image from "next/image";
 
 const cx = cn.bind(styles);
 
@@ -11,7 +12,9 @@ const reviewPopup = () => {
     return (
         <div className={cx("reviewPopupWrapper")}>
             <div className={cx("reviewPopupLogo")}>
-                <img
+                <Image
+                    width={157}
+                    height={202}
                     src="/images/Logo1.png"
                     alt=""
                     className={cx("reviewPopupHeader")}
@@ -24,7 +27,9 @@ const reviewPopup = () => {
             <div className={cx("reviewPopupBody")}>
                 <div className={cx("bodyContent")}>
                     <h1 className={cx("bodyTitle")}>후기 작성하기</h1>
-                    <img
+                    <Image
+                        width={102}
+                        height={131}
                         src="/images/example.png"
                         alt=""
                         className={cx("bodyImg")}
