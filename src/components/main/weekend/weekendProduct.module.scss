@@ -1,0 +1,45 @@
+.product-wrapper {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 1280px;
+
+  .weekendTime {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 345px;
+    height: 100px;
+    text-align: start;
+
+    .main-title {
+      font-weight: 700;
+      font-size: 21.77px;
+      line-height: 25.98px;
+      letter-spacing: -5%;
+    }
+
+    .time-title {
+      font-weight: 500;
+      font-size: 11.61px;
+      line-height: 13.86px;
+      letter-spacing: -5%;
+      color: var(--black-400);
+    }
+
+    .timer {
+      font-weight: 700;
+      font-size: 17.42px;
+      line-height: 20.79px;
+      letter-spacing: 2%;
+    }
+    .sub-title {
+      font-weight: 500;
+      font-size: 10.16px;
+      line-height: 12.13px;
+      letter-spacing: -5%;
+      color: var(--black-300);
+    }
+  }
+}
