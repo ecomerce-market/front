@@ -10,13 +10,7 @@ const cx = cn.bind(styles);
 const orderList = () => {
     return (
         <div className={cx("orderListWrapper")}>
-            <PersonalInfo
-                grade={"일반"}
-                username={"김철수"}
-                credit={"3,000"}
-                expiringCredit={"50"}
-                coupon={"4"}
-            />
+            <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
                     <SideMenu
@@ -35,9 +29,9 @@ const orderList = () => {
                 <div className={cx("orderListSection")}>
                     <div className={cx("orderListTitle")}>
                         <h1 className={cx("mainTitle")}>주문내역</h1>
-                        <span className={cx("subTitle")}>
+                        <p className={cx("subTitle")}>
                             최대 3년간의 주문 내역까지 확인할 수 있어요.
-                        </span>
+                        </p>
                     </div>
                     <div className={cx("orderListCard")}>
                         <OrderProductCard
@@ -47,6 +41,14 @@ const orderList = () => {
                             payMethod={"신용카드"}
                             price={"2034"}
                             complete={false}
+                        />
+                        <OrderProductCard
+                            date={"2023.02.32"}
+                            title={"감자"}
+                            orderNumber={"12312312"}
+                            payMethod={"신용카드"}
+                            price={"2034"}
+                            complete={true}
                         />
                     </div>
                 </div>

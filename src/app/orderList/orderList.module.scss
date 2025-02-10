@@ -3,24 +3,24 @@
     margin: 0 auto;
 
     .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
         display: grid;
         grid-template-columns: 200px 1fr;
+        gap: 40px;
         margin-top: 50px;
-
-        .sideMenu {
-            margin-left: 150px;
-        }
     }
 
     .orderListSection {
+        width: 100%;
         margin: 0 auto;
 
         .orderListTitle {
+            width: 100%;
             display: flex;
             align-items: center;
             gap: 10px;
-            width: 517px;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
             border-bottom: 2px solid var(--black);
 
             .mainTitle {
@@ -30,7 +30,6 @@
 
             .subTitle {
                 font-size: 15px;
-                margin: 5px 0;
             }
         }
 

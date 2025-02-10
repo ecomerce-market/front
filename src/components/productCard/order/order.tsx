@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import OneBtn from "@/components/btn/oneBtn";
 import { FaAngleRight } from "react-icons/fa6";
+import Link from "next/link";
 
 const cx = cn.bind(styles);
 
@@ -30,16 +31,18 @@ const OrderProductCard: React.FC<DetailProductCardProps> = ({
         <div className={cx("orderWrapper")}>
             <div className={cx("showMore")}>
                 <p>{date}</p>
-                <p>
-                    주문내역 상세보기
-                    <FaAngleRight />
-                </p>
+                <Link href="/orderList/orderDetail">
+                    <p>
+                        주문내역 상세보기
+                        <FaAngleRight />
+                    </p>
+                </Link>
             </div>
             <div className={cx("orderMain")}>
                 <div className={cx("productDetail")}>
                     <Image
-                        width={60}
-                        height={73}
+                        width={70}
+                        height={86}
                         src={"/images/example.png"}
                         alt={"example"}
                     ></Image>
@@ -64,19 +67,21 @@ const OrderProductCard: React.FC<DetailProductCardProps> = ({
                 </div>
                 <div className={cx("productDetail")}>
                     {complete ? <p>배송완료</p> : <p>배송중</p>}
-                    <OneBtn
-                        onClick={onClick}
-                        title={"1:1 문의"}
-                        width={"100"}
-                        height={"28"}
-                        fontSize={"13"}
-                        padding="12px 15px"
-                        color="--main-color"
-                        border="--main-color"
-                        borderSize="2"
-                        bgcolor="--white"
-                        fontWeight="600"
-                    />
+                    <Link href="/inquiry/inquiryDetail">
+                        <OneBtn
+                            onClick={onClick}
+                            title={"1:1 문의"}
+                            width={"100"}
+                            height={"28"}
+                            fontSize={"13"}
+                            padding="12px 15px"
+                            color="--main-color"
+                            border="--main-color"
+                            borderSize="2"
+                            bgcolor="--white"
+                            fontWeight="600"
+                        />
+                    </Link>
                 </div>
             </div>
         </div>
