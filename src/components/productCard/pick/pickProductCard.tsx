@@ -35,19 +35,20 @@ const PickProductCard: React.FC<PickProductCardProps> = ({
             <div className={cx("detailWrapper")}>
                 <span className={cx("title")}>{title}</span>
                 <div className={cx("priceWrapper")}>
-                    {/* 할인율 있을때랑 할인율이 없을 때 구별 */}
-                    {discountRate ? (
+                    {discountRate && discountPrice ? (
                         <>
                             <span className={cx("discountRate")}>
                                 {discountRate}%
                             </span>
-                            <span className={cx("price")}>{price}원~</span>
                             <span className={cx("discountPrice")}>
                                 {discountPrice}원
+                            </span>{" "}
+                            <span className={cx("originalPrice")}>
+                                {price}원~
                             </span>
                         </>
                     ) : (
-                        <p className={cx("price")}>{price}</p>
+                        <span className={cx("singlePrice")}>{price}원</span>
                     )}
                 </div>
                 <div className={cx("btn")}>

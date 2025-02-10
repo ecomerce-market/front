@@ -1,32 +1,32 @@
 .wishListWrapper {
-    .myInfoMain {
-        display: grid;
-        grid-template-columns: 150px auto;
+    max-width: 1200px;
+    margin: 0 auto;
 
-        .sideMenu {
-            margin-left: 150px;
-        }
+    .myInfoMain {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        margin-top: 50px;
     }
 
     .wishListSection {
+        width: 100%;
         margin: 0 auto;
 
         .wishListTitle {
             display: flex;
-            align-items: center;
             gap: 10px;
-            width: 517px;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--black);
 
             .mainTitle {
                 font-size: 24px;
-                margin: 5px 0;
             }
 
             .subTitle {
                 font-size: 15px;
-                margin: 5px 0;
             }
         }
 
@@ -35,7 +35,15 @@
             margin: 5px 0;
 
             .total {
-                margin: 5px 0 30px;
+                margin: 15px 0 20px;
+            }
+
+            .wishList {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 15px;
             }
         }
     }

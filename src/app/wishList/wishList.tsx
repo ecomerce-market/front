@@ -8,26 +8,26 @@ import { IoBasketSharp } from "react-icons/io5";
 
 const cx = cn.bind(styles);
 
-const wishList = () => {
+interface WishListProps {
+    totalProduct: string;
+}
+const wishList = (props: WishListProps) => {
+    const { totalProduct } = props;
     return (
         <div className={cx("wishListWrapper")}>
-            <PersonalInfo
-                grade={"일반"}
-                username={"김철수"}
-                credit={"3,000"}
-                expiringCredit={"50"}
-                coupon={"4"}
-            />
+            <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
                     <SideMenu
                         title={"마이컬리"}
                         content={[
-                            "주문내역",
-                            "찜한상품",
-                            "배송지 관리",
-                            "상품 후기",
-                            "결제수단",
+                            { label: "주문내역", path: "/orderList" },
+                            { label: "찜한상품", path: "/wishList" },
+                            {
+                                label: "배송지 관리",
+                                path: "/addressManagement",
+                            },
+                            { label: "상품 후기", path: "/review" },
                         ]}
                     />
                 </div>
@@ -39,8 +39,8 @@ const wishList = () => {
                         </p>
                     </div>
                     <div className={cx("wishListCard")}>
-                        <p className={cx("total")}>전체 2개</p>
-                        <div>
+                        <p className={cx("total")}>전체 {totalProduct}개</p>
+                        <div className={cx("wishList")}>
                             <PickProductCard
                                 title={"감자 2kg"}
                                 discountRate={30}
