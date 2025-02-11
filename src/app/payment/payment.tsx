@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./payment.module.scss";
 import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
@@ -13,6 +13,7 @@ interface ProductType {
     id: number;
     title: string;
     price: string;
+    discountPrice?: string;
     count: string;
 }
 
@@ -23,6 +24,7 @@ const Payment = () => {
             id: 1,
             title: "[올레길] 제주 슈레드 모짜렐라 치즈",
             price: "8,100",
+            discountPrice: "7,000",
             count: "2",
         },
         {
@@ -40,6 +42,69 @@ const Payment = () => {
     ];
 
     const [isExpanded, setIsExpanded] = useState(false);
+    const [pointsToUse, setPointsToUse] = useState<number>(0);
+    const [availablePoints] = useState<number>(0);
+
+    const calculations = useMemo(() => {
+        // 문자열 가격을 숫자로 변환하는 헬퍼 함수
+        const parsePrice = (price: string) => {
+            return parseInt(price.replace(/,/g, ""));
+        };
+
+        // 상품 총액 계산
+        const totalProductPrice = products.reduce((sum, product) => {
+            return sum + parsePrice(product.price) * parseInt(product.count);
+        }, 0);
+
+        // 상품별 할인 금액 계산
+        const itemDiscounts = products.reduce((sum, product) => {
+            if (product.discountPrice) {
+                const originalPrice = parsePrice(product.price);
+                const discountedPrice = parsePrice(product.discountPrice);
+                const discountAmount =
+                    (originalPrice - discountedPrice) * parseInt(product.count);
+                return sum + discountAmount;
+            }
+            return sum;
+        }, 0);
+
+        // 배송비 계산 (예: 3만원 이상 무료, 미만 3,000원)
+        const shippingFee = totalProductPrice >= 30000 ? 0 : 3000;
+
+        // 상품 할인 금액
+        const productDiscount = itemDiscounts;
+
+        // 적립금 사용
+        const pointsUsed = Math.min(pointsToUse, availablePoints);
+
+        // 최종 결제 금액
+        const finalAmount =
+            totalProductPrice + shippingFee - productDiscount - pointsUsed;
+
+        return {
+            totalProductPrice,
+            shippingFee,
+            productDiscount,
+            pointsUsed,
+            finalAmount,
+        };
+    }, [products, pointsToUse, availablePoints]);
+
+    // 적립금 전체 사용 핸들러
+    const handleUseAllPoints = () => {
+        setPointsToUse(availablePoints);
+    };
+
+    // 적립금 입력 핸들러
+    const handlePointsInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseInt(e.target.value) || 0;
+        setPointsToUse(Math.min(value, availablePoints));
+    };
+
+    // 숫자 포맷팅 함수
+    const formatPrice = (price: number) => {
+        return price.toLocaleString("ko-KR");
+    };
 
     return (
         <div className={cx("paymentWrapper")}>
@@ -51,6 +116,7 @@ const Payment = () => {
                         <PaymentCard
                             title={products[0].title}
                             price={products[0].price}
+                            discountPrice={products[0].discountPrice}
                             count={products[0].count}
                         />
                         {products.length > 1 && (
@@ -82,6 +148,9 @@ const Payment = () => {
                                             key={product.id}
                                             title={product.title}
                                             price={product.price}
+                                            discountPrice={
+                                                product.discountPrice
+                                            }
                                             count={product.count}
                                         />
                                     ))}
@@ -131,7 +200,12 @@ const Payment = () => {
                                 <span>적립금 적용</span>
                                 <div className={cx("pointInput")}>
                                     <div className={cx("inputWrapper")}>
-                                        <TextInput />
+                                        <TextInput
+                                            value={String(pointsToUse)}
+                                            onChange={handlePointsInput}
+                                            placeholder="0"
+                                            readOnly
+                                        />
                                         <p>사용 가능 적립금 96원</p>
                                         <p>적립금 내역: 마이컬리-적립금</p>
                                     </div>
@@ -139,6 +213,7 @@ const Payment = () => {
                                         title="모두 사용"
                                         width="100"
                                         height="42"
+                                        onClick={handleUseAllPoints}
                                     />
                                 </div>
                             </div>
@@ -160,37 +235,62 @@ const Payment = () => {
                         <div className={cx("summaryContent")}>
                             <div className={cx("summaryRow")}>
                                 <span>주문금액</span>
-                                <span>54,500원</span>
+                                <span>
+                                    {formatPrice(
+                                        calculations.totalProductPrice
+                                    )}
+                                    원
+                                </span>
                             </div>
                             <div className={cx("summaryRow", "subRow")}>
                                 <span>ㄴ상품금액</span>
-                                <span>54,500원</span>
+                                <span>
+                                    {formatPrice(
+                                        calculations.totalProductPrice
+                                    )}
+                                    원
+                                </span>
                             </div>
                             <div className={cx("summaryRow", "subRow")}>
                                 <span>ㄴ상품할인금액</span>
-                                <span>54,500원</span>
+                                <span>
+                                    -{formatPrice(calculations.productDiscount)}
+                                    원
+                                </span>
                             </div>
                             <div className={cx("summaryRow")}>
                                 <span>배송비</span>
-                                <span>54,500원</span>
+                                <span>
+                                    {formatPrice(calculations.shippingFee)}원
+                                </span>
                             </div>
                             <div className={cx("summaryRow")}>
                                 <span>쿠폰할인</span>
-                                <span>54,500원</span>
+                                <span>0원</span>
                             </div>
                             <div className={cx("summaryRow")}>
                                 <span>적립금사용</span>
-                                <span>54,500원</span>
+                                <span>
+                                    -{formatPrice(calculations.pointsUsed)}원
+                                </span>
                             </div>
                             <div className={cx("summaryRow", "total")}>
                                 <span>최종결제금액</span>
-                                <span>54,500원</span>
+                                <span>
+                                    {formatPrice(calculations.finalAmount)}원
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className={cx("submitButton")}>
-                    <OneBtn title="54,500원 결제하기" width="320" height="42" />
+                    <OneBtn
+                        title={`${formatPrice(
+                            calculations.finalAmount
+                        )}원 결제하기`}
+                        width="320"
+                        height="42"
+                    />
                 </div>
             </div>
         </div>

@@ -16,7 +16,7 @@ interface DetailProductCardProps {
 
 const DetailProductCard: React.FC<DetailProductCardProps> = ({
     title,
-    discountPrice,
+    discountPrice = "",
     price,
     count,
 }) => {
@@ -32,10 +32,14 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
                 <p className={cx("title")}>{title}</p>
             </div>
             <div className={cx("priceWrap")}>
-                {discountPrice && (
-                    <p className={cx("discountPrice")}>{discountPrice}</p>
+                {discountPrice?.trim() && (
+                    <p className={cx("discountPrice")}>{discountPrice}원</p>
                 )}
-                <p className={cx(discountPrice ? "price" : "discountPrice")}>
+                <p
+                    className={cx(
+                        discountPrice?.trim() ? "price" : "discountPrice"
+                    )}
+                >
                     {price}원
                 </p>
                 <p className={cx("count")}>{count}개</p>
