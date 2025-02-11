@@ -56,7 +56,7 @@ const Header = () => {
                 ) : (
                     <>
                         {userInfo.token ? (
-                            <Link href={"/orderList"}>
+                            <Link href={"/myInfo"}>
                                 <p
                                     style={{ color: "var(--main-color)" }}
                                     className={cx("signup")}
