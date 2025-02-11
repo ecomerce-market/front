@@ -24,12 +24,11 @@
             align-items: center;
 
             &.active {
-                background-color: var(--black-100);
-                color: var(--main-color);
+                color: var(--main-third-color);
             }
 
             &:hover {
-                background-color: var(--black-100);
+                background-color: var(--main-fourth-color);
             }
         }
     }

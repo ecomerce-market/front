@@ -16,6 +16,7 @@ const orderList = () => {
                     <SideMenu
                         title={"마이컬리"}
                         content={[
+                            { label: "개인정보 수정", path: "/myInfo" },
                             { label: "주문내역", path: "/orderList" },
                             { label: "찜한상품", path: "/wishList" },
                             {
