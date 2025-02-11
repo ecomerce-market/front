@@ -64,7 +64,7 @@ const AddressManagement = () => {
         const newAddresses = [newAddress, ...addresses];
         setAddresses(newAddresses);
         setSelectedRadio("0");
-        saveToLocalStorage(newAddresses, "0");
+        // saveToLocalStorage(newAddresses, "0");
 
         setIsDetailModalOpen(false);
         setDetailAddress("");
@@ -81,17 +81,17 @@ const AddressManagement = () => {
 
         setAddresses(reorderedAddresses);
         setSelectedRadio("0");
-        saveToLocalStorage(reorderedAddresses, "0");
+        // saveToLocalStorage(reorderedAddresses, "0");
     };
 
-    // 로컬스토리지에 주소 저장 (임시)
-    const saveToLocalStorage = (
-        updatedAddresses: { address: string; zonecode: string }[],
-        selectedValue: string
-    ) => {
-        localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
-        localStorage.setItem("selectedRadio", selectedValue);
-    };
+    // // 로컬스토리지에 주소 저장 (임시)
+    // const saveToLocalStorage = (
+    //     updatedAddresses: { address: string; zonecode: string }[],
+    //     selectedValue: string
+    // ) => {
+    //     localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
+    //     localStorage.setItem("selectedRadio", selectedValue);
+    // };
 
     return (
         <div className={cx("addressManagementWrapper")}>
@@ -101,6 +101,7 @@ const AddressManagement = () => {
                     <SideMenu
                         title={"마이컬리"}
                         content={[
+                            { label: "개인정보 수정", path: "/myInfo" },
                             { label: "주문내역", path: "/orderList" },
                             { label: "찜한상품", path: "/wishList" },
                             {

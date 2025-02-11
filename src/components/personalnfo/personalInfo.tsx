@@ -35,6 +35,7 @@ interface PersonalInfo {
 const cx = cn.bind(styles);
 
 const PersonalInfo = () => {
+    const [selectedSection, setSelectedSection] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState<PersonalInfo>({
         grade: "",
@@ -89,10 +90,17 @@ const PersonalInfo = () => {
         fetchUserInfo();
     }, [token]);
 
+    const handleSectionClick = (section: string) => {
+        setSelectedSection(section);
+    };
+
     return (
         <div className={cx("personalInfoWrapper")}>
             <div className={cx("myInfo")}>
-                <div className={cx("userInfo")}>
+                <div
+                    className={cx("userInfo")}
+                    onClick={() => handleSectionClick("userInfo")}
+                >
                     <p className={cx("grade")}>{userInfo.grade}</p>
                     <p className={cx("user")}>{userInfo.name}님</p>
                 </div>
