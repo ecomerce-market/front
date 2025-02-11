@@ -15,11 +15,14 @@ type CategoryProps = {
 
 const Categorise = ({ params }: CategoryProps) => {
   const [mainCat, setMainCat] = useState<string>("");
-  const [subCat, setSubCat] = useState<Category>("");
+  const [subCat, setSubCat] = useState<any>("");
+  const [categoriesData, setCategoriesData] = useState<[]>([]);
   useEffect(() => {
     const getCategoryData = async () => {
       const data = await fetchCategoryData();
       const categories = data.categories;
+      setCategoriesData(categories);
+      console.log(categories);
 
       const categoryTitle = categories.find(
         (title: Category) => title._id === params
@@ -27,6 +30,7 @@ const Categorise = ({ params }: CategoryProps) => {
       const categoriesFullPath = categoryTitle.fullPath;
       const maincategore = categoriesFullPath.split(">")[0];
       setMainCat(maincategore); //채소, 과일 이런거
+      console.log("maincategore", categoryTitle);
 
       const subCategory = categories.find(
         (sub: { fullPath: string }) => sub.fullPath === maincategore
@@ -44,7 +48,11 @@ const Categorise = ({ params }: CategoryProps) => {
 
   return (
     <div>
-      <CategoriseGrid main={mainCat} sub={subCat._id} />
+      <CategoriseGrid
+        categoriesData={categoriesData}
+        main={mainCat}
+        sub={subCat._id}
+      />
     </div>
   );
 };

@@ -1,15 +1,13 @@
+// src/app/main/collection/[id]/page.tsx
+
 import Categorise from "./categoris";
 
-type CategoryPageProps = {
-  params: { id: string };
-};
-
-const CategoryPage = ({ params }: CategoryPageProps) => {
+const Page = ({ params }: { params: { id: string } }) => {
   return (
     <div>
-      <Categorise params={params.id} /> {/* params 객체 전체를 전달 */}
+      <Categorise params={params.id} />
     </div>
   );
 };
 
-export default CategoryPage;
+export default Page;

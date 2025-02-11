@@ -30,9 +30,6 @@ const Category = () => {
         setSubCategories(subCats);
 
         setSelected(mainCats[0]);
-
-        console.log("대분류:", mainCats);
-        console.log("중분류:", subCats);
       } catch (error) {
         console.error("카테고리 404:", error);
       }
