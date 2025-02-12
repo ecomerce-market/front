@@ -204,3 +204,117 @@
         }
     }
 }
+
+// 모달 관련 스타일
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: var(--white);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    padding: 0;
+    position: relative;
+
+    .modalHeader {
+        padding: 20px;
+        border-bottom: 1px solid var(--balck-50);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--balck-800);
+        }
+
+        .closeBtn {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            color: var(--main-color);
+        }
+    }
+
+    .addressList {
+        padding: 0 20px;
+
+        .addressItem {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 0;
+            cursor: pointer;
+            border-bottom: 1px solid var(--balck-50);
+
+            input[type="radio"] {
+                appearance: none;
+                width: 20px;
+                height: 20px;
+                border: 1px solid var(--black-100);
+                border-radius: 50%;
+                margin: 0;
+                position: relative;
+                cursor: pointer;
+
+                &:checked {
+                    border: 1px solidvar(--main-color);
+                    background: var(--white);
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 12px;
+                        height: 12px;
+                        background: var(--main-color);
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            .addressText {
+                font-size: 14px;
+                color: var(--black-800);
+            }
+
+            &.selected {
+                .addressText {
+                    color: var(--black);
+                }
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .confirmBtn {
+        width: 100%;
+        height: 56px;
+        background: var(--main-color);
+        color: var(--white);
+        border: none;
+        border-radius: 0 0 12px 12px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+}
