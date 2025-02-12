@@ -1,39 +1,72 @@
-"use client"; // 클라이언트 컴포넌트에서 비동기 데이터 처리 가능
+"use client";
 
-import { useEffect, useState } from "react";
 import ProductDetail from "@/components/productCard/productDetail/productDetail";
-import { fetchWeekendProducts } from "@/utils/main/fetchProduct";
-import axios, { all } from "axios";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-const Detail = ({ params }: { params: { id: string } }) => {
-  const [productId, setProductId] = useState<string | null>(null);
+export type DetailType = {
+  discount: {
+    discountAmount: string;
+  };
+  description: string;
+  productName: string;
+  orgPrice: string;
+  finalPrice: string;
+  info: {
+    deliveryComp: string;
+    deliveryInfo: string;
+    packageType: string;
+    productOrigin: string;
+    seller: string;
+  };
+};
+
+const Detail = ({ params }: { params: string }) => {
+  const [data, setData] = useState<DetailType>({
+    discount: {
+      discountAmount: "",
+    },
+    description: "",
+    productName: "",
+    orgPrice: "",
+    finalPrice: "",
+    info: {
+      deliveryComp: "",
+      deliveryInfo: "",
+      packageType: "",
+      productOrigin: "",
+      seller: "",
+    },
+  });
 
   useEffect(() => {
-    if (params?.id) {
-      setProductId(params.id);
-      console.log(params.id);
-    }
-
-    const productData = async () => {
+    const getProductData = async () => {
       try {
-        const res = await axios("");
-      } catch (error: any) {
-        console.error("상품리스트 404 에러", error);
+        const res = await axios.get(
+          `http://localhost:3001/api/v1/products/${params}`
+        );
+        const productData = res.data.product;
+        console.log("product", productData);
+        setData(productData);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
       }
     };
 
-    productData();
-  }, [params]);
-
+    getProductData();
+  }, [params]); // 변경됨
   return (
     <div>
+      <h2>{params}</h2>
       <ProductDetail
-        mainTitle={""}
-        subTitle={""}
-        discountRate={""}
-        discountPrice={""}
-        originPrice={""}
-        subsubTitle={""}
+        productData={data}
+        imgSrc={"/"}
+        mainTitle={data.productName}
+        subTitle={data.description}
+        discountRate={data.discount.discountAmount}
+        discountPrice={data.finalPrice}
+        originPrice={data.orgPrice}
+        info={data.info}
       />
     </div>
   );
