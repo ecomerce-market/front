@@ -1,28 +1,10 @@
 "use client";
 
+import { DetailType } from "@/app/@types/product";
 import Loading from "@/components/loading/loading";
 import ProductDetail from "@/components/productCard/productDetail/productDetail";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-export type DetailType = {
-  discount: {
-    discountAmount: string;
-    discountType: string;
-  };
-  description: string;
-  productName: string;
-  orgPrice: string;
-  finalPrice: string;
-  mainImgUrl: string;
-  info: {
-    deliveryComp: string;
-    deliveryInfo: string;
-    packageType: string;
-    productOrigin: string;
-    seller: string;
-  };
-};
 
 const Detail = ({ params }: { params: string }) => {
   const [data, setData] = useState<DetailType>({
@@ -72,6 +54,7 @@ const Detail = ({ params }: { params: string }) => {
         <Loading />
       ) : (
         <ProductDetail
+          productName={Array(data.productName)}
           productData={data}
           imgSrc={data.mainImgUrl}
           mainTitle={data.productName}

@@ -9,6 +9,7 @@
   gap: 40px;
 
   .img-wrapper {
+    padding-bottom: 5px;
     border: 1px solid var(--black-200);
   }
 
@@ -32,8 +33,9 @@
         }
         .discount-rate {
           color: var(--red-color);
-          font-size: 20px;
+          font-size: 14px;
           margin-bottom: 20px;
+          margin-right: 10px;
         }
         .origin-price {
           color: var(--black-200);

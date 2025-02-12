@@ -4,30 +4,11 @@ import React from "react";
 import Image from "next/image";
 import OneBtn from "@/components/btn/oneBtn";
 import DetailListInfo from "./detailListInfo/detailListInfo";
-import { DetailType } from "@/app/product/[id]/detail";
+import { ProductDetailProps } from "@/app/@types/product";
 
 const cx = cn.bind(styles);
 
-export type ProductDetailProps = {
-  imgSrc: string;
-  mainTitle: string;
-  subTitle: string;
-  discountRate: string;
-  discountType: string;
-  discountPrice: string;
-  originPrice: string;
-  subsubTitle?: string;
-  productData: DetailType;
-  info: {
-    deliveryComp: string;
-    deliveryInfo: string;
-    packageType: string;
-    productOrigin: string;
-    seller: string;
-  };
-};
-
-const ProductDetail = ({
+export const ProductDetail = ({
   mainTitle,
   subTitle,
   discountType,
@@ -35,6 +16,7 @@ const ProductDetail = ({
   discountPrice,
   originPrice,
   subsubTitle,
+  productName,
   info,
 }: ProductDetailProps) => {
   console.log(info);
@@ -94,6 +76,12 @@ const ProductDetail = ({
           <DetailListInfo
             infoTitle={"원산지"}
             infoDetail={info.productOrigin}
+          />
+          <DetailListInfo
+            infoTitle={"상품선택"}
+            showInfo={false}
+            showSelect={true}
+            selectOptions={productName}
           />
         </div>
       </div>
