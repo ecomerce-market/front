@@ -1,11 +1,12 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./payment.module.scss";
 import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
 import OneBtn from "@/components/btn/oneBtn";
 import PaymentCard from "@/components/productCard/payment/paymentCard";
 import { BiSolidDownArrow } from "react-icons/bi";
+import { FiXCircle } from "react-icons/fi";
 
 const cx = cn.bind(styles);
 
@@ -16,8 +17,42 @@ interface ProductType {
     discountPrice?: string;
     count: string;
 }
+interface AddressType {
+    id: number;
+    address: string;
+}
 
-const Payment = () => {
+interface UserDataType {
+    name: string;
+    phone: string;
+    email: string;
+}
+
+interface PaymentProps {
+    onFetchUserData: () => Promise<any>;
+}
+
+const Payment = ({ onFetchUserData }: PaymentProps) => {
+    const [userData, setUserData] = useState<UserDataType | null>(null);
+
+    // 주문자 정보 불러오기
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await onFetchUserData();
+                setUserData({
+                    name: data.name,
+                    phone: data.phone,
+                    email: data.email,
+                });
+            } catch (error) {
+                console.error("사용자 데이터 불러오기 실패:", error);
+            }
+        };
+
+        fetchData();
+    }, [onFetchUserData]);
+
     // 임시 데이터
     const products: ProductType[] = [
         {
@@ -40,13 +75,29 @@ const Payment = () => {
             count: "2",
         },
     ];
+    const addresses: AddressType[] = [
+        {
+            id: 1,
+            address: "울산 동구 방어해안길 1427 방어아파트 100동 101호",
+        },
+        {
+            id: 2,
+            address: "울산 동구 방어해안길 1427 방어2아파트 100동 101호",
+        },
+        {
+            id: 3,
+            address: "울산 동구 방어해안길 1427 방어3아파트 100동 101호",
+        },
+    ];
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [pointsToUse, setPointsToUse] = useState<number>(0);
     const [availablePoints] = useState<number>(0);
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState<number>(1);
 
     const calculations = useMemo(() => {
-        // 문자열 가격을 숫자로 변환하는 헬퍼 함수
+        // 문자열 가격을 숫자로 변환하는 함수
         const parsePrice = (price: string) => {
             return parseInt(price.replace(/,/g, ""));
         };
@@ -106,6 +157,21 @@ const Payment = () => {
         return price.toLocaleString("ko-KR");
     };
 
+    //선택한 주소
+    const getSelectedAddressText = () => {
+        const selected = addresses.find((addr) => addr.id === selectedAddress);
+        return selected?.address;
+    };
+
+    // 배송지 모달 핸들러
+    const handleAddressModal = () => {
+        setIsAddressModalOpen(!isAddressModalOpen);
+    };
+
+    // 배송지 선택 핸들러
+    const handleAddressSelect = (id: number) => {
+        setSelectedAddress(id);
+    };
     return (
         <div className={cx("paymentWrapper")}>
             <h1 className={cx("paymentTitle")}>주문서</h1>
@@ -163,23 +229,28 @@ const Payment = () => {
                     <h2 className={cx("sectionTitle")}>주문자 정보</h2>
                     <div className={cx("infoRow")}>
                         <span>주문자</span>
-                        <span>박레이</span>
+                        <span>{userData?.name}</span>
                     </div>
                     <div className={cx("infoRow")}>
                         <span>휴대폰</span>
-                        <span>010-1234-5678</span>
+                        <span>{userData?.phone}</span>
                     </div>
                     <div className={cx("infoRow")}>
                         <span>이메일</span>
-                        <span>tester01@test.com</span>
+                        <span>{userData?.email}</span>
                     </div>
                 </section>
                 <section className={cx("section", "shipping-info")}>
                     <h2 className={cx("sectionTitle")}>배송 정보</h2>
                     <div className={cx("infoRow", "addressRow")}>
                         <span>배송지</span>
-                        <span>서울시 중랑구 어디로 어디아파트 1동 123호</span>
-                        <OneBtn title="변경" width="100" height="42" />
+                        <span>{getSelectedAddressText()}</span>
+                        <OneBtn
+                            title="변경"
+                            width="100"
+                            height="42"
+                            onClick={handleAddressModal}
+                        />
                     </div>
                 </section>
                 <div className={cx("paymenDetails")}>
@@ -293,6 +364,49 @@ const Payment = () => {
                     />
                 </div>
             </div>
+
+            {/* 배송지 변경 모달 */}
+            {isAddressModalOpen && (
+                <div className={cx("modalOverlay")}>
+                    <div className={cx("modalContent")}>
+                        <div className={cx("modalHeader")}>
+                            <h2>배송지 정보</h2>
+                            <div
+                                className={cx("closeBtn")}
+                                onClick={handleAddressModal}
+                            >
+                                <FiXCircle size={24} />
+                            </div>
+                        </div>
+                        <div className={cx("addressList")}>
+                            {addresses.map((addr) => (
+                                <div
+                                    key={addr.id}
+                                    className={cx("addressItem", {
+                                        selected: selectedAddress === addr.id,
+                                    })}
+                                    onClick={() => handleAddressSelect(addr.id)}
+                                >
+                                    <input
+                                        type="radio"
+                                        checked={selectedAddress === addr.id}
+                                        onChange={() => {}}
+                                    />
+                                    <span className={cx("addressText")}>
+                                        {addr.address}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                        <button
+                            className={cx("confirmBtn")}
+                            onClick={handleAddressModal}
+                        >
+                            확인
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
