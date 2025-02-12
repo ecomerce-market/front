@@ -5,7 +5,9 @@ type LoadingProps = {
   title?: string;
 };
 
-const Loading = ({ title = "로딩 중..." }: LoadingProps) => {
+const Loading = ({
+  title = "페이지를 불러 오고 있습니다...",
+}: LoadingProps) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
