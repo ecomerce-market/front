@@ -1,0 +1,28 @@
+.list-info-wrapper {
+  display: flex;
+  border-bottom: 1px solid var(--black-100);
+
+  .infomation {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 60px;
+    p {
+      color: var(--black-400);
+      font-size: 12px;
+    }
+  }
+
+  .infomation-detail {
+    p {
+      font-size: 12px;
+      color: var(--black-700);
+    }
+
+    .subDetail {
+      font-size: 8px;
+      font-weight: 500;
+      color: var(--black-400);
+    }
+  }
+}

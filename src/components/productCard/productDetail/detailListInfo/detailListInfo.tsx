@@ -16,7 +16,7 @@ const DetailListInfo = ({
   subDetail,
 }: DetailListInfo) => {
   return (
-    <div>
+    <div className={cx("list-info-wrapper")}>
       <div className={cx("infomation")}>
         <p>{infoTitle}</p>
       </div>

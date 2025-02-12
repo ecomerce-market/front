@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/loading/loading";
 import ProductDetail from "@/components/productCard/productDetail/productDetail";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -7,11 +8,13 @@ import { useEffect, useState } from "react";
 export type DetailType = {
   discount: {
     discountAmount: string;
+    discountType: string;
   };
   description: string;
   productName: string;
   orgPrice: string;
   finalPrice: string;
+  mainImgUrl: string;
   info: {
     deliveryComp: string;
     deliveryInfo: string;
@@ -24,12 +27,14 @@ export type DetailType = {
 const Detail = ({ params }: { params: string }) => {
   const [data, setData] = useState<DetailType>({
     discount: {
+      discountType: "",
       discountAmount: "",
     },
     description: "",
     productName: "",
     orgPrice: "",
     finalPrice: "",
+    mainImgUrl: "",
     info: {
       deliveryComp: "",
       deliveryInfo: "",
@@ -38,6 +43,7 @@ const Detail = ({ params }: { params: string }) => {
       seller: "",
     },
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getProductData = async () => {
@@ -48,6 +54,7 @@ const Detail = ({ params }: { params: string }) => {
         const productData = res.data.product;
         console.log("product", productData);
         setData(productData);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -55,19 +62,27 @@ const Detail = ({ params }: { params: string }) => {
 
     getProductData();
   }, [params]); // 변경됨
+
+  if (loading) {
+  }
+
   return (
     <div>
-      <h2>{params}</h2>
-      <ProductDetail
-        productData={data}
-        imgSrc={"/"}
-        mainTitle={data.productName}
-        subTitle={data.description}
-        discountRate={data.discount.discountAmount}
-        discountPrice={data.finalPrice}
-        originPrice={data.orgPrice}
-        info={data.info}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <ProductDetail
+          productData={data}
+          imgSrc={data.mainImgUrl}
+          mainTitle={data.productName}
+          subTitle={data.description}
+          discountRate={data.discount.discountAmount}
+          discountType={data.discount.discountType}
+          discountPrice={data.finalPrice}
+          originPrice={data.orgPrice}
+          info={data.info}
+        />
+      )}
     </div>
   );
 };

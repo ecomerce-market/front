@@ -13,6 +13,7 @@ export type ProductDetailProps = {
   mainTitle: string;
   subTitle: string;
   discountRate: string;
+  discountType: string;
   discountPrice: string;
   originPrice: string;
   subsubTitle?: string;
@@ -29,43 +30,72 @@ export type ProductDetailProps = {
 const ProductDetail = ({
   mainTitle,
   subTitle,
+  discountType,
   discountRate,
   discountPrice,
   originPrice,
   subsubTitle,
-  imgSrc,
-
   info,
 }: ProductDetailProps) => {
   console.log(info);
 
   return (
-    <div>
+    <div className={cx("product-wrapper")}>
       <div className={cx("img-wrapper")}>
-        <Image width={200} height={200} alt={"ex"} src={imgSrc} />
+        <Image width={200} height={300} alt={"ex"} src={`/`} />
       </div>
 
-      <div className={cx("info-wrapper")}>
-        <div className={cx("title-info-wrapper")}>
-          <p className={cx("main-title")}>{mainTitle}</p>
-          <p className={cx("sub-title")}>{subTitle}</p>
-          <span className={cx("discount-rate")}>{discountRate}</span>
-          <span className={cx("discount-price")}>{discountPrice}</span>
-          <p className={cx("origin-price")}>{originPrice}</p>
-          <p className={cx("subsub-title")}>{subsubTitle}</p>
+      <div className={cx("info-container")}>
+        <div className={cx("info-wrapper")}>
+          <div className={cx("title-info-wrapper")}>
+            <p className={cx("main-title")}>{mainTitle}</p>
+            <p className={cx("sub-title")}>{subTitle}</p>
+            {discountRate && discountPrice ? (
+              <>
+                <span className={cx("discount-rate")}>
+                  {discountRate}
+                  {discountType === "won"
+                    ? "원"
+                    : discountType === "per"
+                    ? "%"
+                    : ""}
+                </span>
+                <span className={cx("discount-price")}>{discountPrice}원</span>
+                <p className={cx("origin-price")}>{originPrice}원</p>
+              </>
+            ) : (
+              <p className={cx("origin-price-real")}>{originPrice}원</p>
+            )}
+
+            <p className={cx("subsub-title")}>{subsubTitle}</p>
+          </div>
         </div>
-      </div>
 
-      <OneBtn title={"쿠폰 다운 받기"} width={"254"} />
-      <div className="info-list">
-        <DetailListInfo
-          infoTitle={"배송"}
-          subDetail={info.deliveryInfo}
-          infoDetail={info.deliveryComp}
+        <OneBtn
+          title={"쿠폰 다운 받기"}
+          bgcolor="--white"
+          color="--main-color"
+          border="--main-color"
+          borderSize="1"
+          width={"254"}
+          height={"20"}
         />
-        <DetailListInfo infoTitle={"판매자"} infoDetail={info.seller} />
-        <DetailListInfo infoTitle={"포장타입"} infoDetail={info.packageType} />
-        <DetailListInfo infoTitle={"원산지"} infoDetail={info.productOrigin} />
+        <div className={cx("info-list")}>
+          <DetailListInfo
+            infoTitle={"배송"}
+            subDetail={info.deliveryInfo}
+            infoDetail={info.deliveryComp}
+          />
+          <DetailListInfo infoTitle={"판매자"} infoDetail={info.seller} />
+          <DetailListInfo
+            infoTitle={"포장타입"}
+            infoDetail={info.packageType}
+          />
+          <DetailListInfo
+            infoTitle={"원산지"}
+            infoDetail={info.productOrigin}
+          />
+        </div>
       </div>
     </div>
   );
