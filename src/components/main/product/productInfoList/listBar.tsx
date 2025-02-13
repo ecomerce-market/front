@@ -6,7 +6,7 @@ import { InfoType } from "./productInfoList";
 const cx = cn.bind(styles);
 
 const ListBar = ({ commentCnt, detailInfoHtml }: InfoType) => {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(0);
 
   // 각 탭에 대한 내용
   const items = [
@@ -15,7 +15,7 @@ const ListBar = ({ commentCnt, detailInfoHtml }: InfoType) => {
     {
       label: `후기(${commentCnt})`,
       index: 2,
-      content: <div>"3차 개발"</div>,
+      content: <span>3차 개발</span>,
     },
     { label: "문의", index: 3, content: detailInfoHtml },
   ];
