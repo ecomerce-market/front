@@ -1,5 +1,5 @@
 "use client";
-import { FaAngleRight } from "react-icons/fa6"; // >
+
 import styles from "./product.module.scss";
 import cn from "classnames/bind";
 import React, { useEffect, useState } from "react";

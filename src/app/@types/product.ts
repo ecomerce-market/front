@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type DetailType = {
   discount: {
     discountAmount: string;
@@ -15,6 +16,8 @@ export type DetailType = {
     productOrigin: string;
     seller: string;
   };
+  detailInfoHtml: string;
+  commentCnt: number;
 };
 
 export type ProductDetailProps = {

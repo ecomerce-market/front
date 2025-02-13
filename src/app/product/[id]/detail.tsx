@@ -6,6 +6,7 @@ import ProductDetail from "@/components/productCard/productDetail/productDetail"
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import ProductInfoList from "@/components/main/product/productInfoList/productInfoList";
 
 const Detail = ({ params }: { params: string }) => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const Detail = ({ params }: { params: string }) => {
     orgPrice: "",
     finalPrice: "",
     mainImgUrl: "",
+    detailInfoHtml: "",
     info: {
       deliveryComp: "",
       deliveryInfo: "",
@@ -26,6 +28,7 @@ const Detail = ({ params }: { params: string }) => {
       productOrigin: "",
       seller: "",
     },
+    commentCnt: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -72,6 +75,10 @@ const Detail = ({ params }: { params: string }) => {
             discountPrice={data.finalPrice}
             originPrice={data.orgPrice}
             info={data.info}
+          />
+          <ProductInfoList
+            detailInfoHtml={data.detailInfoHtml}
+            commentCnt={data.commentCnt}
           />
         </>
       )}
