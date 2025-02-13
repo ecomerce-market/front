@@ -5,8 +5,10 @@ import Loading from "@/components/loading/loading";
 import ProductDetail from "@/components/productCard/productDetail/productDetail";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Detail = ({ params }: { params: string }) => {
+  const router = useRouter();
   const [data, setData] = useState<DetailType>({
     discount: {
       discountType: "",
@@ -36,35 +38,42 @@ const Detail = ({ params }: { params: string }) => {
         const productData = res.data.product;
         console.log("product", productData);
         setData(productData);
-        setLoading(false);
-      } catch (error) {
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          if (error.response && error.response.status === 500) {
+            console.error("서버 오류 발생:", error.response.data);
+            router.push("/not-found");
+            return;
+          }
+        }
         console.error("Error fetching product data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     getProductData();
-  }, [params]); // 변경됨
-
-  if (loading) {
-  }
+  }, [params, router]);
 
   return (
     <div>
       {loading ? (
         <Loading />
       ) : (
-        <ProductDetail
-          productName={Array(data.productName)}
-          productData={data}
-          imgSrc={data.mainImgUrl}
-          mainTitle={data.productName}
-          subTitle={data.description}
-          discountRate={data.discount.discountAmount}
-          discountType={data.discount.discountType}
-          discountPrice={data.finalPrice}
-          originPrice={data.orgPrice}
-          info={data.info}
-        />
+        <>
+          <ProductDetail
+            productName={Array(data.productName)}
+            productData={data}
+            imgSrc={data.mainImgUrl}
+            mainTitle={data.productName}
+            subTitle={data.description}
+            discountRate={data.discount.discountAmount}
+            discountType={data.discount.discountType}
+            discountPrice={data.finalPrice}
+            originPrice={data.orgPrice}
+            info={data.info}
+          />
+        </>
       )}
     </div>
   );
