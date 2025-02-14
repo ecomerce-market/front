@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // WeekendProduct.tsx
 "use client";
 import styles from "./weekendProduct.module.scss";

@@ -17,10 +17,10 @@ export const fetchWeekendProducts = async () => {
   }
 };
 
-export const fetchNewProducts = async () => {
+export const fetchLastProducts = async () => {
   try {
     const response = await fetch(
-      "http://localhost:3001/api/v1/products/new-products"
+      "http://localhost:3001/api/v1/products/ending-soon"
     );
 
     if (!response.ok) {
@@ -28,6 +28,7 @@ export const fetchNewProducts = async () => {
     }
 
     const data = await response.json();
+    console.log("마감상품", data);
     return data.products; // 서버에서 반환된 데이터의 `products` 배열만 반환
   } catch (error: unknown) {
     throw new Error("상품리스트 404 에러");
