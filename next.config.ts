@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "example.com", // 추가
+        hostname: "example.com",
         pathname: "/**",
       },
     ],

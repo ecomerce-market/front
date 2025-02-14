@@ -1,7 +1,7 @@
 .new-product-wrapper {
-  border: 1px solid black;
   width: 100%;
   max-width: 1280px;
+  height: 500px;
   margin: 10px auto 80px auto;
   display: flex;
   justify-content: flex-start;
@@ -9,7 +9,6 @@
 
   .title-wrapper {
     width: 45%;
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -20,5 +19,12 @@
       font-size: 16px;
       color: var(--black-300);
     }
+  }
+
+  .new-product-img-wrapper {
+    width: 55%;
+    height: 100%;
+    border: 1px solid var(--black-200);
+    border-radius: 10px;
   }
 }

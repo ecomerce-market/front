@@ -12,7 +12,7 @@ const NewProduct = async () => {
 
   try {
     const allProducts = await fetchNewProducts();
-    const randomProducts = getRandomProducts(allProducts, 1);
+    randomProducts = getRandomProducts(allProducts, 1);
     console.log(randomProducts);
   } catch (error: any) {
     console.error("상품리스트 404 에러", error);
@@ -23,6 +23,8 @@ const NewProduct = async () => {
       <div className={cx("title-wrapper")}>
         <p className={cx("main-title")}>고객 반응으로 입증된 신상품</p>
         <p className={cx("sub-title")}>망설이면 늦어요</p>
+
+        <p className="new-font">{randomProducts[0].name}</p>
       </div>
 
       <div className={cx("new-product-img-wrapper")}>
@@ -31,7 +33,7 @@ const NewProduct = async () => {
             width={"410"}
             height={"307"}
             src={randomProducts[0].mainImgUrl}
-            alt={randomProducts[0]}
+            alt={randomProducts[0].name}
           />
         )}
       </div>
