@@ -1,0 +1,24 @@
+.new-product-wrapper {
+  border: 1px solid black;
+  width: 100%;
+  max-width: 1280px;
+  margin: 10px auto 80px auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+
+  .title-wrapper {
+    width: 45%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .main-title {
+      font-size: 30px;
+    }
+    .sub-title {
+      font-size: 16px;
+      color: var(--black-300);
+    }
+  }
+}
