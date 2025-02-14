@@ -6,7 +6,7 @@ const cx = cn.bind(styles);
 const NoItems = () => {
   return (
     <div className={cx("no-item-wrapper")}>
-      <p>마감 세일이 없습니다.</p>
+      <p>마감 세일이 없습니다...</p>
     </div>
   );
 };

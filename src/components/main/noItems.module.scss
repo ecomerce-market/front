@@ -6,4 +6,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 40px 0px;
+  p {
+    color: var(--main-color);
+    font-size: 20px;
+    transition: 1.5s;
+    animation: tingkle 2s infinite;
+  }
+}
+@keyframes tingkle {
+  0% {
+    color: var(--main-color);
+  }
+  50% {
+    color: var(--white);
+  }
+  100% {
+    color: var(--main-color);
+  }
 }
