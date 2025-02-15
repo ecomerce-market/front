@@ -22,6 +22,7 @@ interface ProductCardProps {
   review: string;
   src: string;
   alt?: string;
+  onClickCart?: () => void;
 }
 
 const cx = cn.bind(styles);
@@ -38,6 +39,7 @@ const ProductCard = (props: ProductCardProps) => {
     price,
     review,
     alt,
+    onClickCart,
   } = props;
 
   // discount와 discountPrice가 없는 경우 "price"에 discountPrice 스타일 적용
@@ -53,9 +55,7 @@ const ProductCard = (props: ProductCardProps) => {
           style={{ width, height }}
         />
         <div className={cx("basketIconWrapper")}>
-          <a href="">
-            <IoBasketSharp />
-          </a>
+          <IoBasketSharp onClick={onClickCart} />
         </div>
       </div>
       <div className={cx("productInfo")}>
