@@ -11,6 +11,7 @@ import {
 import { CategoriseGridProps, PopupItems } from "@/app/@types/product";
 import { SORT_OPTIONS } from "@/lib/category/sortOption";
 import Popup from "@/components/popup/popup";
+import { useRouter } from "next/navigation";
 
 const cx = cn.bind(styles);
 
@@ -23,7 +24,9 @@ const CategoryLists = ({
   const [showPopup, setShowPopup] = useState(false); // 팝업 표시 상태
   const [selectedProduct, setSelectedProduct] = useState<PopupItems | null>(
     null
-  ); // 선택한 상품 객체
+  );
+
+  const router = useRouter();
 
   useEffect(() => {
     const productData = async () => {
@@ -75,6 +78,11 @@ const CategoryLists = ({
     setShowPopup(false);
   };
 
+  const handleDetail = (product: any) => {
+    const detailId = product.productId;
+    router.push(`/product/${detailId}`);
+  };
+
   return (
     <div className={cx("list-container-wrapper")}>
       {products.length == 0 ? (
@@ -113,6 +121,9 @@ const CategoryLists = ({
                     review={list.commentCnt}
                     src={"/images/example.png"}
                     onAddToCart={() => handleAddToCart(list)}
+                    onDetail={() => {
+                      handleDetail(list);
+                    }}
                   />
                 );
               }

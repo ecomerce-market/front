@@ -4,8 +4,13 @@
   height: auto;
   display: flex;
   flex-direction: column;
+  transition: 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.02);
+  }
 
   .imageWrapper {
+    cursor: pointer;
     position: relative;
     width: 100%;
     height: auto;
