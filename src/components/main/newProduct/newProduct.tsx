@@ -5,6 +5,8 @@ import cn from "classnames/bind";
 import React from "react";
 import Image from "next/image";
 import { fetchNewProducts, getRandomProducts } from "@/utils/main/fetchProduct";
+import Link from "next/link";
+
 const cx = cn.bind(styles);
 
 const NewProduct = async () => {
@@ -13,7 +15,6 @@ const NewProduct = async () => {
   try {
     const allProducts = await fetchNewProducts();
     randomProducts = getRandomProducts(allProducts, 1);
-    console.log(randomProducts);
   } catch (error: any) {
     console.error("상품리스트 404 에러", error);
   }
@@ -29,12 +30,14 @@ const NewProduct = async () => {
 
       <div className={cx("new-product-img-wrapper")}>
         {randomProducts.length > 0 && (
-          <Image
-            width={"410"}
-            height={"307"}
-            src={randomProducts[0].mainImgUrl}
-            alt={randomProducts[0].name}
-          />
+          <Link href={`/product/${randomProducts[0].productId}`}>
+            <Image
+              width={"410"}
+              height={"307"}
+              src={"/"}
+              alt={randomProducts[0].name}
+            />
+          </Link>
         )}
       </div>
     </div>

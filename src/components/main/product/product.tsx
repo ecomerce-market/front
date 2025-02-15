@@ -11,12 +11,14 @@ import {
   getRandomProducts,
 } from "@/utils/main/fetchProduct";
 import NoItems from "../noItems";
+import { useRouter } from "next/navigation";
 
 const cx = cn.bind(styles);
 
 const Product = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [productList, setProductList] = useState<[]>([]);
+  const router = useRouter();
 
   //마감 상품
   useEffect(() => {
@@ -34,6 +36,10 @@ const Product = () => {
 
     productData();
   }, []);
+  const handleDetail = (product: any) => {
+    const detailId = product.productId;
+    router.push(`/product/${detailId}`);
+  };
 
   return (
     <div className={cx("product-wrapper")}>
@@ -56,6 +62,9 @@ const Product = () => {
                 price={`${list.orgPrice}원`}
                 review={list.commentCnt}
                 src={"/images/example.png"}
+                onDetail={() => {
+                  handleDetail(list);
+                }}
               />
             );
           })}

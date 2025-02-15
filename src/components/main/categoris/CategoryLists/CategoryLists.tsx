@@ -22,12 +22,12 @@ const CategoryLists = ({
   categoriesData,
 }: CategoriseGridProps) => {
   const [products, setProducts] = useState<[]>([]);
+  const [selectedSort, setSelectedSort] = useState<string | null>("RECOMMEND");
+
   const [showPopup, setShowPopup] = useState(false); // 팝업 표시 상태
   const [selectedProduct, setSelectedProduct] = useState<PopupItems | null>(
     null
   );
-  const [selectedSort, setSelectedSort] = useState<string | null>("RECOMMEND");
-
   const router = useRouter();
 
   useEffect(() => {

@@ -20,11 +20,13 @@
       color: var(--black-300);
     }
   }
+}
 
-  .new-product-img-wrapper {
-    width: 55%;
-    height: 100%;
-    border: 1px solid var(--black-200);
-    border-radius: 10px;
-  }
+.new-product-wrapper {
+  margin-top: 20px;
+}
+.new-product-img-wrapper {
+  width: 55%;
+  border: 1px solid var(--black-200);
+  border-radius: 10px;
 }
