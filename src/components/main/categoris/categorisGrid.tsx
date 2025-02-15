@@ -5,6 +5,7 @@ import cn from "classnames/bind";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CategoryLists from "./CategoryLists/CategoryLists";
+import { fetchCategoryDetailData } from "@/utils/category/fetchCategory";
 const cx = cn.bind(styles);
 
 export interface Category {
@@ -18,12 +19,17 @@ type CategoriseGridProps = {
   main: string;
   sub: string;
   categoriesData: Category[];
+  params: string;
 };
 
-const CategoriseGrid = ({ main, sub, categoriesData }: CategoriseGridProps) => {
+const CategoriseGrid = ({
+  params,
+  main,
+  sub,
+  categoriesData,
+}: CategoriseGridProps) => {
   const [sfc, setSfc] = useState<Category[]>([]);
   const [select, setSelect] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
 
@@ -40,8 +46,6 @@ const CategoriseGrid = ({ main, sub, categoriesData }: CategoriseGridProps) => {
     });
     setSfc(sliceFilterCat);
 
-    setLoading(false);
-
     setSelect(sub);
   }, [categoriesData, main, sub]);
 
@@ -49,7 +53,8 @@ const CategoriseGrid = ({ main, sub, categoriesData }: CategoriseGridProps) => {
     setSelect(categoryId);
     const mainTitleList = categoriesData.find((item) => item.name === main);
     if (categoryId === "all") {
-      router.push(`/main/collection/${mainTitleList?._id}`);
+      const mainID = mainTitleList?._id;
+      router.push(`/main/collection/${mainID}`);
     } else {
       router.push(`/main/collection/${categoryId}`);
     }
@@ -75,7 +80,11 @@ const CategoriseGrid = ({ main, sub, categoriesData }: CategoriseGridProps) => {
       </div>
 
       <div>
-        <CategoryLists main={main} sub={sub} categoriesData={categoriesData} />
+        <CategoryLists
+          params={params}
+          main={main}
+          categoriesData={categoriesData}
+        />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ type Category = {
   _id: string;
   name: string;
   fullpath: string;
+  depth: number;
 };
 
 type CategoryProps = {
@@ -15,8 +16,14 @@ type CategoryProps = {
 
 const Categorise = ({ params }: CategoryProps) => {
   const [mainCat, setMainCat] = useState<string>("");
-  const [subCat, setSubCat] = useState<any>("");
+  const [subCat, setSubCat] = useState<Category>({
+    _id: "",
+    name: "",
+    fullpath: "",
+    depth: 0,
+  });
   const [categoriesData, setCategoriesData] = useState<[]>([]);
+
   useEffect(() => {
     const getCategoryData = async () => {
       const data = await fetchCategoryData();
@@ -30,15 +37,13 @@ const Categorise = ({ params }: CategoryProps) => {
       const maincategore = categoriesFullPath.split(">")[0];
       setMainCat(maincategore); //채소, 과일 이런거
 
-      const subCategory = categories.find(
-        (sub: { fullPath: string }) => sub.fullPath === maincategore
-      );
-
       setSubCat(categoryTitle); //서브 카테고리 정보들들
     };
 
     getCategoryData();
   }, []);
+
+  console.log("subCat", subCat);
 
   return (
     <div>
@@ -46,6 +51,7 @@ const Categorise = ({ params }: CategoryProps) => {
         categoriesData={categoriesData}
         main={mainCat}
         sub={subCat._id}
+        params={params}
       />
     </div>
   );
