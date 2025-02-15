@@ -16,6 +16,12 @@
     }
 
     .basketIconWrapper {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
       position: absolute;
       bottom: 10px;
       right: 10px;
@@ -23,6 +29,11 @@
       padding: 4px;
       border-radius: 50%;
       color: white;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+      &:hover {
+        background-color: var(--main-color);
+      }
     }
     .basketIconWrapper a {
       color: inherit;

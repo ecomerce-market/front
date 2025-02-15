@@ -1,5 +1,4 @@
-"use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import styles from "./CategoryLists.module.scss";
 import cn from "classnames/bind";
@@ -9,8 +8,9 @@ import {
   fetchAllSortData,
   fetchSortData,
 } from "@/utils/category/fetchCategory";
-import { CategoriseGridProps } from "@/app/@types/product";
+import { CategoriseGridProps, PopupItems } from "@/app/@types/product";
 import { SORT_OPTIONS } from "@/lib/category/sortOption";
+import Popup from "@/components/popup/popup";
 
 const cx = cn.bind(styles);
 
@@ -20,11 +20,14 @@ const CategoryLists = ({
   categoriesData,
 }: CategoriseGridProps) => {
   const [products, setProducts] = useState<[]>([]);
+  const [showPopup, setShowPopup] = useState(false); // 팝업 표시 상태
+  const [selectedProduct, setSelectedProduct] = useState<PopupItems | null>(
+    null
+  ); // 선택한 상품 객체
 
   useEffect(() => {
     const productData = async () => {
       try {
-        //어차피 전체보기는 고정이니깐 하드코딩으로 박았음
         if (params == "65f2e1234567890123456801") {
           const allList = await fetchAllProductData();
           const allListProduct = allList.products;
@@ -54,6 +57,22 @@ const CategoryLists = ({
 
     const sortedProducts = sorted.products;
     setProducts(sortedProducts);
+  };
+
+  const handleAddToCart = (product: any) => {
+    setSelectedProduct(product);
+    setShowPopup(true);
+  };
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
+
+  const handleRightBtnClick = (product: PopupItems) => {
+    console.log("확인 버튼 클릭한 상품 객체:", product);
+    // 확인 클릭한 상품 이거 나중에 장바구니로 보내면 될듯!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    alert("장바구니에 추가 되었습니다.");
+    setShowPopup(false);
   };
 
   return (
@@ -93,12 +112,27 @@ const CategoryLists = ({
                     price={`${list.orgPrice}원`}
                     review={list.commentCnt}
                     src={"/images/example.png"}
+                    onAddToCart={() => handleAddToCart(list)}
                   />
                 );
               }
             )}
           </div>
         </>
+      )}
+
+      {showPopup && selectedProduct && (
+        <div className={cx("popup-wrapper")}>
+          <Popup
+            title={"장바구니에 추가할까요?"}
+            leftBtn={"취소"}
+            rightBtn={"확인"}
+            leftBtnHref="#"
+            rightBtnHref="#"
+            onClose={handlePopupClose}
+            onRightBtnClick={() => handleRightBtnClick(selectedProduct)}
+          />
+        </div>
       )}
     </div>
   );

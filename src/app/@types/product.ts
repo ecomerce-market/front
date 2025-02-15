@@ -52,3 +52,16 @@ export interface Category {
   name: string;
   _id: string;
 }
+
+export type PopupItems = {
+  commentCnt: number;
+  discount: {
+    discountAmount: number;
+    discountType: string;
+  };
+  finalPrice: string;
+  mainImgUrl?: string;
+  name: string;
+  orgPrice: string;
+  productId: string;
+};
