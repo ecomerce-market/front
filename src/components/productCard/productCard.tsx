@@ -24,6 +24,7 @@ interface ProductCardProps {
   alt?: string;
   onAddToCart?: () => void;
   onDetail?: () => void;
+  discountType?: string;
 }
 
 const cx = cn.bind(styles);
@@ -42,6 +43,7 @@ const ProductCard = (props: ProductCardProps) => {
     alt,
     onAddToCart,
     onDetail,
+    discountType,
   } = props;
 
   // discount와 discountPrice가 없는 경우 "price"에 discountPrice 스타일 적용
@@ -49,24 +51,30 @@ const ProductCard = (props: ProductCardProps) => {
 
   return (
     <div className={cx("productCardWrapper")} style={{ width }}>
-      <div onClick={onDetail} className={cx("imageWrapper")}>
+      <div className={cx("imageWrapper")}>
         <img
+          onClick={onDetail}
           src={src}
           alt={alt}
           className={cx("titleImage")}
           style={{ width, height }}
         />
-        <div className={cx("basketIconWrapper")}>
-          <IoBasketSharp onClick={onAddToCart} />
+        <div onClick={onAddToCart} className={cx("basketIconWrapper")}>
+          <IoBasketSharp />
         </div>
       </div>
+
       <div className={cx("productInfo")}>
         <div className={cx("productTitleDetail")}>{detail}</div>
         <div className={cx("productTitle")}>{title}</div>
         <div className={cx("priceWrapper")}>
           {discount && discountPrice ? (
             <div className={cx("discountWrapper")}>
-              <div className={cx("discount")}>{discount}</div>
+              <div className={cx("discount")}>
+                {discount}
+                {/* //할인 타입별로 원 or %적용 */}
+                {discountType === "won" ? <span>원</span> : <span>%</span>}
+              </div>
               <div className={cx("discountPrice")}>{discountPrice}</div>
             </div>
           ) : null}

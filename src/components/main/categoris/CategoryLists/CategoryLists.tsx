@@ -25,6 +25,7 @@ const CategoryLists = ({
   const [selectedProduct, setSelectedProduct] = useState<PopupItems | null>(
     null
   );
+  const [selectedSort, setSelectedSort] = useState<string | null>("RECOMMEND");
 
   const router = useRouter();
 
@@ -50,6 +51,7 @@ const CategoryLists = ({
   }, [categoriesData, main, params]);
 
   const handleSort = async (sort: string) => {
+    setSelectedSort(sort); //
     if (params == "65f2e1234567890123456801") {
       const allListSort = await fetchAllSortData(sort);
       const allListSortProducts = allListSort.products;
@@ -57,7 +59,6 @@ const CategoryLists = ({
       return;
     }
     const sorted = await fetchSortData(params, sort);
-
     const sortedProducts = sorted.products;
     setProducts(sortedProducts);
   };
@@ -93,7 +94,13 @@ const CategoryLists = ({
             <p>총 {products.length} 개</p>
             <div className={cx("filter-bar")}>
               {SORT_OPTIONS.map((item) => (
-                <span key={item.sort} onClick={() => handleSort(item.sort)}>
+                <span
+                  key={item.sort}
+                  className={cx("sort-item", {
+                    active: selectedSort === item.sort,
+                  })}
+                  onClick={() => handleSort(item.sort)}
+                >
                   {item.name}
                 </span>
               ))}
@@ -103,7 +110,10 @@ const CategoryLists = ({
             {products.map(
               (list: {
                 productId: React.Key | null | undefined;
-                discount: { discountAmount: string | undefined };
+                discount: {
+                  discountType: string | undefined;
+                  discountAmount: string | undefined;
+                };
                 name: string;
                 finalPrice: string;
                 orgPrice: string;
@@ -115,6 +125,7 @@ const CategoryLists = ({
                     width={"100"}
                     height={"100"}
                     discount={list.discount.discountAmount}
+                    discountType={list.discount.discountType}
                     title={list.name}
                     discountPrice={`${list.finalPrice}원`}
                     price={`${list.orgPrice}원`}

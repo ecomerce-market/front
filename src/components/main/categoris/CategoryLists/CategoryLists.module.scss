@@ -37,6 +37,11 @@
         &:last-child::after {
           content: "";
         }
+
+        &.active {
+          font-weight: 600;
+          color: var(--main-color);
+        }
       }
     }
   }
