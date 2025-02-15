@@ -12,6 +12,7 @@ import {
 } from "@/utils/main/fetchProduct";
 import NoItems from "../noItems";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/useCart/useCart";
 
 const cx = cn.bind(styles);
 
@@ -19,6 +20,15 @@ const Product = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [productList, setProductList] = useState<[]>([]);
   const router = useRouter();
+
+  const {
+    showPopup,
+    selectedProduct,
+    handleAddToCart,
+    handlePopupClose,
+    handleRightBtnClick,
+    handleDetail,
+  } = useCart();
 
   //마감 상품
   useEffect(() => {
@@ -36,10 +46,6 @@ const Product = () => {
 
     productData();
   }, []);
-  const handleDetail = (product: any) => {
-    const detailId = product.productId;
-    router.push(`/product/${detailId}`);
-  };
 
   return (
     <div className={cx("product-wrapper")}>
