@@ -71,7 +71,7 @@ const CategoryLists = ({
   const handleRightBtnClick = (product: PopupItems) => {
     console.log("확인 버튼 클릭한 상품 객체:", product);
     // 확인 클릭한 상품 이거 나중에 장바구니로 보내면 될듯!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    alert("장바구니에 추가 되었습니다.");
+    alert(`${product.name}이(가) 장바구니에 추가 되었습니다.`);
     setShowPopup(false);
   };
 
@@ -124,7 +124,7 @@ const CategoryLists = ({
       {showPopup && selectedProduct && (
         <div className={cx("popup-wrapper")}>
           <Popup
-            title={"장바구니에 추가할까요?"}
+            title={`${selectedProduct.name}을{를} 장바구니에 추가할까요?`}
             leftBtn={"취소"}
             rightBtn={"확인"}
             leftBtnHref="#"
