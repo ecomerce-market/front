@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import React, { useEffect, useState } from "react";
 import styles from "./CategoryLists.module.scss";
 import cn from "classnames/bind";
