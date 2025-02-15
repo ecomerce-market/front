@@ -39,3 +39,16 @@ export type ProductDetailProps = {
     seller: string;
   };
 };
+
+export type CategoriseGridProps = {
+  main: string;
+  categoriesData: Category[];
+  params: string;
+};
+
+export interface Category {
+  depth: number;
+  fullPath: string;
+  name: string;
+  _id: string;
+}

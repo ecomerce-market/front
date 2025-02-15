@@ -43,3 +43,22 @@ export const fetchAllProductData = async (params?: string) => {
     throw error;
   }
 };
+
+export const fetchSortData = async (params: string, sort?: string) => {
+  let url = params
+    ? `http://localhost:3001/api/v1/products?categoryId=${params}`
+    : `http://localhost:3001/api/v1/products`;
+
+  if (sort) {
+    url += params ? `&sort=${sort}` : `?sort=${sort}`;
+  }
+
+  const res = await axios.get(url);
+  return res.data;
+};
+
+export const fetchAllSortData = async (sort?: string) => {
+  const url = `http://localhost:3001/api/v1/products?sort=${sort}`;
+  const res = await axios.get(url);
+  return res.data;
+};
