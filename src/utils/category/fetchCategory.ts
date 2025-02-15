@@ -27,11 +27,14 @@ export const fetchCategoryDetailData = async (params: string | undefined) => {
   }
 };
 
-export const fetchAllProductData = async (params: string | undefined) => {
+export const fetchAllProductData = async (params?: string) => {
   try {
-    const res = await axios.get(
-      `http://localhost:3001/api/v1/products?categoryId=${params}`
-    );
+    const url = params
+      ? `http://localhost:3001/api/v1/products?categoryId=${params}`
+      : `http://localhost:3001/api/v1/products`;
+
+    const res = await axios.get(url);
+
     if (res.status === 200) {
       return res.data;
     }

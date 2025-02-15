@@ -5,7 +5,6 @@ import cn from "classnames/bind";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CategoryLists from "./CategoryLists/CategoryLists";
-import { fetchCategoryDetailData } from "@/utils/category/fetchCategory";
 const cx = cn.bind(styles);
 
 export interface Category {

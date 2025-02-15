@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import styles from "./CategoryLists.module.scss";
 import cn from "classnames/bind";
 import { Category } from "../categorisGrid";
-
 import ProductCard from "@/components/productCard/productCard";
 import { fetchAllProductData } from "@/utils/category/fetchCategory";
 
@@ -22,17 +21,23 @@ const CategoryLists = ({
   main,
   categoriesData,
 }: CategoriseGridProps) => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<[]>([]);
 
   useEffect(() => {
-    //백엔드나오면 이거 지우셈 예시로 한 거임!!!!!!!!!!!
     const productData = async () => {
       try {
+        //어차피 전체보기는 고정이니깐 하드코딩으로 박았음
+        if (params == "65f2e1234567890123456801") {
+          const allList = await fetchAllProductData();
+          const allListProduct = allList.products;
+          setProducts(allListProduct);
+          return;
+        }
         const allProducts = await fetchAllProductData(params); // 데이터 호출
         const filterProducts = allProducts.products;
         setProducts(filterProducts);
-        console.log("allProducts", allProducts);
-      } catch (error: any) {
+        console.log("allProducts", filterProducts);
+      } catch (error) {
         console.error("상품리스트 404 에러", error);
       }
     };
