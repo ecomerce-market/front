@@ -59,7 +59,7 @@ const CategoryLists = ({
   return (
     <div className={cx("list-container-wrapper")}>
       {products.length == 0 ? (
-        <p>해당 제품은 곧 입고 될 예정입니다.</p>
+        <p className={cx("none-massege")}>해당 제품은 곧 입고 될 예정입니다.</p>
       ) : (
         <>
           <div className={cx("tab-bar")}>
