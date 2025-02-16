@@ -21,7 +21,7 @@ export type FormField = {
 };
 
 export type FormState = {
-    username: string;
+    userId: string;
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;

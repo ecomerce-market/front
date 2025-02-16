@@ -41,9 +41,11 @@ const FormField = ({
     // readOnly가 아니고 required이거나 값이 있는 경우에만 validation
     const shouldValidate =
         !field.readOnly && (field.required || value.length > 0);
-    const hasError =
+    const validationError =
         shouldValidate && field.validate ? !field.validate(value) : false;
     const displayValue = field.format ? field.format(value) : value;
+    const showError = validationError || error;
+    const errorMessage = error || validationError;
 
     return (
         <div>
@@ -57,8 +59,8 @@ const FormField = ({
                     placeholder={field.placeholder}
                     readOnly={field.readOnly}
                 />
-                {hasError && error && (
-                    <span className={cx("errorMessage")}>{error}</span>
+                {showError && errorMessage && (
+                    <span className={cx("errorMessage")}>{errorMessage}</span>
                 )}
             </div>
         </div>
@@ -69,7 +71,7 @@ const MyInfoDetail = () => {
     const inputSize = { width: "280", height: "40" };
     const [userData, setUserData] = useState<UserData | null>(null);
     const [formState, setFormState] = useState<FormState>({
-        username: "",
+        userId: "",
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
@@ -83,7 +85,7 @@ const MyInfoDetail = () => {
     const formFields: FormField[] = [
         {
             label: "아이디",
-            name: "username",
+            name: "userId",
             readOnly: true,
         },
         {
@@ -172,7 +174,7 @@ const MyInfoDetail = () => {
                 });
                 setFormState((prev: FormState) => ({
                     ...prev,
-                    username: userData.loginId || "",
+                    userId: userData.loginId || "",
                     name: userData.name || "",
                     email: userData.email || "",
                     phone: formattedPhone,
@@ -196,60 +198,77 @@ const MyInfoDetail = () => {
 
     const validateForm = () => {
         const errors: { [key: string]: string } = {};
+        const {
+            currentPassword,
+            newPassword,
+            confirmPassword,
+            name,
+            email,
+            phone,
+            birthDate,
+        } = formState;
 
-        const isPasswordChangeAttempted =
-            formState.currentPassword ||
-            formState.newPassword ||
-            formState.confirmPassword;
+        // 비밀번호 변경 관련 validation
+        const isPasswordChangeAttempted = !!(
+            currentPassword ||
+            newPassword ||
+            confirmPassword
+        );
 
         if (isPasswordChangeAttempted) {
-            if (!formState.currentPassword) {
-                errors.currentPassword = "현재 비밀번호를 입력해주세요.";
-            }
-            if (!formState.newPassword) {
-                errors.newPassword = "새 비밀번호를 입력해주세요.";
-            }
-            if (!formState.confirmPassword) {
-                errors.confirmPassword = "새 비밀번호 확인을 입력해주세요.";
-            }
-            if (
-                formState.currentPassword &&
-                formState.newPassword &&
-                formState.confirmPassword
-            ) {
-                if (!validatePassword(formState.newPassword)) {
-                    errors.newPassword =
+            // 세 필드 모두 필수
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                if (!currentPassword) {
+                    errors.currentPassword = "현재 비밀번호를 입력해주세요.";
+                }
+                if (!newPassword) {
+                    errors.newPassword = "새 비밀번호를 입력해주세요.";
+                }
+                if (!confirmPassword) {
+                    errors.confirmPassword = "새 비밀번호 확인을 입력해주세요.";
+                }
+            } else {
+                // 모든 필드가 입력된 경우의 validation
+                if (!validatePassword(newPassword)) {
+                    const pwError =
                         "비밀번호는 특수기호 포함 8자 이상이어야 합니다.";
+                    errors.newPassword = pwError;
+                    errors.confirmPassword = pwError;
                 }
-                if (formState.newPassword === formState.currentPassword) {
-                    errors.newPassword = "현재 비밀번호와 동일합니다.";
-                    errors.confirmPassword = "현재 비밀번호와 동일합니다.";
+
+                if (newPassword === currentPassword) {
+                    const sameError =
+                        "새 비밀번호가 현재 비밀번호와 동일합니다.";
+                    errors.newPassword = sameError;
+                    errors.confirmPassword = sameError;
                 }
-                if (formState.newPassword !== formState.confirmPassword) {
-                    errors.newPassword = "새 비밀번호가 일치하지 않습니다.";
-                    errors.confirmPassword = "새 비밀번호가 일치하지 않습니다.";
+
+                if (newPassword !== confirmPassword) {
+                    const mismatchError = "새 비밀번호가 일치하지 않습니다.";
+                    errors.newPassword = mismatchError;
+                    errors.confirmPassword = mismatchError;
                 }
             }
         }
 
         // 필수 필드 validation
-        if (!formState.name.trim()) {
+        if (!name.trim()) {
             errors.name = "이름을 입력해주세요.";
-        } else if (!validateName(formState.name.trim())) {
+        } else if (!validateName(name.trim())) {
             errors.name = "이름은 한글 또는 영문만 입력 가능합니다.";
         }
 
-        if (!validateEmail(formState.email)) {
+        if (!validateEmail(email)) {
             errors.email = "이메일 형식이 올바르지 않습니다.";
         }
-        if (!validatePhoneNumber(formState.phone)) {
+        if (!validatePhoneNumber(phone)) {
             errors.phone = "전화번호 형식이 올바르지 않습니다.";
         }
-        if (!validateBirthDate(formState.birthDate)) {
+        if (!validateBirthDate(birthDate)) {
             errors.birthDate = "생년월일 형식이 올바르지 않습니다.";
         }
 
-        setFormState((prev: FormState) => ({ ...prev, errors }));
+        setFormState((prev) => ({ ...prev, errors }));
         return Object.keys(errors).length === 0;
     };
 
