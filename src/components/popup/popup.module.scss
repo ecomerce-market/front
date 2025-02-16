@@ -1,33 +1,35 @@
 .popupWrapper {
-    background-color: var(--white);
-    width: 280px;
-    min-height: 100px;
-    height: auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--white);
+  width: 280px;
+  min-height: 100px;
+  height: auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .titleWrapper {
+    color: var(--black-700);
+  }
+
+  .confirmBtn {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 20px;
+  }
 
-    .titleWrapper {
-        color: var(--black-700);
-    }
+  .leftBtn {
+    color: var(--black-400);
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-    .confirmBtn {
-        display: flex;
-        justify-content: flex-end;
-        gap: 20px;
-    }
-
-    .leftBtn {
-        color: var(--black-400);
-        text-decoration: none;
-    }
-
-    .rightBtn {
-        color: var(--main-color);
-        text-decoration: none;
-    }
+  .rightBtn {
+    color: var(--main-color);
+    text-decoration: none;
+    cursor: pointer;
+  }
 }
