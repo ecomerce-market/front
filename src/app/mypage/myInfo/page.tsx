@@ -1,21 +1,25 @@
 "use client";
+
 import React, { ChangeEvent, useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import MyInfo from "./myInfo";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+    const router = useRouter();
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        const fetchUserInfo = async () => {
+        const checkAuthAndFetchUser = async () => {
             try {
                 const token = localStorage.getItem("token");
                 if (!token) {
-                    setError("로그인이 필요합니다.");
+                    router.push("/login");
                     return;
                 }
 
@@ -30,17 +34,27 @@ const Page = () => {
 
                 if (response.status === 200 && response.data.data?.loginId) {
                     setUserId(response.data.data.loginId);
+                    setIsAuthenticated(true);
                 } else {
-                    setError("사용자 정보를 불러오는데 실패했습니다.");
+                    throw new Error("사용자 정보를 불러오는데 실패했습니다.");
                 }
             } catch (error) {
-                console.error(error);
-                setError("서버 요청 실패");
+                if (error instanceof AxiosError) {
+                    if (error.response?.status === 401) {
+                        localStorage.removeItem("token");
+                        router.push("/login");
+                    }
+                } else {
+                    setError("오류가 발생했습니다.");
+                    router.push("/not-found");
+                }
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        fetchUserInfo();
-    }, []);
+        checkAuthAndFetchUser();
+    }, [router]);
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
@@ -54,7 +68,7 @@ const Page = () => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
-                setError("로그인이 필요합니다.");
+                router.push("/login");
                 return;
             }
 
@@ -78,16 +92,10 @@ const Page = () => {
             if (error instanceof AxiosError && error.response) {
                 if (error.response.status === 400) {
                     setError("비밀번호가 일치하지 않습니다.");
-                } else if (error.response.status === 401) {
-                    setError("인증이 실패했습니다. 다시 로그인 해주세요.");
-                } else {
-                    setError("서버 연결에 실패했습니다. 다시 시도해주세요.");
                 }
             } else {
-                setError("알 수 없는 오류가 발생했습니다.");
+                setError("오류가 발생했습니다.");
             }
-        } finally {
-            setIsLoading(false);
         }
     };
 

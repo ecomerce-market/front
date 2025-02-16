@@ -1,7 +1,7 @@
 import React from "react";
 import AddressManagement from "./addressManagement";
 
-const page = () => {
+const AddressManagementPage = () => {
     return (
         <div>
             <AddressManagement />
@@ -9,4 +9,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default AddressManagementPage;

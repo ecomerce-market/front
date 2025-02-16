@@ -4,7 +4,7 @@ import MyInfoDetail from "@/app/myInfo/myInfoDetail/myInfoDetail";
 import axios from "axios";
 
 const MyInfoPage = () => {
-    // API 호출 함수들
+    // API 호출
     const fetchUserData = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
