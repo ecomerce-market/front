@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./addressManagement.module.scss";
 import cn from "classnames/bind";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
@@ -12,6 +12,13 @@ import { FiXCircle } from "react-icons/fi";
 
 const cx = cn.bind(styles);
 
+interface Address {
+    addressId: string;
+    address: string;
+    extraAddr: string;
+    defaultAddr: boolean;
+}
+
 const AddressManagement = () => {
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -20,9 +27,10 @@ const AddressManagement = () => {
         zonecode: "",
     });
     const [detailAddress, setDetailAddress] = useState("");
-    const [addresses, setAddresses] = useState<
-        { address: string; zonecode: string }[]
-    >([]);
+    const [detailAddressError, setDetailAddressError] = useState("");
+    const [addresses, setAddresses] = useState<Address[]>([]);
+    const [error, setError] = useState<string>("");
+    const addressSectionRef = useRef<HTMLDivElement>(null);
     const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
 
     const themeObj = {
@@ -30,19 +38,160 @@ const AddressManagement = () => {
     };
 
     // 주소 불러오기
-    useEffect(() => {
-        const savedAddresses = localStorage.getItem("addresses");
-        const savedSelectedRadio = localStorage.getItem("selectedRadio");
+    const fetchAddresses = async () => {
+        const url = `http://localhost:3001/api/v1/users/addresses`;
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("Authentication token is missing.");
+            }
 
-        if (savedAddresses) {
-            setAddresses(JSON.parse(savedAddresses));
+            const response = await fetch(url, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(
+                    `HTTP error! status: ${response.status}, body: ${errorText}`
+                );
+            }
+
+            const data = await response.json();
+            if (data.message === "success") {
+                const sortedAddresses = [...data.addresses].sort((a, b) =>
+                    b.defaultAddr === a.defaultAddr ? 0 : b.defaultAddr ? 1 : -1
+                );
+                setAddresses(sortedAddresses);
+                setError("");
+            }
+        } catch (error) {
+            console.error(error);
         }
-        if (savedSelectedRadio) {
-            setSelectedRadio(savedSelectedRadio);
-        }
+    };
+
+    useEffect(() => {
+        fetchAddresses();
     }, []);
 
-    // 주소 검색 완료 시 화면에 뿌려주기
+    const addNewAddress = async (address: string, extraAddr: string) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                return false;
+            }
+            const response = await fetch(
+                `http://localhost:3001/api/v1/users/addresses`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        address,
+                        extraAddr,
+                        isDefault: addresses.length === 0,
+                    }),
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (data.message === "new address added success") {
+                const newAddress = {
+                    addressId: data.addressId,
+                    address: address,
+                    extraAddr: extraAddr,
+                    defaultAddr: addresses.length === 0,
+                };
+
+                setAddresses((prev) => {
+                    const updatedAddresses = [...prev];
+                    if (updatedAddresses.length === 0) {
+                        updatedAddresses.unshift(newAddress);
+                    } else {
+                        updatedAddresses.push(newAddress);
+                    }
+                    return updatedAddresses;
+                });
+
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+            console.error(error);
+            setError("새 주소를 추가하는데 실패했습니다.");
+            return false;
+        }
+    };
+    const setDefaultAddress = async (addressId: string) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("토큰값이 없습니다.");
+            }
+
+            const response = await fetch(
+                `http://localhost:3001/api/v1/users/addresses/${addressId}`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(` error${response.status},  ${errorText}`);
+            }
+
+            const data = await response.json();
+            if (data.message === "success") {
+                const updatedAddresses = [...addresses];
+                const selectedAddrIndex = updatedAddresses.findIndex(
+                    (addr) => addr.addressId === addressId
+                );
+                if (selectedAddrIndex !== -1) {
+                    updatedAddresses.forEach((addr) => {
+                        addr.defaultAddr = addr.addressId === addressId;
+                    });
+                    const [selectedAddr] = updatedAddresses.splice(
+                        selectedAddrIndex,
+                        1
+                    );
+                    updatedAddresses.unshift(selectedAddr);
+
+                    setAddresses(updatedAddresses);
+                }
+                setError("");
+            }
+        } catch (error) {
+            console.error("Failed to set default address:", error);
+            setError("기본 배송지 설정에 실패했습니다.");
+        }
+    };
+
+    const handleRadioChange = async (addressId: string) => {
+        setSelectedRadio(addressId);
+        await setDefaultAddress(addressId);
+        await fetchAddresses();
+    };
+
     const handleComplete = (data: any) => {
         setSelectedAddress({
             address: data.address,
@@ -50,48 +199,45 @@ const AddressManagement = () => {
         });
         setIsAddressModalOpen(false);
         setIsDetailModalOpen(true);
+        setDetailAddressError("");
     };
 
-    // 상세 주소 입력 시 화면에 뿌려주기
-    const handleDetailSubmit = () => {
-        if (!selectedAddress.address || !detailAddress) return;
+    const handleDetailSubmit = async () => {
+        if (!detailAddress.trim()) {
+            setDetailAddressError("상세주소를 입력해주세요");
+            return;
+        }
 
-        const newAddress = {
-            address: `${selectedAddress.address} ${detailAddress}`,
-            zonecode: selectedAddress.zonecode,
-        };
+        setDetailAddressError("");
 
-        const newAddresses = [newAddress, ...addresses];
-        setAddresses(newAddresses);
-        setSelectedRadio("0");
-        // saveToLocalStorage(newAddresses, "0");
+        try {
+            console.log("주소:", {
+                address: selectedAddress.address,
+                detailAddress: detailAddress,
+            });
 
+            const success = await addNewAddress(
+                selectedAddress.address,
+                detailAddress
+            );
+
+            if (success) {
+                resetModals();
+            } else {
+                setError("주소 추가에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error(error);
+            setError("주소 추가 중 오류가 발생했습니다.");
+        }
+    };
+
+    const resetModals = () => {
+        setIsAddressModalOpen(false);
         setIsDetailModalOpen(false);
         setDetailAddress("");
+        setSelectedAddress({ address: "", zonecode: "" });
     };
-
-    // 라디오 버튼 클릭 시 기본 배송지 변경
-    const handleRadioChange = (value: string) => {
-        const selectedIndex = parseInt(value);
-        const selectedItem = addresses[selectedIndex];
-        const otherAddresses = addresses.filter(
-            (_, index) => index !== selectedIndex
-        );
-        const reorderedAddresses = [selectedItem, ...otherAddresses];
-
-        setAddresses(reorderedAddresses);
-        setSelectedRadio("0");
-        // saveToLocalStorage(reorderedAddresses, "0");
-    };
-
-    // // 로컬스토리지에 주소 저장 (임시)
-    // const saveToLocalStorage = (
-    //     updatedAddresses: { address: string; zonecode: string }[],
-    //     selectedValue: string
-    // ) => {
-    //     localStorage.setItem("addresses", JSON.stringify(updatedAddresses));
-    //     localStorage.setItem("selectedRadio", selectedValue);
-    // };
 
     return (
         <div className={cx("addressManagementWrapper")}>
@@ -112,7 +258,8 @@ const AddressManagement = () => {
                         ]}
                     />
                 </div>
-                <div className={cx("addressSection")}>
+                <div className={cx("addressSection")} ref={addressSectionRef}>
+                    {error && <div className={cx("errorMessage")}>{error}</div>}
                     <div className={cx("addressHeader")}>
                         <div className={cx("addressItem")}>
                             <h1 className={cx("mainTitle")}>배송지 관리</h1>
@@ -132,17 +279,19 @@ const AddressManagement = () => {
 
                     <div className={cx("submitForm")}>
                         <p className={cx("mainAddress")}>기본 배송지</p>
-                        {addresses.map((addr, index) => (
+                        {addresses.map((addr) => (
                             <div
-                                key={`${addr.address}-${index}`}
+                                key={addr.addressId}
                                 className={cx("addressItem")}
                             >
                                 <Radio
-                                    title={`${addr.address} (${addr.zonecode})`}
+                                    title={`${addr.address} ${addr.extraAddr}`}
                                     name="deliveryAddress"
-                                    value={String(index)}
-                                    checked={selectedRadio === String(index)}
-                                    onChange={handleRadioChange}
+                                    value={addr.addressId}
+                                    checked={addr.defaultAddr}
+                                    onChange={() =>
+                                        handleRadioChange(addr.addressId)
+                                    }
                                 />
                             </div>
                         ))}
@@ -150,14 +299,16 @@ const AddressManagement = () => {
                 </div>
             </div>
 
-            {/* 주소 검색 팝업 */}
             {isAddressModalOpen && (
-                <div className={cx("modalOverlay")}>
-                    <div className={cx("modalContent")}>
+                <div className={cx("modalOverlay")} onClick={resetModals}>
+                    <div
+                        className={cx("modalContent")}
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className={cx("modalHeader")}>
                             <h2>주소 검색</h2>
                             <button
-                                onClick={() => setIsAddressModalOpen(false)}
+                                onClick={resetModals}
                                 className={cx("closeButton")}
                             >
                                 <FiXCircle />
@@ -173,14 +324,16 @@ const AddressManagement = () => {
                 </div>
             )}
 
-            {/* 상세 주소 입력 팝업 */}
             {isDetailModalOpen && (
-                <div className={cx("modalOverlay")}>
-                    <div className={cx("modalContent")}>
+                <div className={cx("modalOverlay")} onClick={resetModals}>
+                    <div
+                        className={cx("modalContent")}
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className={cx("modalHeader")}>
                             <h2>상세 주소 입력</h2>
                             <button
-                                onClick={() => setIsDetailModalOpen(false)}
+                                onClick={resetModals}
                                 className={cx("closeButton")}
                             >
                                 <FiXCircle />
@@ -196,10 +349,16 @@ const AddressManagement = () => {
                                     width="450"
                                     height="40"
                                     value={detailAddress}
-                                    onChange={(e) =>
-                                        setDetailAddress(e.target.value)
-                                    }
+                                    onChange={(e) => {
+                                        setDetailAddress(e.target.value);
+                                        setDetailAddressError("");
+                                    }}
                                 />
+                                {detailAddressError && (
+                                    <p className={cx("errorMessage")}>
+                                        {detailAddressError}
+                                    </p>
+                                )}
                                 <div className={cx("submitButton")}>
                                     <OneBtn
                                         title="저장"

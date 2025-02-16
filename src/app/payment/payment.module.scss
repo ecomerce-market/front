@@ -205,7 +205,7 @@
     }
 }
 
-// 모달 관련 스타일
+// 모달 관련
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -251,58 +251,6 @@
 
     .addressList {
         padding: 0 20px;
-
-        .addressItem {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 20px 0;
-            cursor: pointer;
-            border-bottom: 1px solid var(--balck-50);
-
-            input[type="radio"] {
-                appearance: none;
-                width: 20px;
-                height: 20px;
-                border: 1px solid var(--black-100);
-                border-radius: 50%;
-                margin: 0;
-                position: relative;
-                cursor: pointer;
-
-                &:checked {
-                    border: 1px solidvar(--main-color);
-                    background: var(--white);
-
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        width: 12px;
-                        height: 12px;
-                        background: var(--main-color);
-                        border-radius: 50%;
-                    }
-                }
-            }
-
-            .addressText {
-                font-size: 14px;
-                color: var(--black-800);
-            }
-
-            &.selected {
-                .addressText {
-                    color: var(--black);
-                }
-            }
-
-            &:last-child {
-                border-bottom: none;
-            }
-        }
     }
 
     .confirmBtn {

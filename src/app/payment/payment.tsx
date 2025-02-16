@@ -7,6 +7,7 @@ import OneBtn from "@/components/btn/oneBtn";
 import PaymentCard from "@/components/productCard/payment/paymentCard";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { FiXCircle } from "react-icons/fi";
+import Radio from "@/components/radio/radio";
 
 const cx = cn.bind(styles);
 
@@ -18,8 +19,10 @@ interface ProductType {
     count: string;
 }
 interface AddressType {
-    id: number;
+    id: string;
     address: string;
+    extraAddr: string;
+    defaultAddr: boolean;
 }
 
 interface UserDataType {
@@ -29,28 +32,86 @@ interface UserDataType {
 }
 
 interface PaymentProps {
-    onFetchUserData: () => Promise<any>;
+    onFetchUserData: () => Promise<UserDataType>;
 }
 
 const Payment = ({ onFetchUserData }: PaymentProps) => {
     const [userData, setUserData] = useState<UserDataType | null>(null);
+    const [addresses, setAddresses] = useState<AddressType[]>([]);
+    const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(
+        null
+    );
+    const [isLoading, setIsLoading] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [pointsToUse, setPointsToUse] = useState<number>(0);
+    const [availablePoints] = useState<number>(96);
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const [error, setError] = useState<string>("");
+    useState<string>("");
+
+    // 주소 목록 불러오기
+    const fetchAddresses = async () => {
+        setIsLoading(true);
+        setError("");
+
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("인증 토큰이 없습니다.");
+            }
+
+            const response = await fetch(
+                `${
+                    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+                }/api/v1/users/addresses`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`서버 응답 오류: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.message === "success" && Array.isArray(data.addresses)) {
+                setAddresses(data.addresses);
+                const defaultAddress =
+                    data.addresses.find((addr) => addr.defaultAddr) ||
+                    data.addresses[0];
+                setSelectedAddress(defaultAddress);
+            }
+        } catch (error) {
+            console.error("배송지 목록 불러오기 실패:", error);
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "알 수 없는 오류가 발생했습니다."
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // 주문자 정보 불러오기
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchInitialData = async () => {
             try {
-                const data = await onFetchUserData();
-                setUserData({
-                    name: data.name,
-                    phone: data.phone,
-                    email: data.email,
-                });
+                const userData = await onFetchUserData();
+                setUserData(userData);
+                await fetchAddresses();
             } catch (error) {
-                console.error("사용자 데이터 불러오기 실패:", error);
+                console.error("초기 데이터 로딩 실패:", error);
+                setError("데이터를 불러오는데 실패했습니다.");
             }
         };
 
-        fetchData();
+        fetchInitialData();
     }, [onFetchUserData]);
 
     // 임시 데이터
@@ -75,67 +136,35 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
             count: "2",
         },
     ];
-    const addresses: AddressType[] = [
-        {
-            id: 1,
-            address: "울산 동구 방어해안길 1427 방어아파트 100동 101호",
-        },
-        {
-            id: 2,
-            address: "울산 동구 방어해안길 1427 방어2아파트 100동 101호",
-        },
-        {
-            id: 3,
-            address: "울산 동구 방어해안길 1427 방어3아파트 100동 101호",
-        },
-    ];
-
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [pointsToUse, setPointsToUse] = useState<number>(0);
-    const [availablePoints] = useState<number>(0);
-    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-    const [selectedAddress, setSelectedAddress] = useState<number>(1);
 
     const calculations = useMemo(() => {
-        // 문자열 가격을 숫자로 변환하는 함수
-        const parsePrice = (price: string) => {
-            return parseInt(price.replace(/,/g, ""));
-        };
+        const parsePrice = (price: string): number =>
+            parseInt(price.replace(/[^\d]/g, "")) || 0;
 
-        // 상품 총액 계산
-        const totalProductPrice = products.reduce((sum, product) => {
-            return sum + parsePrice(product.price) * parseInt(product.count);
-        }, 0);
+        const totalProductPrice = products.reduce(
+            (sum, product) =>
+                sum + parsePrice(product.price) * parseInt(product.count),
+            0
+        );
 
-        // 상품별 할인 금액 계산
         const itemDiscounts = products.reduce((sum, product) => {
-            if (product.discountPrice) {
-                const originalPrice = parsePrice(product.price);
-                const discountedPrice = parsePrice(product.discountPrice);
-                const discountAmount =
-                    (originalPrice - discountedPrice) * parseInt(product.count);
-                return sum + discountAmount;
-            }
-            return sum;
+            if (!product.discountPrice) return sum;
+            const discount =
+                (parsePrice(product.price) -
+                    parsePrice(product.discountPrice)) *
+                parseInt(product.count);
+            return sum + discount;
         }, 0);
 
-        // 배송비 계산 (예: 3만원 이상 무료, 미만 3,000원)
         const shippingFee = totalProductPrice >= 30000 ? 0 : 3000;
-
-        // 상품 할인 금액
-        const productDiscount = itemDiscounts;
-
-        // 적립금 사용
         const pointsUsed = Math.min(pointsToUse, availablePoints);
-
-        // 최종 결제 금액
         const finalAmount =
-            totalProductPrice + shippingFee - productDiscount - pointsUsed;
+            totalProductPrice + shippingFee - itemDiscounts - pointsUsed;
 
         return {
             totalProductPrice,
             shippingFee,
-            productDiscount,
+            productDiscount: itemDiscounts,
             pointsUsed,
             finalAmount,
         };
@@ -148,7 +177,7 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
 
     // 적립금 입력 핸들러
     const handlePointsInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value) || 0;
+        const value = Math.max(0, parseInt(e.target.value) || 0);
         setPointsToUse(Math.min(value, availablePoints));
     };
 
@@ -159,19 +188,19 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
 
     //선택한 주소
     const getSelectedAddressText = () => {
-        const selected = addresses.find((addr) => addr.id === selectedAddress);
-        return selected?.address;
+        return selectedAddress
+            ? `${selectedAddress.address} ${selectedAddress.extraAddr}`
+            : "배송지를 선택해주세요.";
     };
 
     // 배송지 모달 핸들러
-    const handleAddressModal = () => {
-        setIsAddressModalOpen(!isAddressModalOpen);
-    };
+    const handleAddressModal = () => setIsAddressModalOpen((prev) => !prev);
 
     // 배송지 선택 핸들러
-    const handleAddressSelect = (id: number) => {
-        setSelectedAddress(id);
+    const handleAddressSelect = (selectedAddr: AddressType) => {
+        setSelectedAddress(selectedAddr);
     };
+
     return (
         <div className={cx("paymentWrapper")}>
             <h1 className={cx("paymentTitle")}>주문서</h1>
@@ -211,7 +240,7 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
                                 >
                                     {products.slice(1).map((product) => (
                                         <PaymentCard
-                                            key={product.id}
+                                            key={product.id} // ✅ key 추가
                                             title={product.title}
                                             price={product.price}
                                             discountPrice={
@@ -371,30 +400,35 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
                     <div className={cx("modalContent")}>
                         <div className={cx("modalHeader")}>
                             <h2>배송지 정보</h2>
-                            <div
+                            <button
                                 className={cx("closeBtn")}
                                 onClick={handleAddressModal}
+                                aria-label="닫기"
                             >
                                 <FiXCircle size={24} />
-                            </div>
+                            </button>
                         </div>
                         <div className={cx("addressList")}>
-                            {addresses.map((addr) => (
+                            {addresses.map((addr, index) => (
                                 <div
-                                    key={addr.id}
+                                    key={`${addr.id}-${index}`}
                                     className={cx("addressItem", {
-                                        selected: selectedAddress === addr.id,
+                                        selected:
+                                            selectedAddress?.id === addr.id,
                                     })}
-                                    onClick={() => handleAddressSelect(addr.id)}
+                                    onClick={() => handleAddressSelect(addr)}
                                 >
-                                    <input
-                                        type="radio"
-                                        checked={selectedAddress === addr.id}
-                                        onChange={() => {}}
+                                    <Radio
+                                        checked={
+                                            selectedAddress?.id === addr.id
+                                        }
+                                        onChange={() =>
+                                            handleAddressSelect(addr)
+                                        }
+                                        name="deliveryAddress"
+                                        title={`${addr.address} ${addr.extraAddr}`}
+                                        value={addr.id}
                                     />
-                                    <span className={cx("addressText")}>
-                                        {addr.address}
-                                    </span>
                                 </div>
                             ))}
                         </div>
