@@ -1,0 +1,49 @@
+.countForm-wrapper {
+  width: 100%;
+  .pick-product {
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid var(--black-100);
+    align-items: center;
+    font-size: 12px;
+    .count-info {
+      display: flex;
+      gap: 30px;
+      justify-content: space-between;
+      align-items: center;
+      margin-right: 20px;
+    }
+
+    .count {
+      display: flex;
+      gap: 10px;
+      font-size: 14px;
+
+      .miuse {
+        cursor: pointer;
+      }
+      .plus {
+        cursor: pointer;
+      }
+    }
+  }
+  .total-wrap {
+    padding: 10px 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    .total-price {
+      color: var(--black-600);
+      font-size: 12px;
+    }
+
+    .result-price {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--black-800);
+    }
+  }
+}

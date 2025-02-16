@@ -1,96 +1,119 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import React, { useEffect, useState } from "react";
 import styles from "./CategoryLists.module.scss";
 import cn from "classnames/bind";
-import { Category } from "../categorisGrid";
-import {
-  fetchWeekendProducts,
-  getRandomProducts,
-} from "@/utils/main/fetchProduct";
 import ProductCard from "@/components/productCard/productCard";
+import {
+  fetchAllProductData,
+  fetchAllSortData,
+  fetchSortData,
+} from "@/utils/category/fetchCategory";
+import { CategoriseGridProps } from "@/app/@types/product";
+import { SORT_OPTIONS } from "@/lib/category/sortOption";
+import Popup from "@/components/popup/popup";
+import { useCart } from "@/hooks/useCart/useCart"; // useCart 훅 불러오기
 
 const cx = cn.bind(styles);
 
-export type CategoriseGridProps = {
-  sub: string;
-  main: string;
-  categoriesData: Category[];
-};
-// Category 타입 불러오고 적용
+const CategoryLists = ({ params }: CategoriseGridProps) => {
+  const [products, setProducts] = useState<[]>([]);
+  const {
+    showPopup,
+    selectedProduct,
+    handleAddToCart,
+    handlePopupClose,
+    handleRightBtnClick,
+    handleDetail,
+  } = useCart();
 
-const CategoryLists = ({ main, sub, categoriesData }: CategoriseGridProps) => {
-  //백엔드나오면 지우셈
-  const [products, setProducts] = useState<any[]>([]);
+  const [selectedSort, setSelectedSort] = useState<string | null>("RECOMMEND");
 
   useEffect(() => {
-    console.log(main);
-    console.log("categoriesData받아온값들", categoriesData); //전체 카테고리 배열들임
-
-    //이 배열에서 필터로 해당 오브젝트 아이디 별 리스트 끌어내면 될듯
-    //백엔드에 요청 필요
-    //1. Products에 카테고리 필요할듯
-    //2. Productcategories에 카테고리만 있고 상품이 없음
-    //3. 카테고리 api에 childCategories, childProduct? 이렇게 있어야 할듯
-
-    const listarr = categoriesData.filter((list) => {
-      list.fullPath.split(">")[0] === main;
-    });
-
-    console.log("listarr", listarr);
-
-    //백엔드나오면 이거 지우셈 예시로 한 거임!!!!!!!!!!!
     const productData = async () => {
       try {
-        const allProducts = await fetchWeekendProducts(); // 데이터 호출
-        setProducts(allProducts);
-      } catch (error: any) {
+        let allProducts;
+        if (params === "65f2e1234567890123456801") {
+          allProducts = await fetchAllProductData();
+        } else {
+          allProducts = await fetchAllProductData(params);
+        }
+        setProducts(allProducts.products);
+      } catch (error) {
         console.error("상품리스트 404 에러", error);
       }
     };
 
     productData();
-  }, [categoriesData, main]);
+  }, [params]);
+
+  const handleSort = async (sort: string) => {
+    setSelectedSort(sort);
+    let sortedProducts;
+    if (params === "65f2e1234567890123456801") {
+      sortedProducts = await fetchAllSortData(sort);
+    } else {
+      sortedProducts = await fetchSortData(params, sort);
+    }
+    setProducts(sortedProducts.products);
+  };
+
   return (
     <div className={cx("list-container-wrapper")}>
-      <div className={cx("tab-bar")}>
-        <p>총 n 개</p>
-        <div className={cx("filter-bar")}>
-          <span>추천순</span>
-          <span>신상품순</span>
-          <span>판매량순</span>
-          <span>혜택순</span>
-          <span>낮은 가격 순</span>
-          <span>높은 가격 순</span>
-        </div>
-      </div>
-
-      <div className={cx("list-grid")}>
-        {products.map(
-          (list: {
-            productId: React.Key | null | undefined;
-            discount: { discountAmount: string | undefined };
-            name: string;
-            finalPrice: string;
-            orgPrice: string;
-            commentCnt: string;
-          }) => {
-            return (
+      {products.length === 0 ? (
+        <p className={cx("none-massege")}>해당 제품은 곧 입고 될 예정입니다.</p>
+      ) : (
+        <>
+          <div className={cx("tab-bar")}>
+            <p>총 {products.length} 개</p>
+            <div className={cx("filter-bar")}>
+              {SORT_OPTIONS.map((item) => (
+                <span
+                  key={item.sort}
+                  className={cx("sort-item", {
+                    active: selectedSort === item.sort,
+                  })}
+                  onClick={() => handleSort(item.sort)}
+                >
+                  {item.name}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className={cx("list-grid")}>
+            {products.map((product: any) => (
               <ProductCard
-                key={list.productId}
+                key={product.productId}
                 width={"100"}
                 height={"100"}
-                discount={list.discount.discountAmount}
-                title={list.name}
-                discountPrice={`${list.finalPrice}원`}
-                price={`${list.orgPrice}원`}
-                review={list.commentCnt}
+                discount={product.discount.discountAmount}
+                discountType={product.discount.discountType}
+                title={product.name}
+                discountPrice={`${product.finalPrice}원`}
+                price={`${product.orgPrice}원`}
+                review={product.commentCnt}
                 src={"/images/example.png"}
+                onAddToCart={() => handleAddToCart(product)}
+                onDetail={() => handleDetail(product)}
               />
-            );
-          }
-        )}
-      </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {showPopup && selectedProduct && (
+        <div className={cx("popup-wrapper")}>
+          <Popup
+            title={`${selectedProduct.name}을{를} 장바구니에 추가할까요?`}
+            leftBtn={"취소"}
+            rightBtn={"확인"}
+            leftBtnHref="#"
+            rightBtnHref="#"
+            onClose={handlePopupClose}
+            onRightBtnClick={() => handleRightBtnClick(selectedProduct)}
+          />
+        </div>
+      )}
     </div>
   );
 };

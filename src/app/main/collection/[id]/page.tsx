@@ -2,10 +2,11 @@
 
 import Categorise from "./categoris";
 
-const Page = ({ params }: { params: { id: string } }) => {
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
   return (
     <div>
-      <Categorise params={params.id} />
+      <Categorise params={id} />
     </div>
   );
 };

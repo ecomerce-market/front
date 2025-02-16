@@ -1,0 +1,32 @@
+.new-product-wrapper {
+  width: 100%;
+  max-width: 1280px;
+  height: 500px;
+  margin: 10px auto 80px auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+
+  .title-wrapper {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .main-title {
+      font-size: 30px;
+    }
+    .sub-title {
+      font-size: 16px;
+      color: var(--black-300);
+    }
+  }
+}
+
+.new-product-wrapper {
+  margin-top: 20px;
+}
+.new-product-img-wrapper {
+  width: 55%;
+  border: 1px solid var(--black-200);
+  border-radius: 10px;
+}

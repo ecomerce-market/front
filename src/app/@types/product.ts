@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type DetailType = {
   discount: {
     discountAmount: string;
@@ -15,6 +16,8 @@ export type DetailType = {
     productOrigin: string;
     seller: string;
   };
+  detailInfoHtml: string;
+  commentCnt: number;
 };
 
 export type ProductDetailProps = {
@@ -35,4 +38,30 @@ export type ProductDetailProps = {
     productOrigin: string;
     seller: string;
   };
+};
+
+export type CategoriseGridProps = {
+  main: string;
+  categoriesData: Category[];
+  params: string;
+};
+
+export interface Category {
+  depth: number;
+  fullPath: string;
+  name: string;
+  _id: string;
+}
+
+export type PopupItems = {
+  commentCnt: number;
+  discount: {
+    discountAmount: number;
+    discountType: string;
+  };
+  finalPrice: string;
+  mainImgUrl?: string;
+  name: string;
+  orgPrice: string;
+  productId: string;
 };

@@ -3,6 +3,14 @@
   max-width: 1280px;
   margin: 0 auto;
 
+  .none-massege {
+    padding-top: 80px;
+    margin-bottom: 80px;
+    text-align: center;
+    font-size: 30px;
+    color: var(--main-color);
+  }
+
   .tab-bar {
     width: 100%;
     margin: 80px auto 20px auto;
@@ -29,6 +37,11 @@
         &:last-child::after {
           content: "";
         }
+
+        &.active {
+          font-weight: 600;
+          color: var(--main-color);
+        }
       }
     }
   }
@@ -38,4 +51,11 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 50px;
   }
+}
+
+.popup-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

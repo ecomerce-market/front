@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // WeekendProduct.tsx
 "use client";
 import styles from "./weekendProduct.module.scss";
@@ -8,10 +9,21 @@ import {
   fetchWeekendProducts,
   getRandomProducts,
 } from "@/utils/main/fetchProduct";
+
+import { useCart } from "@/hooks/useCart/useCart";
+import Popup from "@/components/popup/popup";
 const cx = cn.bind(styles);
 
 const WeekendProduct = () => {
   const [products, setProducts] = useState<any[]>([]);
+  const {
+    showPopup,
+    selectedProduct,
+    handleAddToCart,
+    handlePopupClose,
+    handleRightBtnClick,
+    handleDetail,
+  } = useCart();
 
   useEffect(() => {
     const weekendData = async () => {
@@ -47,9 +59,27 @@ const WeekendProduct = () => {
             price={`${list.orgPrice}원`}
             review={list.commentCnt}
             src={"/images/example.png"}
+            onAddToCart={() => handleAddToCart(list)}
+            onDetail={() => {
+              handleDetail(list);
+            }}
           />
         );
       })}
+
+      {showPopup && selectedProduct && (
+        <div className={cx("popup-wrapper")}>
+          <Popup
+            title={`${selectedProduct.name}을{를} 장바구니에 추가할까요?`}
+            leftBtn={"취소"}
+            rightBtn={"확인"}
+            leftBtnHref="#"
+            rightBtnHref="#"
+            onClose={handlePopupClose}
+            onRightBtnClick={() => handleRightBtnClick(selectedProduct)}
+          />
+        </div>
+      )}
     </div>
   );
 };
