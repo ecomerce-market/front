@@ -6,7 +6,6 @@ import TextInput from "@/components/input/textInput";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
 import SideMenu from "@/components/sideMenu/sideMenu";
 import TwoBtn from "@/components/btn/twoBtn";
-import axios from "axios";
 import {
     type UserData,
     type FormField,
@@ -24,10 +23,15 @@ import {
 
 const cx = cn.bind(styles);
 
-// FormField 컴포넌트
+interface MyInfoDetailProps {
+    onFetchUserData: () => Promise<UserData>;
+    onVerifyPassword: (currentPassword: string) => Promise<void>;
+    onUpdateProfile: (updateData: Partial<FormState>) => Promise<void>;
+}
+
 const FormField = ({
     field,
-    value,
+    value = "",
     onChange,
     error,
     inputSize,
@@ -38,14 +42,7 @@ const FormField = ({
     error?: string;
     inputSize: { width: string; height: string };
 }) => {
-    // readOnly가 아니고 required이거나 값이 있는 경우에만 validation
-    const shouldValidate =
-        !field.readOnly && (field.required || value.length > 0);
-    const validationError =
-        shouldValidate && field.validate ? !field.validate(value) : false;
     const displayValue = field.format ? field.format(value) : value;
-    const showError = validationError || error;
-    const errorMessage = error || validationError;
 
     return (
         <div>
@@ -59,17 +56,20 @@ const FormField = ({
                     placeholder={field.placeholder}
                     readOnly={field.readOnly}
                 />
-                {showError && errorMessage && (
-                    <span className={cx("errorMessage")}>{errorMessage}</span>
-                )}
+                {error && <span className={cx("errorMessage")}>{error}</span>}
             </div>
         </div>
     );
 };
 
-const MyInfoDetail = () => {
+const MyInfoDetail: React.FC<MyInfoDetailProps> = ({
+    onFetchUserData,
+    onVerifyPassword,
+    onUpdateProfile,
+}) => {
     const inputSize = { width: "280", height: "40" };
     const [userData, setUserData] = useState<UserData | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formState, setFormState] = useState<FormState>({
         userId: "",
         currentPassword: "",
@@ -136,32 +136,18 @@ const MyInfoDetail = () => {
             required: true,
         },
     ];
-    // 개인 정보 조회 API
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) return;
 
-        const fetchUserData = async () => {
+    useEffect(() => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(
-                    "http://localhost:3001/api/v1/users/profiles",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
-                const userData = response.data.data || response.data;
-                if (!userData) {
-                    throw new Error("사용자 데이터가 없습니다.");
-                }
+                const userData = await onFetchUserData();
                 const formattedPhone = userData.phone
                     ? formatPhoneNumber(userData.phone)
                     : "";
                 const formattedBirth = userData.birth
                     ? userData.birth.replace(/-/g, "/")
                     : "";
+
                 setUserData({
                     tier: userData.tier || "",
                     name: userData.name || "",
@@ -172,29 +158,49 @@ const MyInfoDetail = () => {
                     points: userData.points || 0,
                     couponCnt: userData.couponCnt || 0,
                 });
-                setFormState((prev: FormState) => ({
+
+                setFormState((prev) => ({
                     ...prev,
                     userId: userData.loginId || "",
                     name: userData.name || "",
                     email: userData.email || "",
                     phone: formattedPhone,
                     birthDate: formattedBirth,
-                    errors: {},
                 }));
             } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    setFormState((prev: FormState) => ({
-                        ...prev,
-                        errors: {
-                            form: "사용자 정보를 불러오는데 실패했습니다.",
-                        },
-                    }));
-                }
+                setFormState((prev) => ({
+                    ...prev,
+                    errors: {
+                        form: "사용자 정보를 불러오는데 실패했습니다.",
+                    },
+                }));
             }
         };
 
-        fetchUserData();
-    }, []);
+        fetchData();
+    }, [onFetchUserData]);
+
+    const validateField = (name: keyof FormState, value: string) => {
+        const field = formFields.find((f) => f.name === name);
+        if (!field?.validate) return "";
+
+        const isValid = field.validate(value);
+        if (!isValid) {
+            switch (name) {
+                case "name":
+                    return "이름은 한글 또는 영문만 입력 가능합니다.";
+                case "email":
+                    return "이메일 형식이 올바르지 않습니다.";
+                case "phone":
+                    return "전화번호 형식이 올바르지 않습니다.";
+                case "birthDate":
+                    return "생년월일 형식이 올바르지 않습니다.";
+                default:
+                    return "";
+            }
+        }
+        return "";
+    };
 
     const validateForm = () => {
         const errors: { [key: string]: string } = {};
@@ -208,7 +214,6 @@ const MyInfoDetail = () => {
             birthDate,
         } = formState;
 
-        // 비밀번호 변경 관련 validation
         const isPasswordChangeAttempted = !!(
             currentPassword ||
             newPassword ||
@@ -216,7 +221,6 @@ const MyInfoDetail = () => {
         );
 
         if (isPasswordChangeAttempted) {
-            // 세 필드 모두 필수
             if (!currentPassword || !newPassword || !confirmPassword) {
                 if (!currentPassword) {
                     errors.currentPassword = "현재 비밀번호를 입력해주세요.";
@@ -228,7 +232,6 @@ const MyInfoDetail = () => {
                     errors.confirmPassword = "새 비밀번호 확인을 입력해주세요.";
                 }
             } else {
-                // 모든 필드가 입력된 경우의 validation
                 if (!validatePassword(newPassword)) {
                     const pwError =
                         "비밀번호는 특수기호 포함 8자 이상이어야 합니다.";
@@ -254,143 +257,135 @@ const MyInfoDetail = () => {
         // 필수 필드 validation
         if (!name.trim()) {
             errors.name = "이름을 입력해주세요.";
-        } else if (!validateName(name.trim())) {
-            errors.name = "이름은 한글 또는 영문만 입력 가능합니다.";
+        } else {
+            const nameError = validateField("name", name);
+            if (nameError) errors.name = nameError;
         }
 
-        if (!validateEmail(email)) {
-            errors.email = "이메일 형식이 올바르지 않습니다.";
-        }
-        if (!validatePhoneNumber(phone)) {
-            errors.phone = "전화번호 형식이 올바르지 않습니다.";
-        }
-        if (!validateBirthDate(birthDate)) {
-            errors.birthDate = "생년월일 형식이 올바르지 않습니다.";
+        if (!email.trim()) {
+            errors.email = "이메일을 입력해주세요.";
+        } else {
+            const emailError = validateField("email", email);
+            if (emailError) errors.email = emailError;
         }
 
-        setFormState((prev) => ({ ...prev, errors }));
-        return Object.keys(errors).length === 0;
+        if (!phone.trim()) {
+            errors.phone = "휴대폰 번호를 입력해주세요.";
+        } else {
+            const phoneError = validateField("phone", phone);
+            if (phoneError) errors.phone = phoneError;
+        }
+
+        if (!birthDate.trim()) {
+            errors.birthDate = "생년월일을 입력해주세요.";
+        } else {
+            const birthError = validateField("birthDate", birthDate);
+            if (birthError) errors.birthDate = birthError;
+        }
+
+        return { isValid: Object.keys(errors).length === 0, errors };
     };
 
-    // 폼 제출 처리
     const handleSubmit = async () => {
-        if (!validateForm()) return;
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
+        const { isValid, errors } = validateForm();
+        if (!isValid) {
+            setFormState((prev) => ({
+                ...prev,
+                errors: errors,
+            }));
+            setIsSubmitting(false);
+            return;
+        }
 
         const token = localStorage.getItem("token");
-        if (!token) return;
+        if (!token) {
+            setIsSubmitting(false);
+            return;
+        }
 
         try {
             if (formState.currentPassword) {
                 try {
-                    await axios.post(
-                        "http://localhost:3001/api/v1/users/passwords",
-                        { loginPw: formState.currentPassword },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                "Content-Type": "application/json",
-                            },
-                            timeout: 5000,
-                        }
-                    );
+                    await onVerifyPassword(formState.currentPassword);
                 } catch (error) {
-                    if (axios.isAxiosError(error)) {
-                        if (error.code === "ERR_NETWORK") {
-                            setFormState((prev: FormState) => ({
-                                ...prev,
-                                errors: {
-                                    form: "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
-                                },
-                            }));
-                        } else if (error.response?.status === 400) {
-                            setFormState((prev: FormState) => ({
-                                ...prev,
-                                errors: {
-                                    ...prev.errors,
-                                    currentPassword:
-                                        "현재 비밀번호가 올바르지 않습니다.",
-                                },
-                            }));
-                        } else {
-                            setFormState((prev: FormState) => ({
-                                ...prev,
-                                errors: {
-                                    form: "비밀번호 확인 중 오류가 발생했습니다.",
-                                },
-                            }));
-                        }
-                    }
+                    const errorMessage =
+                        error instanceof Error
+                            ? error.message
+                            : "비밀번호 확인 중 오류가 발생했습니다.";
+                    setFormState((prev) => ({
+                        ...prev,
+                        errors: {
+                            ...prev.errors,
+                            currentPassword: errorMessage,
+                        },
+                    }));
+                    setIsSubmitting(false);
                     return;
                 }
             }
 
-            const updateData: any = {
+            const updateData: Partial<FormState> = {
                 name: formState.name,
                 email: formState.email,
-                phone: formState.phone.replace(/\D/g, ""),
-                birthDate: formState.birthDate.replace(/\//g, "-"),
+                phone: formState.phone,
+                birthDate: formState.birthDate,
             };
 
             if (formState.currentPassword && formState.newPassword) {
                 updateData.loginPw = formState.newPassword;
             }
 
-            await axios.patch(
-                "http://localhost:3001/api/v1/users/profiles",
-                updateData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    withCredentials: true,
-                    timeout: 5000,
-                }
-            );
+            await onUpdateProfile(updateData);
 
-            setFormState((prev: FormState) => ({ ...prev, errors: {} }));
+            setFormState((prev) => ({
+                ...prev,
+                currentPassword: "",
+                newPassword: "",
+                confirmPassword: "",
+                errors: {},
+            }));
             alert("회원정보가 성공적으로 수정되었습니다.");
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                if (error.code === "ERR_NETWORK") {
-                    setFormState((prev: FormState) => ({
-                        ...prev,
-                        errors: {
-                            form: "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
-                        },
-                    }));
-                } else {
-                    setFormState((prev: FormState) => ({
-                        ...prev,
-                        errors: {
-                            form: "회원정보 수정 중 오류가 발생했습니다.",
-                        },
-                    }));
-                }
-            }
+            const errorMessage =
+                error instanceof Error
+                    ? error.message
+                    : "회원정보 수정 중 오류가 발생했습니다.";
+            setFormState((prev) => ({
+                ...prev,
+                errors: {
+                    ...prev.errors,
+                    form: errorMessage,
+                },
+            }));
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    // 입력 필드 변경 처리
     const handleInputChange =
         (name: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value;
+            let updatedValue = value;
+
             if (name === "birthDate") {
-                setFormState((prev: FormState) => ({
-                    ...prev,
-                    [name]: formatBirthDate(value),
-                }));
+                updatedValue = formatBirthDate(value);
             } else if (name === "phone") {
-                setFormState((prev: FormState) => ({
-                    ...prev,
-                    [name]: formatPhoneNumber(value),
-                }));
-            } else {
-                setFormState((prev: FormState) => ({
-                    ...prev,
-                    [name]: value,
-                }));
+                updatedValue = formatPhoneNumber(value);
             }
+
+            setFormState((prev) => {
+                const updatedErrors = { ...prev.errors };
+                delete updatedErrors[name];
+
+                return {
+                    ...prev,
+                    [name]: updatedValue,
+                    errors: updatedErrors,
+                };
+            });
         };
 
     return (

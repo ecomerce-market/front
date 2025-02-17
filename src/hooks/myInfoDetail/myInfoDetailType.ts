@@ -22,6 +22,7 @@ export type FormField = {
 
 export type FormState = {
     userId: string;
+    loginPw?: string;
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
