@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
 import styles from "./payment.module.scss";
 import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
@@ -8,6 +7,7 @@ import PaymentCard from "@/components/productCard/payment/paymentCard";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { FiXCircle } from "react-icons/fi";
 import Radio from "@/components/radio/radio";
+import { useEffect, useMemo, useState } from "react";
 
 const cx = cn.bind(styles);
 
@@ -18,6 +18,7 @@ interface ProductType {
     discountPrice?: string;
     count: string;
 }
+
 interface AddressType {
     id: string;
     address: string;
@@ -33,9 +34,10 @@ interface UserDataType {
 
 interface PaymentProps {
     onFetchUserData: () => Promise<UserDataType>;
+    onFetchAddresses: () => Promise<AddressType[]>;
 }
 
-const Payment = ({ onFetchUserData }: PaymentProps) => {
+const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
     const [userData, setUserData] = useState<UserDataType | null>(null);
     const [addresses, setAddresses] = useState<AddressType[]>([]);
     const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(
@@ -47,72 +49,34 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
     const [availablePoints] = useState<number>(96);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [error, setError] = useState<string>("");
-    useState<string>("");
 
-    // 주소 목록 불러오기
-    const fetchAddresses = async () => {
-        setIsLoading(true);
-        setError("");
-
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("인증 토큰이 없습니다.");
-            }
-
-            const response = await fetch(
-                `${
-                    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
-                }/api/v1/users/addresses`,
-                {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`서버 응답 오류: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data.message === "success" && Array.isArray(data.addresses)) {
-                setAddresses(data.addresses);
-                const defaultAddress =
-                    data.addresses.find((addr) => addr.defaultAddr) ||
-                    data.addresses[0];
-                setSelectedAddress(defaultAddress);
-            }
-        } catch (error) {
-            console.error("배송지 목록 불러오기 실패:", error);
-            setError(
-                error instanceof Error
-                    ? error.message
-                    : "알 수 없는 오류가 발생했습니다."
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // 주문자 정보 불러오기
     useEffect(() => {
         const fetchInitialData = async () => {
+            setIsLoading(true);
+            setError("");
             try {
-                const userData = await onFetchUserData();
+                const [userData, addressesData] = await Promise.all([
+                    onFetchUserData(),
+                    onFetchAddresses(),
+                ]);
+
                 setUserData(userData);
-                await fetchAddresses();
+                setAddresses(addressesData);
+
+                const defaultAddress =
+                    addressesData.find((addr) => addr.defaultAddr) ||
+                    addressesData[0];
+                setSelectedAddress(defaultAddress);
             } catch (error) {
                 console.error("초기 데이터 로딩 실패:", error);
                 setError("데이터를 불러오는데 실패했습니다.");
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchInitialData();
-    }, [onFetchUserData]);
+    }, [onFetchUserData, onFetchAddresses]);
 
     // 임시 데이터
     const products: ProductType[] = [
@@ -240,7 +204,7 @@ const Payment = ({ onFetchUserData }: PaymentProps) => {
                                 >
                                     {products.slice(1).map((product) => (
                                         <PaymentCard
-                                            key={product.id} // ✅ key 추가
+                                            key={product.id}
                                             title={product.title}
                                             price={product.price}
                                             discountPrice={
