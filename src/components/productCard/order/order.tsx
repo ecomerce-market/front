@@ -27,7 +27,6 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
     payMethod,
     price,
     complete,
-    imageUrl = "/images/example.png",
     totalProductCnt,
     onClick,
 }) => {
@@ -47,7 +46,13 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
             </div>
             <div className={cx("orderMain")}>
                 <div className={cx("productDetail")}>
-                    <Image width={70} height={86} src={imageUrl} alt={title} />
+                    <Image
+                        width={70}
+                        height={86}
+                        src={"/images/example.png"}
+                        //  src={imageUrl}
+                        alt={title}
+                    />
                     <div className={cx("infoDetail")}>
                         <div>
                             <p>상품명</p>
