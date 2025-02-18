@@ -1,74 +1,62 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React, { useState } from "react";
 import cn from "classnames/bind";
 import styles from "./countForm.module.scss";
 
 const cx = cn.bind(styles);
-
-type CountFormProps = {
-  selectedProduct: string | null;
-  discountPrice?: string;
-  originPrice: string;
+type countFormProps = {
+  selectedOptions: string[];
+  setSelectedOptions: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const CountForm = ({
-  selectedProduct,
-  originPrice,
-  discountPrice,
-}: CountFormProps) => {
-  const [count, setCount] = useState<number>(1);
-  let unitPrice: string; // 변수 선언
+const CountForm = ({ selectedOptions, setSelectedOptions }: countFormProps) => {
+  const [counts, setCounts] = useState<{ [key: string]: number }>({});
 
-  if (discountPrice) {
-    unitPrice = discountPrice;
-  } else {
-    unitPrice = originPrice;
-  }
-
-  useEffect(() => {
-    setCount(1);
-  }, [selectedProduct]);
-
-  const handleMinusCount = () => {
-    if (count === 1) {
-      setCount(0);
-    } else {
-      setCount((prev) => prev - 1);
+  // 마이너스 버튼 클릭
+  const handleMinusCount = (item: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (counts[item] === 1) {
+      setSelectedOptions((prev) =>
+        prev.filter((selectedItem) => selectedItem !== item)
+      );
+      setCounts((prev) => ({ ...prev, [item]: 1 }));
+      return;
     }
+    setCounts((prev) => ({
+      ...prev,
+      [item]: prev[item] ? prev[item] - 1 : 1,
+    }));
   };
 
-  const handlePlusCount = () => {
-    setCount((prev) => prev + 1);
+  // 플러스 버튼 클릭
+  const handlePlusCount = (item: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    setCounts((prev) => ({
+      ...prev,
+      [item]: prev[item] ? prev[item] + 1 : 1,
+    }));
   };
 
   return (
-    <div className={cx("countForm-wrapper")}>
-      {selectedProduct && count > 0 && (
-        <div className={cx("pick-product")}>
-          <span>{selectedProduct}</span>
-          <div className={cx("count-info")}>
-            <div className={cx("count")}>
-              <span onClick={handleMinusCount} className={cx("minus")}>
-                -
-              </span>
-              <span className={cx("pick-count")}>{count}개</span>
-              <span onClick={handlePlusCount} className={cx("plus")}>
-                +
-              </span>
-            </div>
-            <span className={cx("price")}>{unitPrice.toLocaleString()}원</span>
+    <>
+      <div>
+        {selectedOptions.length > 0 ? (
+          <div>
+            {selectedOptions.map((item, index) => (
+              <div key={index}>
+                {item}
+                <span onClick={(e) => handleMinusCount(item, e)}> - </span>
+                <span> {counts[item] || 1} </span>{" "}
+                {/* 개별 상품에 대한 count */}
+                <span onClick={(e) => handlePlusCount(item, e)}> + </span>
+              </div>
+            ))}
           </div>
-        </div>
-      )}
-
-      {selectedProduct && count > 0 && (
-        <div className={cx("total-wrap")}>
-          <span className={cx("total-price")}>총 상품금액 :</span>
-          <span className={cx("result-price")}>
-            {(count * parseInt(unitPrice)).toLocaleString()}원
-          </span>
-        </div>
-      )}
-    </div>
+        ) : null}
+      </div>
+    </>
   );
 };
 
