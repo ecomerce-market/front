@@ -64,7 +64,7 @@ const Detail = ({ params }: { params: string }) => {
         <Loading />
       ) : (
         <>
-          <ProductDetail
+          {/* <ProductDetail
             productName={Array(data.productName)}
             productData={data}
             imgSrc={data.mainImgUrl}
@@ -75,11 +75,11 @@ const Detail = ({ params }: { params: string }) => {
             discountPrice={data.finalPrice}
             originPrice={data.orgPrice}
             info={data.info}
-          />
-          <ProductInfoList
+          /> */}
+          {/* <ProductInfoList
             detailInfoHtml={data.detailInfoHtml}
             commentCnt={data.commentCnt}
-          />
+          /> */}
         </>
       )}
     </div>
