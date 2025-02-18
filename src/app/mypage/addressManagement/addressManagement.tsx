@@ -247,14 +247,14 @@ const AddressManagement = () => {
                     <SideMenu
                         title={"마이컬리"}
                         content={[
-                            { label: "개인정보 수정", path: "/myInfo" },
-                            { label: "주문내역", path: "/orderList" },
-                            { label: "찜한상품", path: "/wishList" },
+                            { label: "개인정보 수정", path: "/mypage/myInfo" },
+                            { label: "주문내역", path: "/mypage/orderList" },
+                            { label: "찜한상품", path: "/mypage/wishList" },
                             {
                                 label: "배송지 관리",
-                                path: "/addressManagement",
+                                path: "/mypage/addressManagement",
                             },
-                            { label: "상품 후기", path: "/review" },
+                            { label: "상품 후기", path: "/mypage/review" },
                         ]}
                     />
                 </div>

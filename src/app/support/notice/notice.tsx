@@ -44,9 +44,9 @@ const Notice = () => {
                     <SideMenu
                         title={"마이컬리"}
                         content={[
-                            { label: "1:1 문의", path: "/inquiry" },
-                            { label: "공지사항", path: "/notice" },
-                            { label: "자주하는 질문", path: "/faq" },
+                            { label: "1:1 문의", path: "/support/inquiry" },
+                            { label: "공지사항", path: "/support/notice" },
+                            { label: "자주하는 질문", path: "/support/faq" },
                         ]}
                     />
                 </div>
