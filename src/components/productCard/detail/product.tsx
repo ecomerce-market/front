@@ -12,6 +12,8 @@ interface DetailProductCardProps {
     count: string;
     complete: boolean;
     onClick?: () => void;
+    productImage?: string;
+    deliveryStatus?: string;
 }
 
 const DetailProductCard: React.FC<DetailProductCardProps> = ({
@@ -20,15 +22,19 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
     price,
     count,
     complete,
+    productImage = "/images/example.png",
+    deliveryStatus,
 }) => {
+    const getDeliveryStatusText = () => {
+        if (deliveryStatus) {
+            return deliveryStatus;
+        }
+        return complete ? "배송완료" : "배송중";
+    };
+
     return (
         <div className={cx("inputWrapper")}>
-            <Image
-                width={70}
-                height={86}
-                src={"/images/example.png"}
-                alt={"example"}
-            />
+            <Image width={70} height={86} src={productImage} alt={title} />
             <div className={cx("productInfoWrap")}>
                 <p className={cx("title")}>{title}</p>
                 <div className={cx("priceWrap")}>
@@ -46,7 +52,14 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
                 </div>
             </div>
             <div className={cx("btnWrap")}>
-                {complete ? <p>배송완료</p> : <p>배송중</p>}
+                <p
+                    className={cx("deliveryStatus", {
+                        completed: complete,
+                        inProgress: !complete,
+                    })}
+                >
+                    {getDeliveryStatusText()}
+                </p>
             </div>
         </div>
     );

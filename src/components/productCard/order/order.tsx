@@ -8,30 +8,37 @@ import Link from "next/link";
 
 const cx = cn.bind(styles);
 
-interface DetailProductCardProps {
+interface OrderProductCardProps {
     date: string;
     title: string;
     orderNumber: string;
     payMethod: string;
-    price: string;
+    price: number;
     complete: boolean;
+    imageUrl?: string;
+    totalProductCnt: number;
     onClick?: () => void;
 }
 
-const OrderProductCard: React.FC<DetailProductCardProps> = ({
+const OrderProductCard: React.FC<OrderProductCardProps> = ({
     date,
     title,
     orderNumber,
     payMethod,
     price,
     complete,
+    imageUrl = "/images/example.png",
+    totalProductCnt,
     onClick,
 }) => {
+    const displayTitle =
+        totalProductCnt > 1 ? `${title} 외 ${totalProductCnt - 1}개` : title;
+
     return (
         <div className={cx("orderWrapper")}>
             <div className={cx("showMore")}>
                 <p>{date}</p>
-                <Link href="/orderList/orderDetail">
+                <Link href={`/mypage/orderList/orderDetail/${orderNumber}`}>
                     <p>
                         주문내역 상세보기
                         <FaAngleRight />
@@ -40,16 +47,11 @@ const OrderProductCard: React.FC<DetailProductCardProps> = ({
             </div>
             <div className={cx("orderMain")}>
                 <div className={cx("productDetail")}>
-                    <Image
-                        width={70}
-                        height={86}
-                        src={"/images/example.png"}
-                        alt={"example"}
-                    ></Image>
+                    <Image width={70} height={86} src={imageUrl} alt={title} />
                     <div className={cx("infoDetail")}>
                         <div>
                             <p>상품명</p>
-                            <p>{title}</p>
+                            <p>{displayTitle}</p>
                         </div>
                         <div>
                             <p>주문번호</p>
@@ -61,13 +63,13 @@ const OrderProductCard: React.FC<DetailProductCardProps> = ({
                         </div>
                         <div>
                             <p>결제금액</p>
-                            <p>{price}원</p>
+                            <p>{price.toLocaleString()}원</p>
                         </div>
                     </div>
                 </div>
                 <div className={cx("productDetail")}>
-                    {complete ? <p>배송완료</p> : <p>배송중</p>}
-                    <Link href="/inquiry/inquiryDetail">
+                    <p>{complete ? "배송완료" : "배송중"}</p>
+                    <Link href={`/inquiry/inquiryDetail/${orderNumber}`}>
                         <OneBtn
                             onClick={onClick}
                             title={"1:1 문의"}
