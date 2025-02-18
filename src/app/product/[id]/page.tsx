@@ -15,7 +15,7 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const data = await res.json();
     return (
       <div>
-        <Detail data={data.product} />
+        <Detail id={id} data={data.product} />
       </div>
     );
   } catch (error) {

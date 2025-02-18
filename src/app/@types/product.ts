@@ -41,4 +41,5 @@ export interface Product {
 
 export type DetailProps = {
   data: Product;
+  id: string;
 };

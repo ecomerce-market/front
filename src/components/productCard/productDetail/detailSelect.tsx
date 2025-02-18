@@ -9,8 +9,7 @@ const cx = cn.bind(styles);
 type selectProps = {
   data: selectProduct[];
   productName: string;
-  productID: string;
-  finalPrice: number;
+  id: string;
 };
 
 type selectProduct = {
@@ -21,15 +20,8 @@ type selectProduct = {
   _id: string;
 };
 
-const DetailSelect = ({
-  data,
-  productName,
-  productID,
-  finalPrice,
-}: selectProps) => {
+const DetailSelect = ({ data, productName, id }: selectProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-
-  let arr = [];
 
   const handleSelectIsOption = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
@@ -76,6 +68,7 @@ const DetailSelect = ({
       {/* state로 담아오면 되겠지?? oh my god 좀 되라라*/}
       {/* 근데 코드 더러워 지니깐 컴포넌트로 이것도 빼보자  */}
       <CountForm
+        id={id}
         setSelectedOptions={setSelectedOptions}
         selectedOptions={selectedOptions}
       />

@@ -10,14 +10,14 @@ import DetailSelect from "./detailSelect";
 
 const cx = cn.bind(styles);
 
-export const ProductDetail = ({ data }: DetailProps) => {
+export const ProductDetail = ({ id, data }: DetailProps) => {
   return (
     <div className={cx("product-wrapper")}>
       <div className={cx("img-wrapper")}>
         <Image width={200} height={300} alt={"ex"} src={`/`} />
       </div>
       <div className={cx("product-text-wrapper")}>
-        <ProductText data={data} />
+        <ProductText data={data} id={id} />
         <OneBtn
           title={"쿠폰 다운 받기"}
           bgcolor="--white"
@@ -30,10 +30,9 @@ export const ProductDetail = ({ data }: DetailProps) => {
         <div className={cx("info-list")}>
           <DetailListInfo data={data.info} />
           <DetailSelect
-            productID={data.productId}
+            id={id}
             productName={data.productName}
             data={data.options}
-            finalPrice={data.finalPrice}
           />
         </div>
       </div>
