@@ -1,6 +1,5 @@
 import React from "react";
 import OrderList from "./orderList";
-
 const page = () => {
     return (
         <div>
@@ -10,4 +9,3 @@ const page = () => {
 };
 
 export default page;
-<OrderList />;

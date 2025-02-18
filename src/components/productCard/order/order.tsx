@@ -27,6 +27,7 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
     payMethod,
     price,
     complete,
+    imageUrl = "/images/example.png",
     totalProductCnt,
     onClick,
 }) => {
@@ -37,7 +38,7 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
         <div className={cx("orderWrapper")}>
             <div className={cx("showMore")}>
                 <p>{date}</p>
-                <Link href={`/orderList/orderDetail/${orderNumber}`}>
+                <Link href={`/mypage/orderList/orderDetail/${orderNumber}`}>
                     <p>
                         주문내역 상세보기
                         <FaAngleRight />
@@ -46,13 +47,7 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
             </div>
             <div className={cx("orderMain")}>
                 <div className={cx("productDetail")}>
-                    <Image
-                        width={70}
-                        height={86}
-                        // src={imageUrl} 이미지가 없기 때문에 루트 지정
-                        alt={title}
-                        src={"/images/example.png"}
-                    />
+                    <Image width={70} height={86} src={imageUrl} alt={title} />
                     <div className={cx("infoDetail")}>
                         <div>
                             <p>상품명</p>
