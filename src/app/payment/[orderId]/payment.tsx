@@ -12,41 +12,67 @@ import { useEffect, useMemo, useState } from "react";
 const cx = cn.bind(styles);
 
 interface ProductType {
-    id: number;
-    title: string;
-    price: string;
-    discountPrice?: string;
-    count: string;
+    productId: {
+        productName: string;
+        orgPrice: number;
+        finalPrice: number;
+        mainImgUrl: string;
+    };
+    amount: number;
 }
 
 interface AddressType {
-    id: string;
+    _id: string;
     address: string;
     extraAddr: string;
     defaultAddr: boolean;
 }
 
 interface UserDataType {
+    _id: string;
     name: string;
-    phone: string;
     email: string;
+}
+
+interface OrderType {
+    products: ProductType[];
+    totalPrice: number;
+    totalOrgPrice: number;
+    totalDiscountedPrice: number;
+    addressInfo: {
+        userAddress: {
+            address: string;
+            extraAddr: string;
+            defaultAddr: boolean;
+        };
+    };
+    userInfo: {
+        user: UserDataType;
+    };
+    usedPoints: number;
+    paymentMethod: string;
 }
 
 interface PaymentProps {
     onFetchUserData: () => Promise<UserDataType>;
     onFetchAddresses: () => Promise<AddressType[]>;
+    onFetchOrderDetails: () => Promise<OrderType>;
 }
 
-const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
+const Payment = ({
+    onFetchUserData,
+    onFetchAddresses,
+    onFetchOrderDetails,
+}: PaymentProps) => {
     const [userData, setUserData] = useState<UserDataType | null>(null);
     const [addresses, setAddresses] = useState<AddressType[]>([]);
+    const [orderDetails, setOrderDetails] = useState<OrderType | null>(null);
     const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(
         null
     );
     const [isLoading, setIsLoading] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [pointsToUse, setPointsToUse] = useState<number>(0);
-    const [availablePoints] = useState<number>(96);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [error, setError] = useState<string>("");
 
@@ -55,20 +81,37 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
             setIsLoading(true);
             setError("");
             try {
-                const [userData, addressesData] = await Promise.all([
+                const [userData, addressesData, orderData] = await Promise.all([
                     onFetchUserData(),
                     onFetchAddresses(),
+                    onFetchOrderDetails(),
                 ]);
 
                 setUserData(userData);
                 setAddresses(addressesData);
+                setOrderDetails(orderData);
 
                 const defaultAddress =
                     addressesData.find((addr) => addr.defaultAddr) ||
                     addressesData[0];
+
+                if (defaultAddress) {
+                    const updatedOrderData = {
+                        ...orderData,
+                        addressInfo: {
+                            userAddress: {
+                                ...defaultAddress,
+                                extraAddr: defaultAddress.extraAddr,
+                            },
+                        },
+                    };
+                    setOrderDetails(updatedOrderData);
+                }
+
                 setSelectedAddress(defaultAddress);
+                setPointsToUse(orderData.usedPoints || 0);
             } catch (error) {
-                console.error("초기 데이터 로딩 실패:", error);
+                console.error("데이터 로딩 실패:", error);
                 setError("데이터를 불러오는데 실패했습니다.");
             } finally {
                 setIsLoading(false);
@@ -76,94 +119,95 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
         };
 
         fetchInitialData();
-    }, [onFetchUserData, onFetchAddresses]);
-
-    // 임시 데이터
-    const products: ProductType[] = [
-        {
-            id: 1,
-            title: "[올레길] 제주 슈레드 모짜렐라 치즈",
-            price: "8,100",
-            discountPrice: "7,000",
-            count: "2",
-        },
-        {
-            id: 2,
-            title: "[프레시지] 스파이시 치킨 스테이크",
-            price: "12,900",
-            count: "1",
-        },
-        {
-            id: 3,
-            title: "[피코크] 트러플 리조또",
-            price: "7,900",
-            count: "2",
-        },
-    ];
+    }, [onFetchUserData, onFetchAddresses, onFetchOrderDetails]);
 
     const calculations = useMemo(() => {
-        const parsePrice = (price: string): number =>
-            parseInt(price.replace(/[^\d]/g, "")) || 0;
+        if (!orderDetails)
+            return {
+                totalProductPrice: 0,
+                shippingFee: 0,
+                productDiscount: 0,
+                pointsUsed: 0,
+                finalAmount: 0,
+            };
 
-        const totalProductPrice = products.reduce(
-            (sum, product) =>
-                sum + parsePrice(product.price) * parseInt(product.count),
+        // 각 상품의 할인 금액 계산
+        const productDiscount = orderDetails.products.reduce(
+            (total, product) => {
+                const orgPrice = product.productId.orgPrice * product.amount;
+                const finalPrice = product.productId.finalPrice
+                    ? product.productId.finalPrice * product.amount
+                    : orgPrice;
+                return total + (orgPrice - finalPrice);
+            },
             0
         );
+        const shippingFee = orderDetails.totalOrgPrice >= 30000 ? 0 : 3000;
+        const pointsUsed = orderDetails.usedPoints || 0;
 
-        const itemDiscounts = products.reduce((sum, product) => {
-            if (!product.discountPrice) return sum;
-            const discount =
-                (parsePrice(product.price) -
-                    parsePrice(product.discountPrice)) *
-                parseInt(product.count);
-            return sum + discount;
-        }, 0);
-
-        const shippingFee = totalProductPrice >= 30000 ? 0 : 3000;
-        const pointsUsed = Math.min(pointsToUse, availablePoints);
+        // 최종 금액 계산
         const finalAmount =
-            totalProductPrice + shippingFee - itemDiscounts - pointsUsed;
+            orderDetails.totalOrgPrice - productDiscount + shippingFee;
 
         return {
-            totalProductPrice,
+            totalProductPrice: orderDetails.totalOrgPrice,
             shippingFee,
-            productDiscount: itemDiscounts,
+            productDiscount,
             pointsUsed,
             finalAmount,
         };
-    }, [products, pointsToUse, availablePoints]);
+    }, [orderDetails]);
 
     // 적립금 전체 사용 핸들러
     const handleUseAllPoints = () => {
-        setPointsToUse(availablePoints);
+        setPointsToUse(orderDetails?.usedPoints || 0);
     };
 
     // 적립금 입력 핸들러
     const handlePointsInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!orderDetails) return;
         const value = Math.max(0, parseInt(e.target.value) || 0);
-        setPointsToUse(Math.min(value, availablePoints));
+        setPointsToUse(Math.min(value, orderDetails.usedPoints || 0));
     };
 
-    // 숫자 포맷팅 함수
+    // 숫자 포맷팅
     const formatPrice = (price: number) => {
         return price.toLocaleString("ko-KR");
     };
 
     //선택한 주소
     const getSelectedAddressText = () => {
-        return selectedAddress
-            ? `${selectedAddress.address} ${selectedAddress.extraAddr}`
-            : "배송지를 선택해주세요.";
+        const address = orderDetails?.addressInfo?.userAddress;
+        if (!address) return "배송지를 선택해주세요.";
+
+        const fullAddress = [address.address, address.extraAddr]
+            .filter(Boolean)
+            .join(" ");
+
+        return fullAddress.trim() || "배송지 정보가 없습니다.";
     };
 
-    // 배송지 모달 핸들러
     const handleAddressModal = () => setIsAddressModalOpen((prev) => !prev);
 
-    // 배송지 선택 핸들러
+    // 주소 선택
     const handleAddressSelect = (selectedAddr: AddressType) => {
         setSelectedAddress(selectedAddr);
+
+        if (orderDetails) {
+            const updatedOrderDetails = {
+                ...orderDetails,
+                addressInfo: {
+                    userAddress: {
+                        ...selectedAddr,
+                        extraAddr: selectedAddr.extraAddr,
+                    },
+                },
+            };
+            setOrderDetails(updatedOrderDetails);
+        }
     };
+
+    if (!orderDetails) return <div>주문 정보를 불러올 수 없습니다.</div>;
 
     return (
         <div className={cx("paymentWrapper")}>
@@ -173,20 +217,30 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
                     <h2 className={cx("sectionTitle")}>주문상품</h2>
                     <div className={cx("product")}>
                         <PaymentCard
-                            title={products[0].title}
-                            price={products[0].price}
-                            discountPrice={products[0].discountPrice}
-                            count={products[0].count}
+                            key={orderDetails.products[0].productId.productName}
+                            productName={
+                                orderDetails.products[0].productId.productName
+                            }
+                            orgPrice={
+                                orderDetails.products[0].productId.orgPrice
+                            }
+                            finalPrice={
+                                orderDetails.products[0].productId.finalPrice
+                            }
+                            amount={orderDetails.products[0].amount}
+                            mainImgUrl={
+                                orderDetails.products[0].productId.mainImgUrl
+                            }
                         />
-                        {products.length > 1 && (
+                        {orderDetails.products.length > 1 && (
                             <div className={cx("productAccordion")}>
                                 <div
                                     className={cx("accordionHeader")}
                                     onClick={() => setIsExpanded(!isExpanded)}
                                 >
                                     <span className={cx("moreProducts")}>
-                                        {products.length - 1}개 상품{" "}
-                                        {isExpanded ? "접기" : "더보기"}
+                                        {orderDetails.products.length - 1}개
+                                        상품 {isExpanded ? "접기" : "더보기"}
                                     </span>
                                     <BiSolidDownArrow
                                         className={cx("arrow", {
@@ -202,17 +256,30 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
                                         collapsed: !isExpanded,
                                     })}
                                 >
-                                    {products.slice(1).map((product) => (
-                                        <PaymentCard
-                                            key={product.id}
-                                            title={product.title}
-                                            price={product.price}
-                                            discountPrice={
-                                                product.discountPrice
-                                            }
-                                            count={product.count}
-                                        />
-                                    ))}
+                                    {orderDetails.products
+                                        .slice(1)
+                                        .map((product) => (
+                                            <PaymentCard
+                                                key={
+                                                    product.productId
+                                                        .productName
+                                                }
+                                                productName={
+                                                    product.productId
+                                                        .productName
+                                                }
+                                                orgPrice={
+                                                    product.productId.orgPrice
+                                                }
+                                                finalPrice={
+                                                    product.productId.finalPrice
+                                                }
+                                                amount={product.amount}
+                                                mainImgUrl={
+                                                    product.productId.mainImgUrl
+                                                }
+                                            />
+                                        ))}
                                 </div>
                             </div>
                         )}
@@ -224,10 +291,10 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
                         <span>주문자</span>
                         <span>{userData?.name}</span>
                     </div>
-                    <div className={cx("infoRow")}>
+                    {/* <div className={cx("infoRow")}>
                         <span>휴대폰</span>
                         <span>{userData?.phone}</span>
-                    </div>
+                    </div> */}
                     <div className={cx("infoRow")}>
                         <span>이메일</span>
                         <span>{userData?.email}</span>
@@ -282,7 +349,8 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
                                 </div>
                             </div>
                         </section>
-                        <section className={cx("section")}>
+                        {/* /1차 mvp에서 결제 수단은 none처리 */}
+                        {/* <section className={cx("section")}>
                             <h2 className={cx("sectionTitle")}>결제수단</h2>
                             <div className={cx("paymentMethod")}>
                                 <span>결제 수단 선택</span>
@@ -292,7 +360,7 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
                                     height="42"
                                 />
                             </div>
-                        </section>
+                        </section> */}
                     </div>
                     <div className={cx("paymentSummary")}>
                         <h2 className={cx("summaryTitle")}>결제금액</h2>
@@ -375,23 +443,25 @@ const Payment = ({ onFetchUserData, onFetchAddresses }: PaymentProps) => {
                         <div className={cx("addressList")}>
                             {addresses.map((addr, index) => (
                                 <div
-                                    key={`${addr.id}-${index}`}
+                                    key={`${addr._id}-${index}`}
                                     className={cx("addressItem", {
                                         selected:
-                                            selectedAddress?.id === addr.id,
+                                            selectedAddress?._id === addr._id,
                                     })}
                                     onClick={() => handleAddressSelect(addr)}
                                 >
                                     <Radio
                                         checked={
-                                            selectedAddress?.id === addr.id
+                                            selectedAddress?._id === addr._id
                                         }
                                         onChange={() =>
                                             handleAddressSelect(addr)
                                         }
                                         name="deliveryAddress"
-                                        title={`${addr.address} ${addr.extraAddr}`}
-                                        value={addr.id}
+                                        title={`${addr.address} ${
+                                            addr.extraAddr ?? ""
+                                        }`}
+                                        value={addr._id}
                                     />
                                 </div>
                             ))}

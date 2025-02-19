@@ -6,43 +6,55 @@ import Image from "next/image";
 const cx = cn.bind(styles);
 
 interface DetailProductCardProps {
-    title: string;
-    discountPrice?: string;
-    price: string;
-    count: string;
-
-    onClick?: () => void;
+    productName: string;
+    orgPrice: number;
+    finalPrice?: number;
+    amount: number;
+    mainImgUrl?: string;
 }
 
 const DetailProductCard: React.FC<DetailProductCardProps> = ({
-    title,
-    discountPrice = "",
-    price,
-    count,
+    productName,
+    orgPrice,
+    finalPrice,
+    amount,
 }) => {
+    const formatPrice = (price: number) => {
+        return price.toLocaleString("ko-KR");
+    };
+
+    // 총 가격 계산
+    const totalOrgPrice = orgPrice * amount;
+    const totalFinalPrice = finalPrice ? finalPrice * amount : totalOrgPrice;
+
     return (
         <div className={cx("inputWrapper")}>
             <div className={cx("titleWrapper")}>
                 <Image
                     width={70}
                     height={86}
+                    // src={mainImgUrl}
                     src={"/images/example.png"}
-                    alt={"example"}
+                    alt={productName}
                 />
-                <p className={cx("title")}>{title}</p>
+                <p className={cx("title")}>{productName}</p>
             </div>
             <div className={cx("priceWrap")}>
-                {discountPrice?.trim() && (
-                    <p className={cx("discountPrice")}>{discountPrice}원</p>
+                {finalPrice && finalPrice !== orgPrice && (
+                    <p className={cx("discountPrice")}>
+                        {formatPrice(totalFinalPrice)}원
+                    </p>
                 )}
                 <p
                     className={cx(
-                        discountPrice?.trim() ? "price" : "discountPrice"
+                        finalPrice && finalPrice !== orgPrice
+                            ? "price"
+                            : "discountPrice"
                     )}
                 >
-                    {price}원
+                    {formatPrice(totalOrgPrice)}원
                 </p>
-                <p className={cx("count")}>{count}개</p>
+                <p className={cx("count")}>{amount}개</p>
             </div>
         </div>
     );
