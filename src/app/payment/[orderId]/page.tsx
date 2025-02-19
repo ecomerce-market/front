@@ -3,12 +3,20 @@
 import Payment from "./payment";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 
 interface OrderUpdateData {
     usePoint?: number;
     userAddressId?: string;
     paymentMethod?: "CARD";
     couponId?: string;
+}
+
+interface ApproveResponse {
+    message: string;
+    totalPaidPrice: number;
+    addedPoints: number;
+    orderId: string;
 }
 
 const PaymentPage = () => {
@@ -149,6 +157,50 @@ const PaymentPage = () => {
         }
     };
 
+    // 주문 승인
+    const approveOrder = async (): Promise<ApproveResponse> => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("인증 토큰이 없습니다.");
+        }
+
+        if (!orderId) {
+            throw new Error("주문 ID가 없습니다.");
+        }
+
+        try {
+            const response = await axios.post(
+                `${
+                    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+                }/api/v1/orders/${orderId}/approve`,
+                {
+                    // 멱등성
+                    uuid: uuidv4(),
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.data.message === "order approve success") {
+                return response.data;
+            }
+
+            throw new Error("주문 승인에 실패했습니다.");
+        } catch (error: any) {
+            if (error.response?.status === 400) {
+                throw new Error(error.response.data.message);
+            } else if (error.response?.status === 404) {
+                throw new Error("주문서가 존재하지 않습니다.");
+            }
+            console.error("Order approval error:", error);
+            throw error;
+        }
+    };
+
     return (
         <div>
             <Payment
@@ -156,6 +208,7 @@ const PaymentPage = () => {
                 onFetchAddresses={fetchAddresses}
                 onFetchOrderDetails={fetchOrderDetails}
                 onUpdateOrder={updateOrder}
+                onApproveOrder={approveOrder}
             />
         </div>
     );
