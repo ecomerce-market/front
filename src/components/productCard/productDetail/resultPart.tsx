@@ -53,12 +53,15 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
   };
 
   return (
-    <div>
+    <div className={cx("resultPart-wrapper")}>
       <h3>
-        {result
-          .reduce((sum, item) => sum + item.price * item.count, 0)
-          .toLocaleString()}
-        원
+        총 상품금액 :
+        <span>
+          {result
+            .reduce((sum, item) => sum + item.price * item.count, 0)
+            .toLocaleString()}
+          원
+        </span>
       </h3>
       <div className={cx("btn-wrap")}>
         <OneBtn
@@ -80,14 +83,17 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
           width={"50"}
           height={"46"}
         />
-        <OneBtn
-          // onClick={} 보류
-          fontWeight="700"
-          fontSize="19"
-          title={"구매하기"}
-          width={"343"}
-          height={"46"}
-        />
+
+        <div className="buy">
+          <OneBtn
+            // onClick={} 보류
+            fontWeight="700"
+            fontSize="19"
+            title={"구매하기"}
+            width={"393"}
+            height={"46"}
+          />
+        </div>
       </div>
     </div>
   );

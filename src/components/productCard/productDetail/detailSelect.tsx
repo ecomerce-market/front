@@ -3,7 +3,7 @@
 import cn from "classnames/bind";
 import styles from "./detailSelect.module.scss";
 import React, { useState } from "react";
-import CountForm from "@/app/product/countForm/countForm";
+import CountForm from "@/components/productCard/productDetail/detailListInfo/countForm/countForm";
 const cx = cn.bind(styles);
 
 type selectProps = {
