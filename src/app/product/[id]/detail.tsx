@@ -3,14 +3,18 @@ import ProductInfoList from "@/components/main/product/productInfoList/productIn
 import ProductDetail from "@/components/productCard/productDetail/productDetail";
 
 const Detail = ({ id, data }: DetailProps) => {
+  console.log(data);
   return (
     <div>
       <ProductDetail id={id} data={data} />
+      <ProductInfoList
+        detailInfoHtml={data.detailInfoHtml}
+        likeCnt={data.likeCnt}
+      />
     </div>
   );
 };
 
 export default Detail;
 {
-  /* <ProductInfoList />; */
 }
