@@ -22,7 +22,7 @@ interface ProductType {
 }
 
 interface AddressType {
-    _id: string;
+    addressId: string;
     address: string;
     extraAddr: string;
     defaultAddr: boolean;
@@ -57,16 +57,54 @@ interface PaymentProps {
     onFetchUserData: () => Promise<UserDataType>;
     onFetchAddresses: () => Promise<AddressType[]>;
     onFetchOrderDetails: () => Promise<OrderType>;
+    onUpdateOrder: (updateData: {
+        usePoint?: number;
+        userAddressId?: string;
+        paymentMethod?: "none";
+        couponId?: string;
+    }) => Promise<OrderType>;
 }
 
 const Payment = ({
     onFetchUserData,
     onFetchAddresses,
     onFetchOrderDetails,
+    onUpdateOrder,
 }: PaymentProps) => {
     const [userData, setUserData] = useState<UserDataType | null>(null);
     const [addresses, setAddresses] = useState<AddressType[]>([]);
-    const [orderDetails, setOrderDetails] = useState<OrderType | null>(null);
+    const [orderDetails, setOrderDetails] = useState<OrderType>(() => ({
+        products: [
+            {
+                productId: {
+                    productName: "",
+                    orgPrice: 0,
+                    finalPrice: 0,
+                    mainImgUrl: "",
+                },
+                amount: 0,
+            },
+        ],
+        totalPrice: 0,
+        totalOrgPrice: 0,
+        totalDiscountedPrice: 0,
+        addressInfo: {
+            userAddress: {
+                address: "",
+                extraAddr: "",
+                defaultAddr: false,
+            },
+        },
+        userInfo: {
+            user: {
+                _id: "",
+                name: "",
+                email: "",
+            },
+        },
+        usedPoints: 0,
+        paymentMethod: "",
+    }));
     const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(
         null
     );
@@ -75,11 +113,13 @@ const Payment = ({
     const [pointsToUse, setPointsToUse] = useState<number>(0);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [error, setError] = useState<string>("");
+    const [isUpdating, setIsUpdating] = useState(false);
 
     useEffect(() => {
         const fetchInitialData = async () => {
             setIsLoading(true);
             setError("");
+            console.log("초기 데이터 로딩 시작");
             try {
                 const [userData, addressesData, orderData] = await Promise.all([
                     onFetchUserData(),
@@ -119,10 +159,43 @@ const Payment = ({
         };
 
         fetchInitialData();
-    }, [onFetchUserData, onFetchAddresses, onFetchOrderDetails]);
+    }, [onFetchUserData, onFetchAddresses, onFetchOrderDetails, onUpdateOrder]);
 
     const calculations = useMemo(() => {
-        if (!orderDetails)
+        try {
+            // 각 상품의 할인 금액 계산
+            const productDiscount = orderDetails.products.reduce(
+                (total, product) => {
+                    if (!product?.productId) return total;
+
+                    const orgPrice =
+                        (product.productId.orgPrice || 0) *
+                        (product.amount || 0);
+                    const finalPrice = product.productId.finalPrice
+                        ? product.productId.finalPrice * (product.amount || 0)
+                        : orgPrice;
+                    return total + (orgPrice - finalPrice);
+                },
+                0
+            );
+
+            const totalProductPrice = orderDetails.totalOrgPrice || 0;
+            const shippingFee = totalProductPrice >= 30000 ? 0 : 3000;
+            const pointsUsed = orderDetails.usedPoints || 0;
+
+            // 최종 금액 계산
+            const finalAmount =
+                totalProductPrice - productDiscount + shippingFee;
+
+            return {
+                totalProductPrice,
+                shippingFee,
+                productDiscount,
+                pointsUsed,
+                finalAmount,
+            };
+        } catch (error) {
+            console.error("calculations 계산 중 에러:", error);
             return {
                 totalProductPrice: 0,
                 shippingFee: 0,
@@ -130,48 +203,12 @@ const Payment = ({
                 pointsUsed: 0,
                 finalAmount: 0,
             };
-
-        // 각 상품의 할인 금액 계산
-        const productDiscount = orderDetails.products.reduce(
-            (total, product) => {
-                const orgPrice = product.productId.orgPrice * product.amount;
-                const finalPrice = product.productId.finalPrice
-                    ? product.productId.finalPrice * product.amount
-                    : orgPrice;
-                return total + (orgPrice - finalPrice);
-            },
-            0
-        );
-        const shippingFee = orderDetails.totalOrgPrice >= 30000 ? 0 : 3000;
-        const pointsUsed = orderDetails.usedPoints || 0;
-
-        // 최종 금액 계산
-        const finalAmount =
-            orderDetails.totalOrgPrice - productDiscount + shippingFee;
-
-        return {
-            totalProductPrice: orderDetails.totalOrgPrice,
-            shippingFee,
-            productDiscount,
-            pointsUsed,
-            finalAmount,
-        };
+        }
     }, [orderDetails]);
 
-    // 적립금 전체 사용 핸들러
-    const handleUseAllPoints = () => {
-        setPointsToUse(orderDetails?.usedPoints || 0);
-    };
-
-    // 적립금 입력 핸들러
-    const handlePointsInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!orderDetails) return;
-        const value = Math.max(0, parseInt(e.target.value) || 0);
-        setPointsToUse(Math.min(value, orderDetails.usedPoints || 0));
-    };
-
     // 숫자 포맷팅
-    const formatPrice = (price: number) => {
+    const formatPrice = (price?: number) => {
+        if (price === undefined || price === null) return "0";
         return price.toLocaleString("ko-KR");
     };
 
@@ -189,25 +226,27 @@ const Payment = ({
 
     const handleAddressModal = () => setIsAddressModalOpen((prev) => !prev);
 
-    // 주소 선택
-    const handleAddressSelect = (selectedAddr: AddressType) => {
-        setSelectedAddress(selectedAddr);
-
-        if (orderDetails) {
-            const updatedOrderDetails = {
-                ...orderDetails,
-                addressInfo: {
-                    userAddress: {
-                        ...selectedAddr,
-                        extraAddr: selectedAddr.extraAddr,
-                    },
-                },
-            };
-            setOrderDetails(updatedOrderDetails);
+    // 주소 수정
+    const handleAddressSelect = async (selectedAddr: AddressType) => {
+        if (isUpdating) return;
+        setIsUpdating(true);
+        setError("");
+        try {
+            const updatedOrder = await onUpdateOrder({
+                userAddressId: selectedAddr.addressId,
+            });
+            console.log("배송지 변경 성공:", {
+                변경된_주문_정보: updatedOrder,
+            });
+            setOrderDetails(updatedOrder);
+            setSelectedAddress(selectedAddr);
+        } catch (error: any) {
+            setError(error.message || "배송지 변경에 실패했습니다.");
+        } finally {
+            setIsUpdating(false);
+            setIsAddressModalOpen(false);
         }
     };
-
-    if (!orderDetails) return <div>주문 정보를 불러올 수 없습니다.</div>;
 
     return (
         <div className={cx("paymentWrapper")}>
@@ -321,7 +360,7 @@ const Payment = ({
                                 <span>쿠폰 적용</span>
                                 <TextInput
                                     placeholder="사용 가능한 쿠폰이 없습니다."
-                                    readOnly
+                                    readOnly={true}
                                 />
                             </div>
                         </section>
@@ -333,18 +372,26 @@ const Payment = ({
                                     <div className={cx("inputWrapper")}>
                                         <TextInput
                                             value={String(pointsToUse)}
-                                            onChange={handlePointsInput}
+                                            // onChange={handlePointsInput}
                                             placeholder="0"
-                                            readOnly
+                                            readOnly={isUpdating}
                                         />
-                                        <p>사용 가능 적립금 96원</p>
-                                        <p>적립금 내역: 마이컬리-적립금</p>
+                                        <p>
+                                            사용 가능 적립금{" "}
+                                            {orderDetails?.usedPoints || 0}원
+                                        </p>
+                                        {error && (
+                                            <p className={cx("error")}>
+                                                {error}
+                                            </p>
+                                        )}
                                     </div>
                                     <OneBtn
                                         title="모두 사용"
                                         width="100"
                                         height="42"
-                                        onClick={handleUseAllPoints}
+                                        // onClick={handleUseAllPoints}
+                                        disabled={isUpdating}
                                     />
                                 </div>
                             </div>
@@ -443,17 +490,19 @@ const Payment = ({
                         <div className={cx("addressList")}>
                             {addresses.map((addr, index) => (
                                 <div
-                                    key={`${addr._id}-${index}`}
+                                    key={`${addr.addressId}-${index}`}
                                     className={cx("addressItem", {
                                         selected:
-                                            selectedAddress?._id === addr._id,
+                                            selectedAddress?.addressId ===
+                                            addr.addressId,
                                     })}
                                     onClick={() => handleAddressSelect(addr)}
                                 >
                                     <Radio
                                         checked={
-                                            selectedAddress?._id === addr._id
-                                        }
+                                            selectedAddress?.addressId ===
+                                            addr.addressId
+                                        } // _id 대신 addressId 사용
                                         onChange={() =>
                                             handleAddressSelect(addr)
                                         }
@@ -461,7 +510,7 @@ const Payment = ({
                                         title={`${addr.address} ${
                                             addr.extraAddr ?? ""
                                         }`}
-                                        value={addr._id}
+                                        value={addr.addressId} // _id 대신 addressId 사용
                                     />
                                 </div>
                             ))}
@@ -480,3 +529,55 @@ const Payment = ({
 };
 
 export default Payment;
+
+// // 적립금 사용 핸들러 (적립금 2차 개발이라 기능 제외)
+// const handlePointsUpdate = async (points: number) => {
+//     if (isUpdating) return;
+//     setIsUpdating(true);
+//     setError("");
+//
+//     try {
+//         const updatedOrder = await onUpdateOrder({ usePoint: points });
+//
+//         setOrderDetails(updatedOrder);
+//         setPointsToUse(points);
+//     } catch (error: any) {
+//
+//         setError(error.message || "적립금 적용에 실패했습니다.");
+//         setPointsToUse(orderDetails?.usedPoints || 0);
+//     } finally {
+//         setIsUpdating(false);
+//     }
+// };
+
+// // 적립금 전체 사용 핸들러 수정
+// const handleUseAllPoints = async () => {
+//     const maxPoints = orderDetails?.usedPoints || 0;
+//     await handlePointsUpdate(maxPoints);
+// };
+
+// // 적립금 입력 핸들러 수정
+// const handlePointsInput = async (
+//     e: React.ChangeEvent<HTMLInputElement>
+// ) => {
+//     if (!orderDetails) return;
+//     const value = Math.max(0, parseInt(e.target.value) || 0);
+//     const points = Math.min(value, orderDetails.usedPoints || 0);
+//     await handlePointsUpdate(points);
+// };
+
+// // 쿠폰 적용 핸들러 추가 (포인트 2차 개발이라 기능 제외)
+// const handleCouponApply = async (couponId: string) => {
+//     if (isUpdating) return;
+//     setIsUpdating(true);
+//     setError("");
+
+//     try {
+//         const updatedOrder = await onUpdateOrder({ couponId });
+//         setOrderDetails(updatedOrder);
+//     } catch (error: any) {
+//         setError(error.message || "쿠폰 적용에 실패했습니다.");
+//     } finally {
+//         setIsUpdating(false);
+//     }
+// };
