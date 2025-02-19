@@ -17,7 +17,12 @@ const DetailListInfo = ({ data }: InfoProps) => {
         ) : null}
         <div className={cx("infomation")}>
           <span className={cx("infomation-type")}>배송</span>
-          <span className={cx("infomation-detail")}>{data.deliveryComp}</span>
+          <div className={cx("infomation-detail")}>
+            {data.deliveryComp}
+            {data.deliveryInfo ? (
+              <p className={cx("infomation-detail")}>{data.deliveryInfo}</p>
+            ) : null}
+          </div>
         </div>
 
         <div className={cx("infomation")}>
@@ -27,7 +32,14 @@ const DetailListInfo = ({ data }: InfoProps) => {
 
         <div className={cx("infomation")}>
           <span className={cx("infomation-type")}>포장타입</span>
-          <div className={cx("infomation-detail")}>{data.packageType}</div>
+          <div className={cx("infomation-detail")}>
+            {data.packageType}
+            {data.packageDescription ? (
+              <p className={cx("infomation-detail")}>
+                {data.packageDescription}
+              </p>
+            ) : null}
+          </div>
         </div>
 
         <div className={cx("infomation")}>

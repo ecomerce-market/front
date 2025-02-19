@@ -15,13 +15,14 @@ const ProductText = ({ data }: DetailProps) => {
           {data.discount.discountAmount ? (
             <>
               <span className={cx("discount-rate")}>
+                {data.discount.discountName ? (
+                  <p> {data.discount.discountName}</p>
+                ) : null}
                 {data.discount.discountAmount}
                 {data.discount.discountType === "won" ? "원" : "%"}
               </span>
               <span className={cx("discount-price")}>{data.finalPrice}원</span>
-              <p className={cx("origin-price")}>
-                {data.discount.discountAmount}원
-              </p>
+              <p className={cx("origin-price")}>{data.orgPrice}원</p>
             </>
           ) : (
             <p className={cx("origin-price-real")}>{data.orgPrice}원</p>
