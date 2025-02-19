@@ -20,7 +20,7 @@ const DetailListInfo = ({ data }: InfoProps) => {
           <div className={cx("infomation-detail")}>
             {data.deliveryComp}
             {data.deliveryInfo ? (
-              <p className={cx("infomation-detail")}>{data.deliveryInfo}</p>
+              <p className={cx("infomation-sub")}>{data.deliveryInfo}</p>
             ) : null}
           </div>
         </div>
@@ -35,9 +35,7 @@ const DetailListInfo = ({ data }: InfoProps) => {
           <div className={cx("infomation-detail")}>
             {data.packageType}
             {data.packageDescription ? (
-              <p className={cx("infomation-detail")}>
-                {data.packageDescription}
-              </p>
+              <p className={cx("infomation-sub")}>{data.packageDescription}</p>
             ) : null}
           </div>
         </div>

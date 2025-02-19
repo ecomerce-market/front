@@ -28,12 +28,18 @@
       padding: 10px 0;
       width: 135px;
       display: flex;
+      gap: 4px;
+      flex-direction: column;
       align-items: start;
       justify-self: start;
       font-weight: 500;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 18px;
       letter-spacing: -5%;
+      .infomation-sub {
+        font-size: 10px;
+        color: var(--black-500);
+      }
     }
   }
 }
