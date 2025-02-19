@@ -1,0 +1,22 @@
+.resultPart-wrapper {
+  h3 {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+    padding: 20px 0px;
+  }
+
+  .btn-wrap {
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 5px;
+    .buy {
+      max-width: 200px;
+    }
+  }
+}
