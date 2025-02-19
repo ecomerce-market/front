@@ -1,6 +1,14 @@
 "use client";
+import React from "react";
+import cn from "classnames/bind";
+import styles from "./resultPart.module.scss";
 
+import OneBtn from "@/components/btn/oneBtn";
 import { useEffect, useState } from "react";
+import { IoMdHeartEmpty } from "react-icons/io";
+import { LuBell } from "react-icons/lu";
+
+const cx = cn.bind(styles);
 
 type ResultPartProps = {
   selectedOptions: string[];
@@ -39,6 +47,11 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
 
   console.log(result);
 
+  //버튼 부분
+  const handlePostData = () => {
+    const res = fetch("localhost:30001/api/v1/orders");
+  };
+
   return (
     <div>
       <h3>
@@ -47,39 +60,37 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
           .toLocaleString()}
         원
       </h3>
+      <div className={cx("btn-wrap")}>
+        <OneBtn
+          color="--main-color"
+          bgcolor="--white"
+          border="--main-color"
+          borderSize="1"
+          title={<IoMdHeartEmpty />}
+          width={"50"}
+          height={"46"}
+          fontSize={"18"}
+        />
+        <OneBtn
+          color="--main-color"
+          bgcolor="--white"
+          border="--main-color"
+          borderSize="1"
+          title={<LuBell />}
+          width={"50"}
+          height={"46"}
+        />
+        <OneBtn
+          // onClick={} 보류
+          fontWeight="700"
+          fontSize="19"
+          title={"구매하기"}
+          width={"343"}
+          height={"46"}
+        />
+      </div>
     </div>
   );
 };
 
 export default ResultPart;
-
-{
-  /* <div className={cx("btn-wrap")}>
-            <OneBtn
-              color="--main-color"
-              bgcolor="--white"
-              border="--main-color"
-              borderSize="1"
-              title={<IoMdHeartEmpty />}
-              width={"50"}
-              height={"46"}
-              fontSize={"18"}
-            />
-            <OneBtn
-              color="--main-color"
-              bgcolor="--white"
-              border="--main-color"
-              borderSize="1"
-              title={<LuBell />}
-              width={"50"}
-              height={"46"}
-            />
-            <OneBtn
-              fontWeight="700"
-              fontSize="19"
-              title={"구매하기"}
-              width={"343"}
-              height={"46"}
-            />
-          </div> */
-}

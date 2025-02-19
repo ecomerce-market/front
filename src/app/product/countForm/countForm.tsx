@@ -75,14 +75,14 @@ const CountForm = ({
     e.stopPropagation();
     setCounts((prev) => ({
       ...prev,
-      [item]: prev[item] ? prev[item] + 1 : 1,
+      [item]: (prev[item] || 0) + 1, // undefined가 나오지 않게 기본값을 0으로 설정
     }));
   };
 
   return (
-    <div>
+    <div className={cx("count-wrapper")}>
       {selectedOptions.length > 0 && product ? (
-        <div>
+        <div className={cx("selected-wrapper")}>
           {selectedOptions.map((item, index) => {
             const selectedOption = product.options.find(
               (opt) => opt.optName === item
@@ -92,17 +92,34 @@ const CountForm = ({
               : product.finalPrice;
 
             return (
-              <div key={index}>
-                {item}
-                <div>
-                  <span onClick={(e) => handleMinusCount(item, e)}> - </span>
-                  <span> {counts[item] || 1} </span> {/* 개별 상품의 수량 */}
-                  <span onClick={(e) => handlePlusCount(item, e)}> + </span>
+              <div className={cx("selected-list")} key={index}>
+                <div className={cx("selected-title")}> {item}</div>
+
+                <div className={cx("count-wrapper")}>
+                  <span
+                    className={cx("count-pointer")}
+                    onClick={(e) => handleMinusCount(item, e)}
+                  >
+                    {" "}
+                    -{" "}
+                  </span>
+                  <span className={cx("count-number")}>
+                    {" "}
+                    {counts[item] || 1}{" "}
+                  </span>{" "}
+                  {/* 개별 상품의 수량 */}
+                  <span
+                    className={cx("count-pointer")}
+                    onClick={(e) => handlePlusCount(item, e)}
+                  >
+                    {" "}
+                    +{" "}
+                  </span>
                 </div>
 
-                <div>
+                <div className={cx("price-wrapper")}>
                   <span>
-                    {(price * (counts[item] || 1)).toLocaleString()} 원
+                    {(price * (counts[item] || 1)).toLocaleString()}원
                   </span>
                 </div>
               </div>
