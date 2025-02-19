@@ -43,6 +43,7 @@ const CountForm = ({
           throw new Error("상품 데이터를 불러오는 데 실패했습니다.");
         }
         const data = await res.json();
+
         setProduct(data.product);
       } catch (error) {
         console.error("상품 데이터 패칭 실패", error);
@@ -51,6 +52,7 @@ const CountForm = ({
 
     getData();
   }, [id]);
+  console.log(product);
 
   // 마이너스 버튼 클릭
   const handleMinusCount = (item: string, e: React.MouseEvent) => {
@@ -109,9 +111,12 @@ const CountForm = ({
         </div>
       ) : null}
 
-      {/* 최종가격 보낼거임 */}
       <div>
-        <ResultPart />
+        <ResultPart
+          product={product}
+          selectedOptions={selectedOptions}
+          counts={counts}
+        />
       </div>
     </div>
   );

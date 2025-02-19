@@ -77,34 +77,3 @@ const DetailSelect = ({ data, productName, id }: selectProps) => {
 };
 
 export default DetailSelect;
-
-{
-  /* <div className={cx("btn-wrap")}>
-            <OneBtn
-              color="--main-color"
-              bgcolor="--white"
-              border="--main-color"
-              borderSize="1"
-              title={<IoMdHeartEmpty />}
-              width={"50"}
-              height={"46"}
-              fontSize={"18"}
-            />
-            <OneBtn
-              color="--main-color"
-              bgcolor="--white"
-              border="--main-color"
-              borderSize="1"
-              title={<LuBell />}
-              width={"50"}
-              height={"46"}
-            />
-            <OneBtn
-              fontWeight="700"
-              fontSize="19"
-              title={"구매하기"}
-              width={"343"}
-              height={"46"}
-            />
-          </div> */
-}

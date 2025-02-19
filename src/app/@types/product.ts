@@ -43,3 +43,10 @@ export type DetailProps = {
   data: Product;
   id: string;
 };
+
+export type ProductProps = {
+  options: any;
+  finalPrice: any;
+  find(arg0: () => any): unknown;
+  product: Product;
+};
