@@ -144,7 +144,7 @@ const AddressManagement = () => {
             }
 
             const response = await fetch(
-                `http://localhost:3001/api/v1/users/addresses/${addressId}`,
+                `http://localhost:3001/api/v1/users/addresses/${addressId}/defaults`,
                 {
                     method: "PATCH",
                     credentials: "include",
