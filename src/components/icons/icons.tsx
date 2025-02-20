@@ -26,6 +26,8 @@ import { IoBasketSharp } from "react-icons/io5"; //장바구니;
 import { IoChatboxEllipsesOutline } from "react-icons/io5"; //chat
 import { BiSolidDownArrow } from "react-icons/bi"; //downarrow
 import { FaCamera } from "react-icons/fa6"; //카메라
+import { FaPencil } from "react-icons/fa6"; //pencil
+import { FaTrashAlt } from "react-icons/fa"; //trash
 
 const Icons = () => {
     return <div></div>;
