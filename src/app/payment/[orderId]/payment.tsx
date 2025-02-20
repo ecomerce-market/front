@@ -301,12 +301,25 @@ const Payment = ({
     };
 
     const handleApproveOrder = async () => {
-        if (isApproving) return;
+        console.log("handleApproveOrder 시작");
+        console.log("현재 상태:", {
+            isApproving,
+            currentPaymentMethod:
+                orderDetails.paymentMethod || selectedPaymentMethod,
+            userData,
+            orderDetails,
+        });
+
+        if (isApproving) {
+            console.log("이미 승인 진행 중");
+            return;
+        }
 
         const currentPaymentMethod =
             orderDetails.paymentMethod || selectedPaymentMethod;
 
         if (currentPaymentMethod === "none") {
+            console.log("결제수단 미선택");
             alert("결제수단을 선택해주세요.");
             return;
         }
@@ -328,14 +341,23 @@ const Payment = ({
             });
 
             alert("결제가 완료되었습니다.");
-
-            router.push(`/payment/complete/${approveResponse.orderId}`);
+            const addedPoints = approveResponse.addedPoints || 0;
+            const totalPaidPrice =
+                approveResponse.totalPaidPrice || calculations.finalAmount;
+            const orderId = approveResponse.orderId;
+            router.push(
+                `/payment/complete/${orderId}?` +
+                    `addedPoints=${encodeURIComponent(addedPoints)}` +
+                    `&totalPaidPrice=${encodeURIComponent(totalPaidPrice)}`
+            );
         } catch (error: any) {
+            console.error("결제 오류:", error);
             const errorMessage = error.message || "결제 진행에 실패했습니다.";
 
             setError(errorMessage);
             alert(`결제 실패: ${error.message}`);
         } finally {
+            console.log("승인 프로세스 종료");
             setIsApproving(false);
         }
     };
