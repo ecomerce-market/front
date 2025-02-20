@@ -63,12 +63,22 @@
             }
 
             .addressItem {
+                display: flex;
+                justify-content: space-between;
                 padding: 10px 0;
                 border-bottom: 1px solid var(--black-100);
             }
 
             .addressItem:last-child {
                 border-bottom: none;
+            }
+
+            .addressIcon {
+                display: flex;
+                gap: 20px;
+            }
+            .addressIcon div:hover {
+                color: var(--main-color);
             }
         }
     }
