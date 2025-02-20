@@ -111,7 +111,7 @@ const Payment = ({
             },
         },
         usedPoints: 0,
-        paymentMethod: "",
+        paymentMethod: "none",
     }));
     const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(
         null
@@ -124,7 +124,7 @@ const Payment = ({
     const [isUpdating, setIsUpdating] = useState(false);
     const [isApproving, setIsApproving] = useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] =
-        useState<string>("");
+        useState<string>("none");
     useEffect(() => {
         const fetchInitialData = async () => {
             setIsLoading(true);
@@ -138,15 +138,20 @@ const Payment = ({
 
                 setUserData(userData);
                 setAddresses(addressesData);
+                const updatedOrderData = {
+                    ...orderData,
+                    paymentMethod: orderData.paymentMethod || "none",
+                };
                 setOrderDetails(orderData);
+                setSelectedPaymentMethod(updatedOrderData.paymentMethod);
 
                 const defaultAddress =
                     addressesData.find((addr) => addr.defaultAddr) ||
                     addressesData[0];
 
                 if (defaultAddress) {
-                    const updatedOrderData = {
-                        ...orderData,
+                    const addressUpdatedOrderData = {
+                        ...updatedOrderData,
                         addressInfo: {
                             userAddress: {
                                 ...defaultAddress,
@@ -154,7 +159,7 @@ const Payment = ({
                             },
                         },
                     };
-                    setOrderDetails(updatedOrderData);
+                    setOrderDetails(addressUpdatedOrderData);
                 }
 
                 setSelectedAddress(defaultAddress);
@@ -272,29 +277,64 @@ const Payment = ({
         }
     };
 
-    // 결제 승인
+    const handlePaymentMethodSelect = async () => {
+        try {
+            const newMethod =
+                selectedPaymentMethod === "none" ? "card" : "none";
+
+            const updatedOrder = await onUpdateOrder({
+                paymentMethod: newMethod,
+            });
+
+            setSelectedPaymentMethod(newMethod);
+            setOrderDetails((prevDetails) => ({
+                ...prevDetails,
+                paymentMethod: newMethod,
+            }));
+        } catch (error: any) {
+            console.error("결제 수단 변경 실패:", error);
+
+            setSelectedPaymentMethod("none");
+
+            alert(`결제 수단 변경 실패: ${error.message}`);
+        }
+    };
+
     const handleApproveOrder = async () => {
         if (isApproving) return;
+
+        const currentPaymentMethod =
+            orderDetails.paymentMethod || selectedPaymentMethod;
+
+        if (currentPaymentMethod === "none") {
+            alert("결제수단을 선택해주세요.");
+            return;
+        }
+
         setIsApproving(true);
         setError("");
 
         try {
-            // 기본 결제 상태가 none 이라 정상 승인 확인 필요
+            const approveResponse = await onApproveOrder();
+
             console.log("결제:", {
                 totalAmount: calculations.finalAmount,
                 products: orderDetails.products.map(
                     (p) => p.productId.productName
                 ),
                 userEmail: userData?.email,
+                orderId: approveResponse.orderId,
+                paymentMethod: currentPaymentMethod,
             });
 
             alert("결제가 완료되었습니다.");
 
-            router.push("/payment/complete");
+            router.push(`/payment/complete/${approveResponse.orderId}`);
         } catch (error: any) {
             const errorMessage = error.message || "결제 진행에 실패했습니다.";
+
             setError(errorMessage);
-            alert(errorMessage);
+            alert(`결제 실패: ${error.message}`);
         } finally {
             setIsApproving(false);
         }
@@ -448,7 +488,6 @@ const Payment = ({
                                 </div>
                             </div>
                         </section>
-                        {/* /1차 mvp에서 결제 수단은 none처리 */}
                         <section className={cx("section")}>
                             <h2 className={cx("sectionTitle")}>결제수단</h2>
                             <div className={cx("paymentMethod")}>
@@ -457,6 +496,23 @@ const Payment = ({
                                     title="신용카드"
                                     width="100"
                                     height="42"
+                                    onClick={handlePaymentMethodSelect}
+                                    bgcolor={
+                                        selectedPaymentMethod === "card"
+                                            ? "--main-color"
+                                            : "--white"
+                                    }
+                                    color={
+                                        selectedPaymentMethod === "card"
+                                            ? "--white"
+                                            : "--black"
+                                    }
+                                    border={
+                                        selectedPaymentMethod === "card"
+                                            ? "--white"
+                                            : "--main-color"
+                                    }
+                                    borderSize="1"
                                 />
                             </div>
                         </section>
@@ -556,7 +612,7 @@ const Payment = ({
                                         checked={
                                             selectedAddress?.addressId ===
                                             addr.addressId
-                                        } // _id 대신 addressId 사용
+                                        }
                                         onChange={() =>
                                             handleAddressSelect(addr)
                                         }
@@ -564,7 +620,7 @@ const Payment = ({
                                         title={`${addr.address} ${
                                             addr.extraAddr ?? ""
                                         }`}
-                                        value={addr.addressId} // _id 대신 addressId 사용
+                                        value={addr.addressId}
                                     />
                                 </div>
                             ))}

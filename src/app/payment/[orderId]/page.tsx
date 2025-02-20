@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 interface OrderUpdateData {
     usePoint?: number;
     userAddressId?: string;
-    paymentMethod?: "CARD";
+    paymentMethod?: "card";
     couponId?: string;
 }
 
@@ -132,9 +132,7 @@ const PaymentPage = () => {
                 `${
                     process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
                 }/api/v1/orders/${orderId}`,
-                {
-                    products: [updateData],
-                },
+                updateData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -143,16 +141,22 @@ const PaymentPage = () => {
                 }
             );
 
+            console.log("주문 업데이트 요청:", {
+                orderId,
+                updateData,
+                응답: response.data,
+            });
+
             if (response.data.message === "order update success") {
                 return response.data.order;
             }
 
             throw new Error("주문서 수정에 실패했습니다.");
         } catch (error: any) {
-            if (error.response?.data?.message) {
-                throw new Error(error.response.data.message);
-            }
-            console.error("Order update error:", error);
+            console.error(
+                "주문 업데이트 중 오류:",
+                error.response?.data || error
+            );
             throw error;
         }
     };
