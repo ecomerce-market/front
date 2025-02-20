@@ -1,373 +1,155 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import styles from "./addressManagement.module.scss";
-import cn from "classnames/bind";
+import React, { useState, useEffect } from "react";
+import { FaPencil } from "react-icons/fa6";
+import { FaTrashAlt } from "react-icons/fa";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
 import SideMenu from "@/components/sideMenu/sideMenu";
 import Radio from "@/components/radio/radio";
-import DaumPostcode from "react-daum-postcode";
-import OneBtn from "@/components/btn/oneBtn";
-import TextInput from "@/components/input/textInput";
-import { FiXCircle } from "react-icons/fi";
-import { FaPencil } from "react-icons/fa6";
-import { FaTrashAlt } from "react-icons/fa";
+import { AddressSearchModal, DetailAddressModal } from "./addressModal";
+import { addressService } from "./addressService";
+import { Address, SelectedAddress } from "./addressType";
+import styles from "./addressManagement.module.scss";
+import cn from "classnames/bind";
+import Popup from "@/components/popup/popup";
 
 const cx = cn.bind(styles);
 
-interface Address {
-    addressId: string;
-    address: string;
-    extraAddr: string;
-    defaultAddr: boolean;
-}
-
 const AddressManagement = () => {
+    const [addresses, setAddresses] = useState<Address[]>([]);
+    const [error, setError] = useState("");
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
-    const [editingAddressId, setEditingAddressId] = useState<string>("");
-    const [selectedAddress, setSelectedAddress] = useState({
+    const [selectedAddress, setSelectedAddress] = useState<SelectedAddress>({
         address: "",
+        extraAddr: "",
         zonecode: "",
     });
-    const [detailAddress, setDetailAddress] = useState("");
-    const [detailAddressError, setDetailAddressError] = useState("");
-    const [addresses, setAddresses] = useState<Address[]>([]);
-    const [error, setError] = useState<string>("");
-    const addressSectionRef = useRef<HTMLDivElement>(null);
-    const [selectedRadio, setSelectedRadio] = useState<string | null>(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [editingAddressId, setEditingAddressId] = useState("");
+    const [currentDetailAddress, setCurrentDetailAddress] = useState("");
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState<{
+        addressId: string;
+        isDefault: boolean;
+    } | null>(null);
 
-    const themeObj = {
-        bgColor: "#EAF8F4",
-    };
-
-    // 사용자 주소 목록 조회
-    const fetchAddresses = async () => {
-        const url = `http://localhost:3001/api/v1/users/addresses`;
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("Authentication token is missing.");
-            }
-
-            const response = await fetch(url, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(
-                    `HTTP error! status: ${response.status}, body: ${errorText}`
-                );
-            }
-
-            const data = await response.json();
-            if (data.message === "success") {
-                const sortedAddresses = [...data.addresses].sort((a, b) =>
-                    b.defaultAddr === a.defaultAddr ? 0 : b.defaultAddr ? 1 : -1
-                );
-                setAddresses(sortedAddresses);
-                setError("");
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
+    // 사용자 모든 배송지 가져오기
     useEffect(() => {
-        fetchAddresses();
+        loadAddresses();
     }, []);
 
-    // 사용자 주소 추가
-    const addNewAddress = async (address: string, extraAddr: string) => {
+    const loadAddresses = async () => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                return false;
-            }
-            const response = await fetch(
-                `http://localhost:3001/api/v1/users/addresses`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        address,
-                        extraAddr,
-                        isDefault: addresses.length === 0,
-                    }),
-                }
-            );
-            if (!response.ok) {
-                throw new Error(`status: ${response.status}`);
-            }
-            const data = await response.json();
-
-            if (data.message === "new address added success") {
-                const newAddress = {
-                    addressId: data.addressId,
-                    address: address,
-                    extraAddr: extraAddr,
-                    defaultAddr: addresses.length === 0,
-                };
-
-                setAddresses((prev) => {
-                    const updatedAddresses = [...prev];
-                    if (updatedAddresses.length === 0) {
-                        updatedAddresses.unshift(newAddress);
-                    } else {
-                        updatedAddresses.push(newAddress);
-                    }
-                    return updatedAddresses;
-                });
-
-                return true;
-            }
-
-            return false;
-        } catch (error) {
-            console.error(error);
-            setError("새 주소를 추가하는데 실패했습니다.");
-            return false;
+            const fetchedAddresses = await addressService.fetchAddresses();
+            setAddresses(fetchedAddresses);
+            setError("");
+        } catch (err) {
+            setError("주소 목록을 불러오는데 실패했습니다.");
+            console.error(err);
         }
     };
 
-    // 사용자 주소 기본 주소로 설정
-    const setDefaultAddress = async (addressId: string) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("토큰값이 없습니다.");
-            }
-
-            const response = await fetch(
-                `http://localhost:3001/api/v1/users/addresses/${addressId}/defaults`,
-                {
-                    method: "PATCH",
-                    credentials: "include",
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(` error${response.status},  ${errorText}`);
-            }
-
-            const data = await response.json();
-            if (data.message === "success") {
-                const updatedAddresses = [...addresses];
-                const selectedAddrIndex = updatedAddresses.findIndex(
-                    (addr) => addr.addressId === addressId
-                );
-                if (selectedAddrIndex !== -1) {
-                    updatedAddresses.forEach((addr) => {
-                        addr.defaultAddr = addr.addressId === addressId;
-                    });
-                    const [selectedAddr] = updatedAddresses.splice(
-                        selectedAddrIndex,
-                        1
-                    );
-                    updatedAddresses.unshift(selectedAddr);
-
-                    setAddresses(updatedAddresses);
-                }
-                setError("");
-            }
-        } catch (error) {
-            console.error("Failed to set default address:", error);
-            setError("기본 배송지 설정에 실패했습니다.");
-        }
+    // 주소 선택 완료 시 상세 주소 입력 모달로 전환
+    const handleAddressComplete = (data: any) => {
+        setSelectedAddress({
+            address: data.address,
+            zonecode: data.zonecode,
+            extraAddr: data.extraAddr,
+        });
+        setIsAddressModalOpen(false);
+        setIsDetailModalOpen(true);
     };
 
-    const handleRadioChange = async (addressId: string) => {
-        setSelectedRadio(addressId);
-        await setDefaultAddress(addressId);
-        await fetchAddresses();
-    };
+    // 상세 주소 입력
+    // 수정인지 추가인지 확인 / 첫번째 주소는 기본배송지로 설정
 
-    const handleDetailSubmit = async () => {
-        if (!detailAddress.trim()) {
-            setDetailAddressError("상세주소를 입력해주세요");
-            return;
-        }
-
-        setDetailAddressError("");
+    const handleDetailSubmit = async (detailAddress: string) => {
         try {
-            let success;
             if (isEditMode) {
-                success = await updateAddress(
+                await addressService.updateAddress(
                     editingAddressId,
                     selectedAddress.address,
                     detailAddress
                 );
             } else {
-                success = await addNewAddress(
+                await addressService.addAddress(
                     selectedAddress.address,
-                    detailAddress
+                    detailAddress,
+                    addresses.length === 0
                 );
             }
-
-            if (success) {
-                resetModals();
-            } else {
-                setError(
-                    isEditMode
-                        ? "주소 수정에 실패했습니다."
-                        : "주소 추가에 실패했습니다."
-                );
-            }
-        } catch (error) {
-            console.error(error);
-            setError(
-                isEditMode
-                    ? "주소 수정 중 오류가 발생했습니다."
-                    : "주소 추가 중 오류가 발생했습니다."
-            );
+            await loadAddresses();
+            resetModals();
+        } catch (err: any) {
+            setError(err.message || "주소 처리 중 오류가 발생했습니다.");
         }
     };
-    const handleEditClick = async (address: Address) => {
+
+    // 기본 배송지 변경
+    const handleRadioChange = async (addressId: string) => {
+        try {
+            console.log("Setting default address:", addressId);
+            await addressService.setDefaultAddress(addressId);
+            console.log("Default address set successfully");
+            await loadAddresses();
+            console.log("Addresses reloaded");
+        } catch (err) {
+            console.error("Error in handleRadioChange:", err);
+            setError("기본 배송지 설정에 실패했습니다.");
+        }
+    };
+
+    // 배송지 수정
+    const handleEditClick = (address: Address) => {
         setIsEditMode(true);
         setEditingAddressId(address.addressId);
         setSelectedAddress({
             address: address.address,
             zonecode: "",
+            extraAddr: address.extraAddr,
         });
-        setDetailAddress(address.extraAddr);
+        setCurrentDetailAddress(address.extraAddr);
         setIsDetailModalOpen(true);
     };
 
-    // 주소 수정
-    const updateAddress = async (
-        addressId: string,
-        address: string,
-        extraAddr: string
-    ) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) return false;
-
-            const response = await fetch(
-                `http://localhost:3001/api/v1/users/addresses/${addressId}`,
-                {
-                    method: "PATCH",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        address,
-                        extraAddr,
-                    }),
-                }
-            );
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                if (errorData.code === "E008") {
-                    alert("기본 배송지는 반드시 존재해야 합니다.");
-                    return false;
-                }
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.message === "update success") {
-                await fetchAddresses();
-                return true;
-            }
-
-            return false;
-        } catch (error) {
-            console.error("Failed to update address:", error);
-            setError("주소 수정에 실패했습니다.");
-            return false;
-        }
-    };
-    const handleComplete = (data: any) => {
-        setSelectedAddress({
-            address: data.address,
-            zonecode: data.zonecode,
-        });
-        setIsAddressModalOpen(false);
-        setIsDetailModalOpen(true);
-        setDetailAddressError("");
-    };
-    const resetModals = () => {
-        setIsAddressModalOpen(false);
-        setIsDetailModalOpen(false);
-        setDetailAddress("");
-        setSelectedAddress({ address: "", zonecode: "" });
-        setIsEditMode(false);
-        setEditingAddressId("");
-    };
-
-    // 주소 삭제
-    const deleteAddress = async (addressId: string) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("Authentication token is missing.");
-            }
-
-            const response = await fetch(
-                `http://localhost:3001/api/v1/users/addresses/${addressId}`,
-                {
-                    method: "DELETE",
-                    credentials: "include",
-                    headers: {
-                        Accept: "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.status === 400) {
-                const errorData = await response.json();
-                if (errorData.code === "E007") {
-                    setError("기본 배송지는 삭제할 수 없습니다.");
-                    return;
-                }
-            }
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (data.message === "delete success") {
-                setAddresses((prevAddresses) =>
-                    prevAddresses.filter((addr) => addr.addressId !== addressId)
-                );
-                setError("");
-            }
-        } catch (error) {
-            console.error("Failed to delete address:", error);
-            setError("주소 삭제에 실패했습니다.");
-        }
-    };
-
-    const handleDeleteClick = async (addressId: string, isDefault: boolean) => {
+    // 기본 배송지는 삭제 불가
+    const handleDeleteClick = (addressId: string, isDefault: boolean) => {
         if (isDefault) {
             alert("기본 배송지는 삭제할 수 없습니다.");
             return;
         }
-        await deleteAddress(addressId);
+        setDeleteTarget({ addressId, isDefault });
+        setIsPopupOpen(true);
+    };
+
+    // 실제 삭제 처리
+    const handleConfirmDelete = async () => {
+        if (!deleteTarget) return;
+
+        try {
+            await addressService.deleteAddress(deleteTarget.addressId);
+            await loadAddresses();
+            setIsPopupOpen(false);
+            setDeleteTarget(null);
+        } catch (err: any) {
+            setError(err.message || "주소 삭제에 실패했습니다.");
+        }
+    };
+
+    // 팝업 닫기
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+        setDeleteTarget(null);
+    };
+
+    // 모달 관련 상태 초기화
+    const resetModals = () => {
+        setIsAddressModalOpen(false);
+        setIsDetailModalOpen(false);
+        setSelectedAddress({ address: "", zonecode: "", extraAddr: "" });
+        setIsEditMode(false);
+        setEditingAddressId("");
+        setCurrentDetailAddress("");
     };
 
     return (
@@ -377,8 +159,8 @@ const AddressManagement = () => {
                 <div className={cx("sideMenu")}>
                     <SideMenu title={"마이컬리"} />
                 </div>
-                <div className={cx("addressSection")} ref={addressSectionRef}>
-                    {error && <div className={cx("errorMessage")}>{error}</div>}
+                {/* 제목 */}
+                <div className={cx("addressSection")}>
                     <div className={cx("addressHeader")}>
                         <div className={cx("addressItem")}>
                             <h1 className={cx("mainTitle")}>배송지 관리</h1>
@@ -395,7 +177,7 @@ const AddressManagement = () => {
                             + 새 배송지 추가
                         </p>
                     </div>
-
+                    {/* 배송지 목록 */}
                     <div className={cx("submitForm")}>
                         <p className={cx("mainAddress")}>기본 배송지</p>
                         {addresses.map((addr) => (
@@ -434,80 +216,40 @@ const AddressManagement = () => {
                             </div>
                         ))}
                     </div>
+                    {/* 에러메세지 */}
+                    {error && <div className={cx("errorMessage")}>{error}</div>}
                 </div>
             </div>
 
-            {isAddressModalOpen && (
-                <div className={cx("modalOverlay")} onClick={resetModals}>
-                    <div
-                        className={cx("modalContent")}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className={cx("modalHeader")}>
-                            <h2>주소 검색</h2>
-                            <button
-                                onClick={resetModals}
-                                className={cx("closeButton")}
-                            >
-                                <FiXCircle />
-                            </button>
-                        </div>
-                        <DaumPostcode
-                            onComplete={handleComplete}
-                            autoClose={false}
-                            style={{ height: 500 }}
-                            theme={themeObj}
-                        />
-                    </div>
-                </div>
-            )}
+            {/* 주소 검색 팝업 */}
+            <AddressSearchModal
+                isOpen={isAddressModalOpen}
+                onClose={resetModals}
+                onComplete={handleAddressComplete}
+                theme={{ bgColor: "#EAF8F4" }}
+            />
 
-            {isDetailModalOpen && (
-                <div className={cx("modalOverlay")} onClick={resetModals}>
-                    <div
-                        className={cx("modalContent")}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className={cx("modalHeader")}>
-                            <h2>상세 주소 입력</h2>
-                            <button
-                                onClick={resetModals}
-                                className={cx("closeButton")}
-                            >
-                                <FiXCircle />
-                            </button>
-                        </div>
-                        <div className={cx("detailAddressForm")}>
-                            <div className={cx("addressInfo")}>
-                                <p>우편번호: {selectedAddress.zonecode}</p>
-                                <p>주소: {selectedAddress.address}</p>
-                            </div>
-                            <div className={cx("detailInputWrapper")}>
-                                <TextInput
-                                    width="450"
-                                    height="40"
-                                    value={detailAddress}
-                                    onChange={(e) => {
-                                        setDetailAddress(e.target.value);
-                                        setDetailAddressError("");
-                                    }}
-                                />
-                                {detailAddressError && (
-                                    <p className={cx("errorMessage")}>
-                                        {detailAddressError}
-                                    </p>
-                                )}
-                                <div className={cx("submitButton")}>
-                                    <OneBtn
-                                        title="저장"
-                                        width="320"
-                                        height="42"
-                                        onClick={handleDetailSubmit}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            {/* 상세 주소 입력 팝업 */}
+            <DetailAddressModal
+                isOpen={isDetailModalOpen}
+                onClose={resetModals}
+                selectedAddress={selectedAddress}
+                onSubmit={handleDetailSubmit}
+                isEditMode={isEditMode}
+                initialDetailAddress={currentDetailAddress}
+            />
+
+            {/* 삭제 팝업 */}
+            {isPopupOpen && (
+                <div className={cx("popupWrapper")}>
+                    <Popup
+                        isOpen={isPopupOpen}
+                        title="배송지를 삭제하시겠습니까?"
+                        leftBtn="취소"
+                        rightBtn="삭제"
+                        onClose={handleClosePopup}
+                        onRightBtnClick={() => handleConfirmDelete()}
+                    />
                 </div>
             )}
         </div>
