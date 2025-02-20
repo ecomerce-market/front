@@ -6,7 +6,6 @@ import cn from "classnames/bind";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
 import SideMenu from "@/components/sideMenu/sideMenu";
 import OrderProductCard from "@/components/productCard/order/order";
-import router from "next/router";
 
 const cx = cn.bind(styles);
 interface Order {
@@ -77,19 +76,7 @@ const OrderList = () => {
             <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
-                    <SideMenu
-                        title={"마이컬리"}
-                        content={[
-                            { label: "개인정보 수정", path: "/mypage/myInfo" },
-                            { label: "주문내역", path: "/mypage/orderList" },
-                            { label: "찜한상품", path: "/mypage/wishList" },
-                            {
-                                label: "배송지 관리",
-                                path: "/mypage/addressManagement",
-                            },
-                            { label: "상품 후기", path: "/mypage/review" },
-                        ]}
-                    />
+                    <SideMenu title={"마이컬리"} />
                 </div>
                 <div className={cx("orderListSection")}>
                     <div className={cx("orderListTitle")}>
