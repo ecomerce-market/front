@@ -16,9 +16,9 @@ interface SideMenuProps {
 
 const cx = cn.bind(styles);
 
-// Define separate content for each section
 const mypageContent: MenuContent[] = [
-    { label: "주문 내역", path: "/mypage/profile" },
+    { label: "개인 정보 수정", path: "/mypage/myInfo" },
+    { label: "주문 내역", path: "/mypage/orderList" },
     { label: "찜한 상품", path: "/mypage/wishList" },
     { label: "배송지 관리", path: "/mypage/addressManagement" },
     { label: "상품 후기", path: "/mypage/review" },
@@ -35,12 +35,10 @@ const SideMenu = ({ title }: SideMenuProps) => {
     const router = useRouter();
     const pathname = usePathname();
 
-    // Determine which content to show based on the current path
     const content = pathname?.startsWith("/mypage")
         ? mypageContent
         : supportContent;
 
-    // Set active index based on current path
     useEffect(() => {
         const currentIndex = content.findIndex((item) =>
             pathname?.startsWith(item.path)

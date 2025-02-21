@@ -8,17 +8,33 @@ import Link from "next/link";
 
 const cx = cn.bind(styles);
 
+// 배송 상태 타입 정의
+type DeliveryStatusType = "배송준비중" | "배송중" | "배송완료";
+
+// API 배송 상태 타입 정의
+type ApiDeliveryStatusType = "ready" | "shipping" | "delivered";
+
 interface OrderProductCardProps {
     date: string;
     title: string;
     orderNumber: string;
     payMethod: string;
     price: number;
-    complete: boolean;
+    apiDeliveryStatus?: ApiDeliveryStatusType;
+    deliveryStatus?: DeliveryStatusType;
     imageUrl?: string;
     totalProductCnt: number;
     onClick?: () => void;
 }
+
+// 결제 방식을 영어에서 한글로 변환하는 함수
+const getKoreanPayMethod = (englishPayMethod: string): string => {
+    const payMethodMap: { [key: string]: string } = {
+        card: "신용카드",
+    };
+
+    return payMethodMap[englishPayMethod.toLowerCase()] || englishPayMethod;
+};
 
 const OrderProductCard: React.FC<OrderProductCardProps> = ({
     date,
@@ -26,12 +42,35 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
     orderNumber,
     payMethod,
     price,
-    complete,
+    apiDeliveryStatus,
+    deliveryStatus,
     totalProductCnt,
     onClick,
 }) => {
     const displayTitle =
         totalProductCnt > 1 ? `${title} 외 ${totalProductCnt - 1}개` : title;
+
+    // 배송상태 한글 변환
+    const getKoreanDeliveryStatus = (
+        apiStatus?: ApiDeliveryStatusType
+    ): DeliveryStatusType => {
+        if (!apiStatus) return "배송준비중";
+
+        const statusMap: Record<ApiDeliveryStatusType, DeliveryStatusType> = {
+            ready: "배송준비중",
+            shipping: "배송중",
+            delivered: "배송완료",
+        };
+
+        return statusMap[apiStatus];
+    };
+
+    // 결제방식 한글 변환
+    const koreanPayMethod = getKoreanPayMethod(payMethod);
+
+    // 배송 상태
+    const showDeliveryStatus =
+        deliveryStatus || getKoreanDeliveryStatus(apiDeliveryStatus);
 
     return (
         <div className={cx("orderWrapper")}>
@@ -64,7 +103,7 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
                         </div>
                         <div>
                             <p>결제방법</p>
-                            <p>{payMethod}</p>
+                            <p>{koreanPayMethod}</p>
                         </div>
                         <div>
                             <p>결제금액</p>
@@ -73,7 +112,7 @@ const OrderProductCard: React.FC<OrderProductCardProps> = ({
                     </div>
                 </div>
                 <div className={cx("productDetail")}>
-                    <p>{complete ? "배송완료" : "배송중"}</p>
+                    <p>{showDeliveryStatus}</p>
                     <Link href={`/inquiry/inquiryDetail/${orderNumber}`}>
                         <OneBtn
                             onClick={onClick}
