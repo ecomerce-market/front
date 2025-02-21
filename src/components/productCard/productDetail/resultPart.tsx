@@ -64,12 +64,18 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
     try {
       let products = [];
 
-      if (product.options.length == 0) {
+      if (selectedOptions.length === 0) {
+        alert("상품을 선택해 주세요!");
+        return;
+      }
+
+      if (product.options.length === 0) {
         // 옵션이 없거나 선택된 옵션이 없을 경우
+        const resultCount = result.length > 0 ? result[0].count : 1;
         products = [
           {
             productId: product.productId,
-            amount: 1,
+            amount: counts[""] || resultCount || 1,
             optionName: "", // 공란 처리
           },
         ];
@@ -79,9 +85,12 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
             (opt: { optName: string }) => opt.optName === option
           );
 
+          // counts[option]이 존재하면 그 값을 사용, 없으면 기본값 1을 사용
+          const count = counts[option] || 1;
+
           return {
             productId: product.productId,
-            amount: counts[option] || 1,
+            amount: count, // 업데이트된 카운트를 사용
             optionName:
               matchedOption && product.productName === matchedOption.optName
                 ? "" // 공란 설정
@@ -90,15 +99,7 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
         });
       }
 
-      if (products.length === 0) {
-        alert("상품을 선택해 주세요!");
-        return;
-      }
-
-      console.log(
-        "서버로 보내는 데이터:",
-        JSON.stringify({ products }, null, 2)
-      );
+      console.log("서버로 보내는 데이터:", { products });
 
       const response = await fetch("http://localhost:3001/api/v1/orders", {
         method: "POST",

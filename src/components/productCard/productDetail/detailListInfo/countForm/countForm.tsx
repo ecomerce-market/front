@@ -16,6 +16,7 @@ type Option = {
 };
 
 type Product = {
+  productName: string;
   productId: string;
   finalPrice: number;
   options: Option[];
@@ -43,7 +44,6 @@ const CountForm = ({
           throw new Error("상품 데이터를 불러오는 데 실패했습니다.");
         }
         const data = await res.json();
-
         setProduct(data.product);
       } catch (error) {
         console.error("상품 데이터 패칭 실패", error);
@@ -56,17 +56,19 @@ const CountForm = ({
   // 마이너스 버튼 클릭
   const handleMinusCount = (item: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (counts[item] === 1) {
-      setSelectedOptions((prev) =>
-        prev.filter((selectedItem) => selectedItem !== item)
-      );
-      setCounts((prev) => ({ ...prev, [item]: 1 }));
-      return;
-    }
-    setCounts((prev) => ({
-      ...prev,
-      [item]: prev[item] ? prev[item] - 1 : 1,
-    }));
+    setCounts((prev) => {
+      const updatedCounts = { ...prev };
+      if (updatedCounts[item] > 1) {
+        updatedCounts[item] -= 1;
+      } else {
+        // 수량이 1일 때는 selectedOptions에서 제거
+        setSelectedOptions((prevSelected) =>
+          prevSelected.filter((selectedItem) => selectedItem !== item)
+        );
+        updatedCounts[item] = 1; // 최소 1로 유지
+      }
+      return updatedCounts;
+    });
   };
 
   // 플러스 버튼 클릭
@@ -74,8 +76,73 @@ const CountForm = ({
     e.stopPropagation();
     setCounts((prev) => ({
       ...prev,
-      [item]: (prev[item] || 0) + 1, // undefined가 나오지 않게 기본값을 0으로 설정
+      [item]: (prev[item] || 1) + 1, // 기본값 1로 설정하여 1부터 증가
     }));
+  };
+
+  // 서버에 데이터를 보내는 부분에서 counts를 올바르게 사용하기
+  const handlePostData = async () => {
+    if (!product) return;
+
+    try {
+      let products = [];
+
+      if (product.options.length === 0 || selectedOptions.length === 0) {
+        // 옵션이 없거나 선택된 옵션이 없을 경우
+        products = [
+          {
+            productId: product.productId,
+            amount: 1,
+            optionName: "", // 공란 처리
+          },
+        ];
+      } else {
+        products = selectedOptions.map((option) => {
+          const matchedOption = product.options.find(
+            (opt) => opt.optName === option
+          );
+
+          return {
+            productId: product.productId,
+            amount: counts[option] || 1, // counts에서 올바른 값 사용
+            optionName:
+              matchedOption && product.productName === matchedOption.optName
+                ? ""
+                : option,
+          };
+        });
+      }
+
+      console.log("서버로 보내는 데이터:", { products });
+
+      // 서버로 보내는 코드
+      const response = await fetch("http://localhost:3001/api/v1/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ products }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        console.error("서버 오류 응답:", errorData);
+        throw new Error(
+          `HTTP error ${response.status}: ${errorData?.message || ""}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("주문 성공:", data);
+      alert("주문이 완료되었습니다.");
+    } catch (error) {
+      console.error("주문 요청 실패:", error);
+      alert(
+        `주문 처리 중 오류가 발생했습니다: ${
+          error instanceof Error ? error.message : "알 수 없는 오류"
+        }`
+      );
+    }
   };
 
   return (
@@ -92,7 +159,7 @@ const CountForm = ({
 
             return (
               <div className={cx("selected-list")} key={index}>
-                <div className={cx("selected-title")}> {item}</div>
+                <div className={cx("selected-title")}>{item}</div>
 
                 <div className={cx("count-wrapper")}>
                   <span

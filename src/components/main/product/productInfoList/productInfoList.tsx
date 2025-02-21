@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 const cx = cn.bind(styles);
 type ProductInfoListProps = {
-  detailInfoHtml: string;
+  detailInfoHtml?: any;
   likeCnt: number;
 };
 
@@ -15,14 +15,14 @@ const productInfoList = ({ detailInfoHtml, likeCnt }: ProductInfoListProps) => {
 
   // 각 탭에 대한 내용
   const items = [
-    { label: "상품설명", index: 0, content: detailInfoHtml },
-    { label: "상품정보", index: 1, content: detailInfoHtml },
+    { label: "상품설명", index: 0, content: "추후 개발" },
+    { label: "상품정보", index: 1, content: "추후 개발" },
     {
       label: `후기(${likeCnt})`,
       index: 2,
       content: <span>3차 개발</span>,
     },
-    { label: "문의", index: 3, content: detailInfoHtml },
+    { label: "문의", index: 3, content: "추후 개발" },
   ];
 
   const handleSelect = (index: number) => {
