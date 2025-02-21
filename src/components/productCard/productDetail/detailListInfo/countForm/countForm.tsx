@@ -16,7 +16,7 @@ type Option = {
 };
 
 type Product = {
-  productName: string;
+  productId: string;
   finalPrice: number;
   options: Option[];
 };
@@ -52,7 +52,6 @@ const CountForm = ({
 
     getData();
   }, [id]);
-  console.log(product);
 
   // 마이너스 버튼 클릭
   const handleMinusCount = (item: string, e: React.MouseEvent) => {
