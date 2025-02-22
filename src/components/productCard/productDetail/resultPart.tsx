@@ -7,6 +7,7 @@ import OneBtn from "@/components/btn/oneBtn";
 import { useEffect, useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { LuBell } from "react-icons/lu";
+import { useRouter } from "next/navigation";
 
 const cx = cn.bind(styles);
 
@@ -26,7 +27,7 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
     }[]
   >([]);
   const [token, setToken] = useState<string | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     // 클라이언트 사이드에서만 localStorage 접근
     if (typeof window !== "undefined") {
@@ -119,8 +120,11 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
       }
 
       const data = await response.json();
-      console.log("주문 성공:", data);
+      console.log("주문 성공 :", data);
+      const id = data.order.orderId;
+      console.log("주문 성공 id:", id);
       alert("주문이 완료되었습니다.");
+      router.push(`http://localhost:3000/payment/${id}`);
     } catch (error) {
       console.error("주문 요청 실패:", error);
       alert(
