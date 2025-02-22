@@ -92,22 +92,24 @@ const Header = () => {
                 )}
             </div>
             <div className={cx("headerMain")}>
-                <div className={cx("logo")}>
-                    <Image
-                        width={70}
-                        height={28}
-                        src={"/images/Logo1.png"}
-                        alt={"Logo"}
-                        className={cx("logo1")}
-                    />
-                    <Image
-                        width={80}
-                        height={30}
-                        src={"/images/Logo2.png"}
-                        alt={"Logo"}
-                        className={cx("Logo2")}
-                    />
-                </div>
+                <Link href={"/"}>
+                    <div className={cx("logo")}>
+                        <Image
+                            width={70}
+                            height={28}
+                            src={"/images/Logo1.png"}
+                            alt={"Logo"}
+                            className={cx("logo1")}
+                        />
+                        <Image
+                            width={80}
+                            height={30}
+                            src={"/images/Logo2.png"}
+                            alt={"Logo"}
+                            className={cx("Logo2")}
+                        />
+                    </div>
+                </Link>
                 <div className={cx("searchBar")}>
                     <TextInput
                         width={"350"}
