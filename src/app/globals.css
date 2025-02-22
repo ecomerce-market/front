@@ -1,61 +1,66 @@
 @import "./reset.css";
 
 :root {
-    /* 전역 색상 변수 설정 */
-    --main-color: #0dbd88; /* MAIN 1 */
-    --main-second-color: #61cead; /* MAIN 2 */
-    --main-third-color: #61cead; /* MAIN 3 */
-    --main-fourth-color: #eaf8f4; /* MAIN 4 */
-    --main-fifth-color: #f2f9f7; /* MAIN 5 */
+  /* 전역 색상 변수 설정 */
 
-    /* 이펙트 컬러러 */
-    --red-color: #da3a44;
-    --blue-color: #1d62ec;
-    --yellow-color: #f3cb3c;
+  --mobile: 320px;
+  --tablet: 768px;
+  --desktop: 1024px;
 
-    /* 글씨 색상 */
-    --black: #000000;
-    --black-900: #191919;
-    --black-800: #333333;
-    --black-700: #4c4c4c;
-    --black-600: #666666;
-    --black-500: #7f7f7f;
-    --black-400: #999999;
-    --black-300: #b2b2b2;
-    --black-200: #cccccc;
-    --black-100: #e5e5e5;
-    --black-50: #f6f6f6;
-    --black-10: #fafafa;
-    --white: #ffffff;
+  --main-color: #0dbd88; /* MAIN 1 */
+  --main-second-color: #61cead; /* MAIN 2 */
+  --main-third-color: #61cead; /* MAIN 3 */
+  --main-fourth-color: #eaf8f4; /* MAIN 4 */
+  --main-fifth-color: #f2f9f7; /* MAIN 5 */
+
+  /* 이펙트 컬러러 */
+  --red-color: #da3a44;
+  --blue-color: #1d62ec;
+  --yellow-color: #f3cb3c;
+
+  /* 글씨 색상 */
+  --black: #000000;
+  --black-900: #191919;
+  --black-800: #333333;
+  --black-700: #4c4c4c;
+  --black-600: #666666;
+  --black-500: #7f7f7f;
+  --black-400: #999999;
+  --black-300: #b2b2b2;
+  --black-200: #cccccc;
+  --black-100: #e5e5e5;
+  --black-50: #f6f6f6;
+  --black-10: #fafafa;
+  --white: #ffffff;
 }
 
 @font-face {
-    font-family: "GmarketSansTTFMedium";
-    src: url("/font/GmarketSansTTFMedium.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
+  font-family: "GmarketSansTTFMedium";
+  src: url("/font/GmarketSansTTFMedium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* 전역 폰트 (GmarketSansTTFMedium) */
 body {
-    font-family: "GmarketSansTTFMedium";
+  font-family: "GmarketSansTTFMedium";
 }
 
 /* 404페이지 */
 .not-found-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #d4edda; /* 연한 초록색 */
-    color: #155724; /* 진한 초록색 */
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #d4edda; /* 연한 초록색 */
+  color: #155724; /* 진한 초록색 */
+  text-align: center;
 }
 
 h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
+  font-size: 2rem;
+  margin-bottom: 10px;
 }
 
 /* p {
@@ -64,20 +69,20 @@ h1 {
 } */
 
 button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: white;
-    background-color: #28a745; /* 초록색 버튼 */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: white;
+  background-color: #28a745; /* 초록색 버튼 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* disabled상태일때 호버 없애야할듯 */
 button:hover {
-    background-color: #218838; /* 버튼 hover 효과 */
+  background-color: #218838; /* 버튼 hover 효과 */
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }

@@ -1,57 +1,59 @@
 .navBarWrapper {
+  padding: 15px 20px;
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1280px;
+  .category {
     display: flex;
-    padding: 0 165px 10px;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
 
-    .category {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        position: relative;
+    .categoryIcon {
+      display: flex;
+      align-items: center;
+      font-size: 17px;
 
-        .categoryIcon {
-            display: flex;
-            align-items: center;
-            font-size: 17px;
-
-            &.active {
-                color: var(--main-color);
-            }
-        }
-
-        .categoryTitle {
-            font-size: 15px;
-
-            &.active {
-                color: var(--main-color);
-                font-weight: bold;
-            }
-        }
-
-        .categoryContent {
-            position: absolute;
-            top: 45px;
-            left: 0;
-        }
+      &.active {
+        color: var(--main-color);
+      }
     }
 
-    .subCategory {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 80px;
-        flex-grow: 1;
+    .categoryTitle {
+      font-size: 15px;
+
+      &.active {
+        color: var(--main-color);
+        font-weight: bold;
+      }
     }
 
-    .subCategory p {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 14px;
+    .categoryContent {
+      position: absolute;
+      top: 36px;
+      left: 0;
     }
+  }
+
+  .subCategory {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    flex-grow: 1;
+  }
+
+  .subCategory p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+  }
 }

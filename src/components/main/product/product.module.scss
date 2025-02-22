@@ -1,8 +1,15 @@
 .product-wrapper {
+  border: 1xp solid blue;
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  width: 1280px;
+  max-width: 1280px;
+  width: 100%;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.noItem-wrapper {
+  width: 100%;
+  max-width: 1280px;
 }
