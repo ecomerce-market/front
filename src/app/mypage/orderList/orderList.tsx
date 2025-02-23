@@ -6,28 +6,11 @@ import cn from "classnames/bind";
 import PersonalInfo from "@/components/personalnfo/personalInfo";
 import SideMenu from "@/components/sideMenu/sideMenu";
 import OrderProductCard from "@/components/productCard/order/order";
-import router from "next/router";
+import { fetchOrders } from "./orderService";
+import { Order } from "./orderListType";
 
 const cx = cn.bind(styles);
-interface Order {
-    orderId: string;
-    orderDate: string;
-    firstProductName: string;
-    firstProductMainImgUrl: string;
-    totalProductCnt: number;
-    paymentMethod: string;
-    totalPrice: number;
-    totalDeliveryStatus: "ready" | "shipping" | "completed";
-}
 
-interface OrderResponse {
-    message: string;
-    orders: Order[];
-    totalItems: number;
-    totalPages: number;
-    currPage: number;
-    currItem: number;
-}
 const OrderList = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,25 +18,11 @@ const OrderList = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchOrders = async (page = 1) => {
+    // 주문 데이터 불러오기
+    const loadOrders = async (page = 1) => {
         try {
             setIsLoading(true);
-            const response = await fetch(
-                `http://localhost:3001/api/v1/users/orders?page=${page}&limit=10`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "token"
-                        )}`,
-                    },
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch orders");
-            }
-
-            const data: OrderResponse = await response.json();
+            const data = await fetchOrders(page);
             setOrders(data.orders);
             setTotalPages(data.totalPages);
             setCurrentPage(data.currPage);
@@ -64,12 +33,14 @@ const OrderList = () => {
         }
     };
 
+    // 컴포넌트 마운트 시 데이터 불러오기
     useEffect(() => {
-        fetchOrders();
+        loadOrders();
     }, []);
-    console.log("Current orders:", orders);
+
+    // 페이지 변경 핸들러
     const handlePageChange = (newPage: number) => {
-        fetchOrders(newPage);
+        loadOrders(newPage);
     };
 
     return (
@@ -77,19 +48,7 @@ const OrderList = () => {
             <PersonalInfo />
             <div className={cx("myInfoMain")}>
                 <div className={cx("sideMenu")}>
-                    <SideMenu
-                        title={"마이컬리"}
-                        content={[
-                            { label: "개인정보 수정", path: "/mypage/myInfo" },
-                            { label: "주문내역", path: "/mypage/orderList" },
-                            { label: "찜한상품", path: "/mypage/wishList" },
-                            {
-                                label: "배송지 관리",
-                                path: "/mypage/addressManagement",
-                            },
-                            { label: "상품 후기", path: "/mypage/review" },
-                        ]}
-                    />
+                    <SideMenu title={"마이컬리"} />
                 </div>
                 <div className={cx("orderListSection")}>
                     <div className={cx("orderListTitle")}>
@@ -99,8 +58,8 @@ const OrderList = () => {
                         </p>
                     </div>
                     <div className={cx("orderListCard")}>
-                        {orders.map((order) => {
-                            return (
+                        {orders.length > 0 ? (
+                            orders.map((order) => (
                                 <OrderProductCard
                                     key={order.orderId}
                                     date={new Date(
@@ -110,16 +69,17 @@ const OrderList = () => {
                                     orderNumber={order.orderId}
                                     payMethod={order.paymentMethod}
                                     price={order.totalPrice}
-                                    complete={
-                                        order.totalDeliveryStatus ===
-                                        "completed"
-                                    }
                                     totalProductCnt={order.totalProductCnt}
                                     imageUrl={order.firstProductMainImgUrl}
                                 />
-                            );
-                        })}
+                            ))
+                        ) : (
+                            <div className={cx("noOrders")}>
+                                주문 내역이 없습니다.
+                            </div>
+                        )}
                     </div>
+                    {/* 페이지네이션 */}
                     {totalPages > 1 && (
                         <div className={cx("pagination")}>
                             {[...Array(totalPages)].map((_, index) => (

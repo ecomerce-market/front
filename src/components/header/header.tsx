@@ -225,12 +225,14 @@ const Header = () => {
               </Link>
             ) : null}
 
+
             {userInfo.token ? (
               <Link href={"/login"}>
                 <p className={cx("login")}>장바구니</p>
               </Link>
             ) : null}
           </div>
+
         </div>
       )}
     </div>
