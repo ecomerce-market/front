@@ -43,3 +43,17 @@
     }
   }
 }
+
+@media (max-width: 623px) {
+  .list-info-wrapper {
+    width: 100%;
+    width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 425px) {
+  .list-info-wrapper {
+    width: 300px;
+  }
+}

@@ -85,3 +85,10 @@
     }
   }
 }
+
+@media (max-width: 458px) {
+  .subCategory {
+    display: grid !important;
+    grid-template-columns: repeat(1, 4fr);
+  }
+}
