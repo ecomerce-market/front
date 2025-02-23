@@ -7,6 +7,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 1280px;
+
   .category {
     display: flex;
     justify-content: center;
@@ -55,5 +56,32 @@
     justify-content: center;
     cursor: pointer;
     font-size: 14px;
+  }
+}
+
+@media (max-width: 764px) {
+  .navBarWrapper {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+    padding: 0px;
+    margin: 0 auto;
+    .category {
+      margin-top: 10px;
+      border-top: 1px solid var(--black-200);
+      border-bottom: 1px solid var(--black-200);
+      padding: 10px 0px;
+    }
+  }
+
+  .subCategory {
+    padding: 20px;
+    display: grid !important;
+    gap: 0px !important;
+    grid-template-columns: repeat(2, 1fr);
+    p {
+      padding: 10px;
+      border: 1px solid var(--black-200);
+    }
   }
 }
