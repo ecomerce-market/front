@@ -78,10 +78,13 @@
     padding: 20px;
     display: grid !important;
     gap: 0px !important;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr)); // minmax 추가
+    width: 100%; // 명시적 너비 설정
+
     p {
       padding: 10px;
       border: 1px solid var(--black-200);
+      width: 100%; // 각 항목도 꽉 차게
     }
   }
 }
