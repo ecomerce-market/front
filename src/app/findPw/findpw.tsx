@@ -66,6 +66,21 @@ const FindPw = () => {
 
     if (validateName(formState.name) && !errors.phone) {
       console.log("전송할 비밀번호 찾기 데이터:", formState);
+      const fetchPwData = async () => {
+        try {
+          const res = await fetch(
+            "http://localhost:3001/api/v1/accounts/passwords",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: formState.name,
+                phone: formState.phone,
+              }),
+            }
+          );
+        } catch (error) {}
+      };
     }
   };
 
