@@ -50,7 +50,7 @@ const Product = () => {
   return (
     <div className={cx("product-wrapper")}>
       {productList.length === 0 ? (
-        <div>
+        <div className={cx("noItem-wrapper")}>
           <NoItems />
         </div>
       ) : (

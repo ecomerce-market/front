@@ -32,7 +32,7 @@ export interface Product {
   commentCnt: number;
   sellCnt: number;
   mainImgUrl: string;
-  detailInfoHtml: string;
+  detailInfoHtml: any;
   updateAt: string;
   categories: object[]; // categories의 구조가 명확하지 않아 임시로 object[] 지정
   options: any[]; // 옵션의 타입이 명확하지 않아 any[]로 지정

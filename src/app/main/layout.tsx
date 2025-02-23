@@ -6,11 +6,5 @@ type MainLayoutProps = {
 };
 
 export default function MainLayout({ children }: MainLayoutProps) {
-  return (
-    <div>
-      <BannerSwiper />
-
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 }

@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import Detail from "./detail";
+import Loading from "@/components/loading/loading";
 //ssr연결 해봄
 const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -13,10 +15,25 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     }
 
     const data = await res.json();
+
     return (
-      <div>
-        <Detail id={id} data={data.product} />
-      </div>
+      <Suspense
+        fallback={
+          <p
+            style={{
+              paddingTop: "50px",
+              textAlign: "center",
+              color: "var(--main-color)",
+            }}
+          >
+            "상품을 불러오는 중입니다...{" "}
+          </p>
+        }
+      >
+        <div>
+          <Detail id={id} data={data.product} />
+        </div>
+      </Suspense>
     );
   } catch (error) {
     console.error("상품 데이터 패칭 실패", error);

@@ -1,65 +1,200 @@
 .headerWrapper {
-    padding: 0 150px 30px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 20px;
 
-    .userServices {
+  .userServices {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 0;
+
+    a {
+      text-decoration: none;
+      color: var(--main-color);
+    }
+
+    .signup {
+      color: var(--main-color);
+      cursor: pointer;
+    }
+    .login,
+    .customerManagement {
+      color: var(--black-700);
+    }
+    .signup,
+    .login,
+    .customerManagement {
+      font-size: 13px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .signup::after,
+    .login::after {
+      content: "|";
+      margin: 0 5px;
+    }
+
+    .customerManagement {
+      display: flex;
+      gap: 3px;
+    }
+  }
+  .headerMain {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1280px;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .subMenu {
+      display: flex;
+      font-size: 30px;
+      gap: 20px;
+      a {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        padding: 10px 0;
-
-        a {
-            text-decoration: none;
-            color: var(--main-color);
-        }
-
-        .signup {
-            color: var(--main-color);
-            cursor: pointer;
-        }
-        .login,
-        .customerManagement {
-            color: var(--black-700);
-        }
-        .signup,
-        .login,
-        .customerManagement {
-            font-size: 13px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .signup::after,
-        .login::after {
-            content: "|";
-            margin: 0 5px;
-        }
-
-        .customerManagement::after {
-            content: "";
-        }
-
-        .customerManagement {
-            display: flex;
-            gap: 3px;
-        }
+      }
     }
-    .headerMain {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+  }
+}
+.hamburger-overlay {
+  position: fixed;
+  top: 0px;
+  height: 100vh;
+  right: 0%;
+  transition: 0.4s ease-in-out;
+  background-color: var(--black-50);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+  cursor: pointer;
+  .hamburger-menu-list {
+    cursor: pointer;
+  }
+}
+.logo-mobile {
+  display: none;
+}
 
-        .subMenu {
-            padding-top: 10px;
-            display: flex;
-            font-size: 30px;
-            gap: 20px;
-        }
+.logo-header {
+  display: none;
+}
+
+.hamburger-menu {
+  display: none;
+}
+.searchBar-medium {
+  display: none;
+}
+.searchBar-end-small {
+  display: none !important;
+}
+
+.searchBar-small {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .userServices {
+    .signup,
+    .login,
+    .customerManagement {
+      font-size: 10px !important;
     }
+  }
+  .logo {
+    display: none !important;
+  }
+  .logo-mobile {
+    display: block;
+  }
+  .searchBar {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo-header {
+    margin-top: 10px;
+    display: block;
+    display: flex;
+    justify-content: center;
+  }
+  .userServices {
+    .signup,
+    .login,
+    .customerManagement {
+      display: none !important;
+    }
+  }
+  .logo-mobile {
+    display: none;
+  }
+  .subMenu {
+    display: none !important;
+  }
+  .hamburger-menu {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--black-50);
+    &:hover {
+      background-color: var(--main-color);
+    }
+  }
+  .searchBar {
+    display: none !important;
+  }
+  .searchBar-medium {
+    margin: auto;
+    display: flex;
+  }
+}
+
+@media (max-width: 540px) {
+  .searchBar-medium {
+    display: none;
+  }
+  .searchBar-small {
+    display: block !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .searchBar-medium {
+    display: none;
+  }
+  .searchBar-small {
+    display: none !important;
+  }
+  .searchBar-end-small {
+    margin: 0 auto;
+    display: block !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .userServices {
+    .signup,
+    .login,
+    .customerManagement {
+      display: none !important;
+    }
+  }
 }
