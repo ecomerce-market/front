@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { FaAngleRight } from "react-icons/fa6";
 import styles from "./sideMenu.module.scss";
 import cn from "classnames/bind";
-import { FaAngleRight } from "react-icons/fa6";
-import { useRouter, usePathname } from "next/navigation";
+
+const cx = cn.bind(styles);
 
 interface MenuContent {
     label: string;
@@ -13,8 +15,6 @@ interface MenuContent {
 interface SideMenuProps {
     title: string;
 }
-
-const cx = cn.bind(styles);
 
 const mypageContent: MenuContent[] = [
     { label: "개인 정보 수정", path: "/mypage/myInfo" },
@@ -32,12 +32,27 @@ const supportContent: MenuContent[] = [
 
 const SideMenu = ({ title }: SideMenuProps) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [isCompact, setIsCompact] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
 
     const content = pathname?.startsWith("/mypage")
         ? mypageContent
         : supportContent;
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsCompact(window.innerWidth < 550);
+        };
+
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         const currentIndex = content.findIndex((item) =>
@@ -52,7 +67,7 @@ const SideMenu = ({ title }: SideMenuProps) => {
     };
 
     return (
-        <div className={cx("sideMenuWrapper")}>
+        <div className={cx("sideMenuWrapper", { compact: isCompact })}>
             <div className={cx("sideMenuTitle")}>{title}</div>
             <ul className={cx("menuList")}>
                 {content.map(({ label, path }, index) => (

@@ -3,9 +3,14 @@ export interface Product {
     productId: string;
     amount: number;
     _id: string;
-    optionName: string;
+    productName: string;
+    optionName?: string;
+    orgPrice: number;
+    finalPrice: number;
+    deliveryInfo: {
+        deliveryStatus: string;
+    };
 }
-
 // 배송지 타입
 export interface AddressInfo {
     userAddress: {
