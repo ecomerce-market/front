@@ -1,65 +1,75 @@
 .myInfoDetailWrapper {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding-bottom: 100px;
+    padding: 0 20px 100px;
+    box-sizing: border-box;
 
     .myInfoMain {
+        width: 100%;
         max-width: 1000px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 200px 1fr;
-        gap: 40px;
-        margin-top: 50px;
+        margin: 50px auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sideMenu {
+        width: 100%;
+        max-width: 300px;
+        flex-shrink: 0;
     }
 
     .checkInfo {
+        flex: 1;
+        min-width: 280px;
+
         .mainTitle {
-            font-size: 24px;
+            font-size: clamp(20px, 2.5vw, 24px);
             font-weight: 500;
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 2vh, 20px);
         }
 
         .submitForm {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 30px;
+            align-items: stretch;
+            gap: clamp(8px, 1.5vh, 12px);
+            padding: clamp(20px, 3vh, 30px);
             border-top: 2px solid var(--black);
             border-bottom: 1px solid var(--black-700);
 
             & > div {
                 display: grid;
-                grid-template-columns: 1fr 2fr;
+                grid-template-columns: minmax(100px, 1fr) minmax(200px, 2fr);
                 width: 100%;
-                place-items: center;
+                place-items: start;
 
                 & > div {
                     display: flex;
                     flex-direction: column;
-                    gap: 5px;
-                    grid-template-columns: 1fr;
+                    gap: clamp(3px, 0.8vh, 5px);
+                    width: 100%;
                     padding-bottom: 0;
                 }
             }
 
             span:not(.errorMessage) {
-                margin: 5px;
+                margin: clamp(3px, 0.8vh, 5px);
             }
         }
 
         .submitBtn {
             display: flex;
             justify-content: center;
-            padding-top: 50px;
+            padding-top: clamp(30px, 5vh, 50px);
         }
     }
 }
 
 .errorMessage {
     color: var(--red-color);
-    font-size: 12px;
+    font-size: clamp(13px, 1.2vw, 13px);
     margin: 0;
     padding: 0;
 }

@@ -14,7 +14,8 @@
         justify-content: center;
 
         .sideMenu {
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             flex-shrink: 0;
         }
 
@@ -183,7 +184,7 @@
 // 에러 메세지
 .errorMessage {
     color: var(--red-color);
-    font-size: clamp(13px, 1vw, 13px);
+    font-size: clamp(13px, 1.2vw, 13px);
     margin-top: 5px;
 }
 

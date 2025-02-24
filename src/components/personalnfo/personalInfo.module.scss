@@ -19,6 +19,7 @@
         padding: clamp(8px, 1vw, 10px);
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
+        gap: clamp(13px, 1vw, 15px);
 
         .userInfo {
             display: flex;
