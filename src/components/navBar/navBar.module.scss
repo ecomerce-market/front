@@ -93,5 +93,6 @@
   .subCategory {
     display: grid !important;
     grid-template-columns: repeat(1, 4fr);
+    flex-wrap: wrap;
   }
 }

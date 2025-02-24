@@ -189,12 +189,5 @@
   }
 }
 
-@media (max-width: 320px) {
-  .userServices {
-    .signup,
-    .login,
-    .customerManagement {
-      display: none !important;
-    }
-  }
+@media (min-width: 320px) {
 }
