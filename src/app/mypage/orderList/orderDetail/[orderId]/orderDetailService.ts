@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { OrderResponse, ErrorResponse } from "./orderDetailType";
+import {
+    DeliveryStatusType,
+    convertApiToDisplayStatus,
+} from "@/components/productCard/detail/product";
 
 export const useOrderDetail = (orderId: string) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<ErrorResponse | null>(null);
     const [orderData, setOrderData] = useState<OrderResponse | null>(null);
 
-    // 주문서 조회
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -18,52 +21,63 @@ export const useOrderDetail = (orderId: string) => {
                 return;
             }
 
-            const response = await fetch(
-                `http://localhost:3001/api/v1/orders/${orderId}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
+            try {
+                const response = await fetch(
+                    `http://localhost:3001/api/v1/orders/${orderId}`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (response.status === 401) {
+                    const errorData = await response.json();
+                    setError({
+                        message:
+                            errorData.code === "E009"
+                                ? "사용자 인증에 실패했습니다."
+                                : "로그인이 필요합니다.",
+                        code: "E009",
+                    });
+                    return;
                 }
-            ).catch(() => {
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    setError({
+                        message:
+                            errorData.message ||
+                            "주문 정보 조회에 실패했습니다.",
+                    });
+                    return;
+                }
+
+                const data = await response.json();
+
+                const transformedData = {
+                    ...data,
+                    order: {
+                        ...data.order,
+                        products: data.order.products.map((product: any) => ({
+                            ...product,
+
+                            productName: product.productId?.productName,
+                        })),
+                    },
+                };
+
+                setOrderData(transformedData);
+                setError(null);
+            } catch (err) {
                 setError({
                     message: "서버 연결에 실패했습니다.",
                 });
+            } finally {
                 setLoading(false);
-                return null;
-            });
-
-            if (!response) return;
-
-            if (response.status === 401) {
-                const errorData = await response.json();
-                setError({
-                    message:
-                        errorData.code === "E009"
-                            ? "사용자 인증에 실패했습니다."
-                            : "로그인이 필요합니다.",
-                    code: "E009",
-                });
-                setLoading(false);
-                return;
             }
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                setError({
-                    message:
-                        errorData.message || "주문 정보 조회에 실패했습니다.",
-                });
-                setLoading(false);
-                return;
-            }
-
-            const data = await response.json();
-            setOrderData(data);
-            setError(null);
-            setLoading(false);
         };
 
         fetchData();
@@ -72,12 +86,32 @@ export const useOrderDetail = (orderId: string) => {
     return { loading, error, orderData };
 };
 
-// 배송 상태
-export const getDeliveryStatus = (status: string): string => {
-    const statusMap: Record<string, string> = {
-        ready: "배송준비중",
-        shipping: "배송중",
-        delivered: "배송완료",
+export const getDeliveryStatus = (deliveryStatus: {
+    icedProdDelivStatus: string;
+    nonIcedProdDelivStatus: string;
+}): DeliveryStatusType => {
+    const getStatusPriority = (status: string): number => {
+        switch (status) {
+            case "ready":
+                return 1;
+            case "shipping":
+                return 2;
+            case "delivered":
+                return 3;
+            default:
+                return 0;
+        }
     };
-    return statusMap[status] || "배송준비중";
+
+    const icedStatus = getStatusPriority(deliveryStatus.icedProdDelivStatus);
+    const nonIcedStatus = getStatusPriority(
+        deliveryStatus.nonIcedProdDelivStatus
+    );
+
+    const finalStatus =
+        icedStatus >= nonIcedStatus
+            ? deliveryStatus.icedProdDelivStatus
+            : deliveryStatus.nonIcedProdDelivStatus;
+
+    return convertApiToDisplayStatus(finalStatus as ApiDeliveryStatusType);
 };

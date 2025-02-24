@@ -34,9 +34,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
     }
 
     const { order } = orderData;
-    const deliveryStatus: DeliveryStatusType = getDeliveryStatus(
-        order.deliveryStatus
-    );
+    const deliveryStatus: DeliveryStatusType = getDeliveryStatus({
+        icedProdDelivStatus:
+            order.deliveryStatus?.icedProdDelivStatus || "ready",
+        nonIcedProdDelivStatus:
+            order.deliveryStatus?.nonIcedProdDelivStatus || "ready",
+    });
 
     const safeParse = (value: any): number => {
         if (value === null || value === undefined) return 0;
@@ -77,13 +80,20 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
                             </div>
                             <div className={cx("productList")}>
                                 {order.products.map((product) => {
+                                    const orgPrice = product.orgPrice || 0;
+                                    const finalPrice =
+                                        product.finalPrice || orgPrice;
+                                    const displayTitle = product.optionName
+                                        ? `${product.productName} - ${product.optionName}`
+                                        : product.productName;
+
                                     return (
                                         <DetailProductCard
                                             key={product._id}
-                                            title={product.optionName}
-                                            orgPrice={`${originalPrice.toLocaleString()}원`}
+                                            title={displayTitle}
+                                            orgPrice={`${orgPrice.toLocaleString()}원`}
                                             finalPrice={
-                                                discountAmount > 0
+                                                finalPrice < orgPrice
                                                     ? `${finalPrice.toLocaleString()}원`
                                                     : undefined
                                             }
@@ -128,5 +138,4 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
         </div>
     );
 };
-
 export default OrderDetail;

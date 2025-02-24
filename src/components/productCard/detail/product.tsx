@@ -95,9 +95,13 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
             <div className={cx("productInfoWrap")}>
                 <p className={cx("title")}>{title}</p>
                 <div className={cx("priceWrap")}>
-                    {hasDiscount ? (
+                    {finalPrice ? (
                         <>
-                            <p className={cx("orgPrice")}>
+                            <p
+                                className={cx("orgPrice", {
+                                    "line-through": hasDiscount,
+                                })}
+                            >
                                 {formattedOrgPrice}
                             </p>
                             <p className={cx("finalPrice")}>
@@ -105,7 +109,7 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
                             </p>
                         </>
                     ) : (
-                        <p className={cx("orgPrice")}>{formattedOrgPrice}</p>
+                        <p className={cx("finalPrice")}>{formattedOrgPrice}</p>
                     )}
                     <p className={cx("count")}>{count}</p>
                     <div className={cx("btnWrap")}>
