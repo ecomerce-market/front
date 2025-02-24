@@ -161,7 +161,7 @@ const CountForm = ({
               <div className={cx("selected-list")} key={index}>
                 <div className={cx("selected-title")}>{item}</div>
 
-                <div className={cx("count-wrapper")}>
+                <div className={cx("products-count-wrapper")}>
                   <span
                     className={cx("count-pointer")}
                     onClick={(e) => handleMinusCount(item, e)}

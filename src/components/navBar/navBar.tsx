@@ -37,36 +37,46 @@ const NavBar = () => {
     setIsCategoryActive((prev) => !prev);
   };
 
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className={cx("navBarWrapper")}>
-      <div className={cx("category")} ref={categoryRef}>
-        <div
-          className={cx("categoryIcon", {
-            active: isCategoryActive,
-          })}
-          onClick={toggleCategory}
-        >
-          <TbMenu2 />
-        </div>
-        <div
-          className={cx("categoryTitle", {
-            active: isCategoryActive,
-          })}
-          onClick={toggleCategory}
-        >
-          카테고리
-        </div>
-        {isCategoryOpen && (
-          <div className={cx("categoryContent")}>
-            <Category />
+      <div className={cx("navBar-container")}>
+        <div className={cx("category")} ref={categoryRef}>
+          <div
+            className={cx("categoryIcon", {
+              active: isCategoryActive,
+            })}
+            onClick={toggleCategory}
+          >
+            <TbMenu2 />
           </div>
-        )}
-      </div>
-      <div className={cx("subCategory")}>
-        <p>신상품</p>
-        <p>베스트</p>
-        <p>알뜰쇼핑</p>
-        <p>특가/혜택</p>
+          <div
+            className={cx("categoryTitle", {
+              active: isCategoryActive,
+            })}
+            onClick={toggleCategory}
+          >
+            카테고리
+          </div>
+          {isCategoryOpen && (
+            <div className={cx("categoryContent")}>
+              <Category />
+            </div>
+          )}
+        </div>
+        <div className={cx("subCategory")}>
+          <p>신상품</p>
+          <p>주말특가</p>
+          <p>마감세일</p>
+          <p>특가/혜택</p>
+        </div>
+
+        <div className={cx("noticeCategory")}>
+          <p>공지사항</p>
+        </div>
       </div>
     </div>
   );

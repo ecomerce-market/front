@@ -20,3 +20,41 @@
     }
   }
 }
+
+.btn-wrap-tablet {
+  display: none;
+}
+
+@media (max-width: 764px) {
+  .resultPart-wrapper {
+    width: 355px;
+    h3 {
+      font-size: 14px;
+    }
+    .btn-wrap {
+      display: none;
+      width: 300px;
+      border: 1px solid red;
+    }
+    .btn-wrap-tablet {
+      display: flex !important;
+      gap: 3px;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 623px) {
+  .resultPart-wrapper {
+    h3 {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+
+@media (max-width: 423px) {
+  .btn-wrap-tablet {
+    display: none !important;
+  }
+}

@@ -1,90 +1,135 @@
 .navBarWrapper {
-  padding: 15px 20px;
+  padding: 15px 20px 5px 20px;
   display: flex;
   margin: 0 auto;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 1280px;
 
-  .category {
+  .navBar-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    position: relative;
+    justify-content: space-between;
+    margin: 0 auto;
+    gap: 20px;
+    max-width: 1280px;
+    width: 100%;
 
-    .categoryIcon {
+    .category {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      position: relative;
+
+      .categoryIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+
+        &.active {
+          color: var(--main-color);
+        }
+      }
+
+      .categoryTitle {
+        font-size: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &.active {
+          color: var(--main-color);
+          font-weight: bold;
+        }
+      }
+
+      .categoryContent {
+        position: absolute;
+        top: 36px;
+        left: 0;
+      }
+    }
+
+    .subCategory {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .subCategory p {
       display: flex;
       align-items: center;
-      font-size: 17px;
-
-      &.active {
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      &:hover {
         color: var(--main-color);
+        font-weight: 700;
+        border-bottom: 0.3px solid var(--main-color);
       }
     }
-
-    .categoryTitle {
-      font-size: 15px;
-
-      &.active {
-        color: var(--main-color);
-        font-weight: bold;
+    .noticeCategory {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      p {
+        border: 1px solid var(--black-100);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 14px;
       }
     }
-
-    .categoryContent {
-      position: absolute;
-      top: 36px;
-      left: 0;
+  }
+}
+@media (max-width: 700px) {
+  .navBarWrapper {
+    .navBar-container {
+      .category {
+        .categoryTitle {
+          font-size: 12px;
+        }
+      }
+      .subCategory {
+        gap: 40px;
+        p {
+          font-size: 12px;
+        }
+      }
+      .noticeCategory {
+        p {
+          font-size: 12px;
+        }
+      }
     }
-  }
-
-  .subCategory {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-    flex-grow: 1;
-  }
-
-  .subCategory p {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 14px;
   }
 }
 
-@media (max-width: 764px) {
+@media (max-width: 570px) {
   .navBarWrapper {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 10px;
-    padding: 0px;
-    margin: 0 auto;
-    .category {
-      margin-top: 10px;
-      border-top: 1px solid var(--black-200);
-      border-bottom: 1px solid var(--black-200);
-      padding: 10px 0px;
+    .navBar-container {
+      border: 1px solid var(--black-100);
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px 10px;
+      .noticeCategory {
+        display: none;
+      }
+      .subCategory {
+        padding-top: 10px;
+        p {
+          border: 1px solid var(--black-100);
+          padding: 10px;
+          font-size: 12px;
+          border-radius: 20px;
+        }
+      }
     }
   }
-
-  .subCategory {
-    padding: 20px;
-    display: grid !important;
-    gap: 0px !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)); // minmax 추가
-    width: 100%; // 명시적 너비 설정
-
-    p {
-      padding: 10px;
-      border: 1px solid var(--black-200);
-      width: 100%; // 각 항목도 꽉 차게
+}
     }
   }
 }

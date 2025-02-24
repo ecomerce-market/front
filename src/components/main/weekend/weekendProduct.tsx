@@ -77,6 +77,7 @@ const WeekendProduct = () => {
             rightBtnHref="#"
             onClose={handlePopupClose}
             onRightBtnClick={() => handleRightBtnClick(selectedProduct)}
+            isOpen={false}
           />
         </div>
       )}
