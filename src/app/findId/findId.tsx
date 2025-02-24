@@ -6,6 +6,7 @@ import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
 import OneBtn from "@/components/btn/oneBtn";
 import Popup from "@/components/popup/popup";
+import { useRouter } from "next/navigation";
 
 const cx = cn.bind(styles);
 
@@ -20,7 +21,7 @@ const FindId = () => {
     phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const router = useRouter();
   // 이름 유효성 검사
   const validateName = (name: string) => {
     const nameRegex = /^[A-Za-z가-힣]+$/;
@@ -66,6 +67,33 @@ const FindId = () => {
 
     if (validateName(formState.name) && !errors.phone) {
       console.log("전송할 아이디 데이터:", formState);
+      const fetchPostData = async () => {
+        const res = await fetch(
+          "http://localhost:3001/api/v1/accounts/loginids",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: formState.name,
+              phone: formState.phone,
+            }),
+          }
+        );
+
+        if (res.status == 404) {
+          console.log("사용자의 정보와 일치하지 않습니다.");
+          alert("사용자의 정보와 일치 하지 않습니다..");
+          return;
+        }
+
+        const data = await res.json();
+        console.log("data", data);
+        router.push(`/findId/completedId?id=${data.loginId}`);
+      };
+
+      fetchPostData();
     }
   };
 

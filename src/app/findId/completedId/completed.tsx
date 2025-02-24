@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./completed.module.scss";
 import cn from "classnames/bind";
 import OneBtn from "@/components/btn/oneBtn";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const cx = cn.bind(styles);
 
@@ -13,10 +13,14 @@ type userId = {
 
 const CompletedId = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
+  console.log("userId", userId);
 
   const moveLogin = (a: string) => {
     router.push(a);
   };
+
   return (
     <div className={cx("completedIdWrapper")}>
       <p>아이디찾기</p>
@@ -25,10 +29,7 @@ const CompletedId = () => {
         <p className={cx("subMassege")}>아이디 확인 후 로그인 해주세요.</p>
       </div>
 
-      <div className={cx("findedID")}>
-        {/* {id} */}
-        user0001
-      </div>
+      <div className={cx("findedID")}>{userId}</div>
 
       <div className={cx("btnWrapper")}>
         <OneBtn
