@@ -33,7 +33,7 @@ const DetailSelect = ({ data, productName, id }: selectProps) => {
   return (
     <div className={cx("list-info-wrapper")}>
       <div className={cx("infomation")}>
-        <span className={cx("infomation-type")}>판매자</span>{" "}
+        <span className={cx("infomation-type")}>상품</span>{" "}
         <div className={cx("infomation-detail")}>
           {data.length > 0 ? (
             <div>

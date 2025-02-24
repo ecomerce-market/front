@@ -1,3 +1,9 @@
+import MainPage from "./main/page";
+
 export default function Home() {
-  return <div></div>;
+  return (
+    <div>
+      <MainPage />
+    </div>
+  );
 }

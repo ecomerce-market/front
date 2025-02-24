@@ -178,6 +178,42 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
           />
         </div>
       </div>
+      <div className={cx("btn-wrap-tablet")}>
+        <OneBtn
+          color="--main-color"
+          bgcolor="--white"
+          border="--main-color"
+          borderSize="1"
+          title={<IoMdHeartEmpty />}
+          width={"35"}
+          height={"40"}
+          fontSize={"14"}
+          padding={"5px"}
+        />
+        <OneBtn
+          color="--main-color"
+          bgcolor="--white"
+          border="--main-color"
+          borderSize="1"
+          title={<LuBell />}
+          width={"35"}
+          height={"40"}
+          fontSize={"14"}
+          padding={"5px"}
+        />
+
+        <div className="buy">
+          <OneBtn
+            onClick={handlePostData}
+            fontWeight="700"
+            fontSize="16"
+            title={"구매하기"}
+            width={"200"}
+            height={"40"}
+            padding={"5px"}
+          />
+        </div>
+      </div>
     </div>
   );
 };

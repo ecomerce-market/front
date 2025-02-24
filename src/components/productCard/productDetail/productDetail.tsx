@@ -18,15 +18,18 @@ export const ProductDetail = ({ id, data }: DetailProps) => {
       </div>
       <div className={cx("product-text-wrapper")}>
         <ProductText data={data} id={id} />
-        <OneBtn
-          title={"쿠폰 다운 받기"}
-          bgcolor="--white"
-          color="--main-color"
-          border="--main-color"
-          borderSize="1"
-          width={"254"}
-          height={"20"}
-        />
+        {/* <div className={cx("coupon-wrapper")}>
+          <OneBtn
+            title={"쿠폰 다운 받기"}
+            bgcolor="--white"
+            color="--main-color"
+            border="--main-color"
+            borderSize="1"
+            width={"254"}
+            height={"20"}
+          />
+        </div> */}
+
         <div className={cx("info-list")}>
           <DetailListInfo data={data.info} />
           <DetailSelect

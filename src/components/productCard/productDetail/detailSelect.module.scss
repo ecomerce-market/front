@@ -60,3 +60,36 @@
     }
   }
 }
+
+@media (max-width: 623px) {
+  .list-info-wrapper {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 425px) {
+  .list-info-wrapper {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    .infomation-detail {
+      width: 100%;
+      .select {
+        width: 120%;
+      }
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .infomation-detail {
+    border: 1px solid red;
+    width: 100%;
+    .select {
+      width: 100% !important;
+      font-size: 12px !important;
+    }
+  }
+}

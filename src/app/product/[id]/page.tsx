@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import Detail from "./detail";
-import Loading from "@/components/loading/loading";
+import cn from "classnames/bind";
+import styles from "./detail.module.scss";
+import React from "react";
+const cx = cn.bind(styles);
 //ssr연결 해봄
 const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
@@ -30,7 +33,7 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           </p>
         }
       >
-        <div>
+        <div className={cx("productPage-warp")}>
           <Detail id={id} data={data.product} />
         </div>
       </Suspense>

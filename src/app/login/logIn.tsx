@@ -8,6 +8,7 @@ import OneBtn from "@/components/btn/oneBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import NotFoundPage from "../not-found";
+import Loading from "@/components/loading/loading";
 
 const cx = cn.bind(styles);
 
@@ -98,11 +99,6 @@ const LogIn = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await loginApi();
-  };
-
   const loginApi = async () => {
     try {
       const response = await fetch(
@@ -133,8 +129,13 @@ const LogIn = () => {
   };
 
   if (loading) {
-    return <NotFoundPage />;
+    return <Loading />;
   }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await loginApi();
+  };
 
   return (
     <>
