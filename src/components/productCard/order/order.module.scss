@@ -1,46 +1,84 @@
 .orderWrapper {
     width: 100%;
-    padding: 10px;
+    padding: clamp(8px, 1.5vw, 10px);
 
     .showMore {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 0 5px 0;
+        padding: clamp(8px, 1.5vw, 10px) 0 clamp(3px, 1vw, 5px) 0;
         border-bottom: 1px solid var(--black-100);
-    }
 
-    .showMore p {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 13px;
+        p {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            font-size: clamp(11px, 1.3vw, 13px);
+            gap: clamp(3px, 0.5vw, 5px);
+        }
     }
 
     .orderMain {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: stretch;
+        flex-wrap: wrap;
+        gap: clamp(15px, 2vw, 20px);
+        width: 100%;
 
         .productDetail {
             display: flex;
-            align-items: center;
-            gap: 30px;
-            font-size: 13px;
-            padding-top: 15px;
+            align-items: flex-start;
+            gap: clamp(15px, 2vw, 30px);
+            font-size: clamp(11px, 1.3vw, 13px);
+            padding-top: clamp(10px, 1.5vw, 15px);
+
+            &:first-child {
+                flex: 1 1 clamp(280px, 70%, 600px);
+                min-width: 280px;
+            }
+
+            &:last-child {
+                flex: 1 1 clamp(120px, 25%, 200px);
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+                gap: clamp(10px, 1.5vw, 15px);
+                margin-left: auto;
+
+                p {
+                    margin-right: auto;
+                    white-space: nowrap;
+                    min-width: max-content;
+                }
+            }
 
             .infoDetail {
                 display: flex;
                 flex-direction: column;
-            }
-            .infoDetail div {
-                display: grid;
-                grid-template-columns: 1fr 2fr;
-                gap: 20px;
-                font-size: 13px;
+                gap: clamp(8px, 1.2vw, 10px);
+                flex: 1;
+
+                div {
+                    display: grid;
+                    grid-template-columns: minmax(60px, 1fr) minmax(120px, 2fr);
+                    gap: clamp(10px, 1.5vw, 20px);
+                    font-size: clamp(11px, 1.3vw, 13px);
+
+                    p {
+                        &:first-child {
+                            color: var(--black-400);
+                        }
+
+                        &:last-child {
+                            word-break: break-all;
+                        }
+                    }
+                }
             }
         }
     }

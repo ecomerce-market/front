@@ -1,34 +1,73 @@
 .sideMenuWrapper {
-    width: 140px;
     height: auto;
+    width: 200px;
+    transition: all 0.3s ease;
 
     .sideMenuTitle {
         font-size: 22px;
         font-weight: 700;
         color: var(--black-800);
+        margin-bottom: 25px;
     }
 
     .menuList {
         list-style: none;
         padding: 0;
-        margin-top: 25px;
+        margin: 0;
         border: 1px solid var(--black-100);
         cursor: pointer;
 
         .menuContent {
-            font-size: 10px;
+            font-size: 14px;
             color: var(--black-600);
-            padding: 10px;
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--black-100);
+
+            &:last-child {
+                border-bottom: none;
+            }
 
             &.active {
                 color: var(--main-third-color);
+                background-color: rgba(var(--main-third-color-rgb), 0.1);
             }
 
             &:hover {
                 background-color: var(--main-fourth-color);
+            }
+        }
+    }
+
+    @media screen and (max-width: 620px) {
+        width: 100%;
+        margin-bottom: 30px;
+
+        .sideMenuTitle {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .menuList {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            border: none;
+            width: 100%;
+
+            .menuContent {
+                border: 1px solid var(--black-100);
+                border-radius: 6px;
+                font-size: 14px;
+                padding: 15px;
+                margin: 0;
+
+                &:last-child {
+                    border: 1px solid var(--black-100);
+                }
             }
         }
     }

@@ -1,50 +1,62 @@
 .addressManagementWrapper {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 
     .myInfoMain {
+        width: 100%;
         max-width: 1000px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 200px 1fr;
-        gap: 40px;
-        margin-top: 50px;
+        margin: 50px auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .sideMenu {
+            width: 300px;
+            flex-shrink: 0;
+        }
 
         .addressSection {
-            width: 100%;
-            margin: 0 auto;
+            flex: 1;
+            min-width: 280px;
 
             .addressHeader {
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: space-between;
                 gap: 5px;
                 margin-bottom: 20px;
+                flex-wrap: wrap;
 
                 .mainTitle {
-                    font-size: 24px;
+                    font-size: clamp(20px, 1vw, 24px);
                     margin: 5px 0;
                 }
 
                 .subTitle {
-                    font-size: 15px;
+                    font-size: clamp(13px, 1vw, 15px);
                     margin: 5px 0;
                 }
 
                 .content {
-                    font-size: 15px;
+                    font-size: clamp(13px, 1vw, 15px);
                     margin: 5px 0;
                     padding-left: 10px;
+                    white-space: nowrap;
                 }
             }
+
             .addressHeader div {
                 display: flex;
                 align-items: center;
                 gap: 10px;
+                flex-wrap: wrap;
             }
 
             .submitForm {
-                padding: 10px 25px 0;
+                padding: 10px clamp(15px, 1vw, 25px) 0;
                 border-top: 2px solid var(--black);
                 border-bottom: 1px solid var(--black-700);
 
@@ -54,11 +66,11 @@
                     align-items: flex-end;
                     width: 90px;
                     height: 25px;
-                    font-size: 14px;
+                    font-size: clamp(12px, 1.4vw, 14px);
                     background-color: var(--black-100);
                     padding: 0 5px;
                     border-radius: 20px;
-                    margin: 10px 0 0 30px;
+                    margin: 10px 0 0 clamp(15px, 1vw, 30px);
                 }
 
                 .addressItem {
@@ -68,6 +80,8 @@
                     padding: 10px 0;
                     margin: 10px 0;
                     border-bottom: 1px solid var(--black-100);
+                    gap: 10px;
+                    flex-wrap: wrap;
                 }
 
                 .addressItem:last-child {
@@ -76,12 +90,14 @@
 
                 .addressIcon {
                     display: flex;
-                    gap: 20px;
+                    gap: clamp(10px, 1vw, 20px);
+                    flex-shrink: 0;
                 }
 
                 .addressIcon div {
                     color: var(--black-500);
-                    cursor: "pointer";
+                    cursor: pointer;
+                    padding: 5px;
                 }
 
                 .addressIcon div:hover {
@@ -104,10 +120,11 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 20px;
 
     .modalContent {
         background-color: var(--white);
-        padding: 20px;
+        padding: clamp(15px, 3vw, 20px);
         border-radius: 8px;
         width: 100%;
         max-width: 500px;
@@ -121,13 +138,13 @@
 
             h2 {
                 margin: 0;
-                font-size: 18px;
+                font-size: clamp(16px, 1vw, 18px);
             }
 
             .closeButton {
                 background: none;
                 border: none;
-                font-size: 24px;
+                font-size: clamp(20px, 1vw, 24px);
                 cursor: pointer;
                 padding: 0;
                 color: var(--main-color);
@@ -144,7 +161,7 @@
 
                 p {
                     margin: 8px 0;
-                    font-size: 14px;
+                    font-size: clamp(12px, 1vw, 14px);
                 }
             }
 
@@ -157,6 +174,7 @@
             .submitButton {
                 display: flex;
                 justify-content: center;
+                margin-top: 20px;
             }
         }
     }
@@ -165,7 +183,7 @@
 // 에러 메세지
 .errorMessage {
     color: var(--red-color);
-    font-size: 13px;
+    font-size: clamp(13px, 1vw, 13px);
     margin-top: 5px;
 }
 
@@ -181,4 +199,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
