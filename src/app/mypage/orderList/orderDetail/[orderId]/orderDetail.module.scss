@@ -14,10 +14,13 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+
     .sideMenu {
-        width: 300px;
+        width: 100%;
+        max-width: 300px;
         flex-shrink: 0;
     }
+
     .orderDetailSection {
         flex: 1;
         min-width: 280px;
