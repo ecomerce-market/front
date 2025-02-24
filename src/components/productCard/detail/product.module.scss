@@ -1,46 +1,95 @@
 .inputWrapper {
     width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
+    min-height: 100px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(12px, 2vw, 20px);
     align-items: center;
-    position: relative;
+    padding: clamp(10px, 1.5vw, 16px);
 
     .productInfoWrap {
         display: flex;
         flex-direction: column;
-        position: absolute;
-        left: 13%;
+        gap: clamp(4px, 1vw, 8px);
+        width: 100%;
 
         p {
             font-weight: 600;
-            font-size: 12px;
+            font-size: clamp(11px, 1.2vw, 12px);
             color: var(--black-800);
+        }
+
+        .title {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .priceWrap {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(8px, 1vw, 10px);
+            width: 100%;
+            min-width: 0;
 
             .finalPrice {
-                font-size: 12px;
+                font-size: clamp(11px, 1.2vw, 12px);
+                flex-shrink: 0;
             }
 
             .orgPrice {
-                font-size: 10px;
+                font-size: clamp(9px, 1.1vw, 10px);
                 font-weight: 400;
                 color: var(--black-400);
                 text-decoration: line-through;
+                flex-shrink: 0;
+            }
+
+            .count {
+                margin-left: auto;
+                margin-right: 16px;
+                flex-shrink: 0;
+            }
+
+            .btnWrap {
+                display: flex;
+                align-items: center;
+                font-size: clamp(11px, 1.3vw, 13px);
+                white-space: nowrap;
+                flex-shrink: 0;
+
+                .deliveryStatus {
+                    text-align: right;
+
+                    &.completed {
+                        color: var(--black-800);
+                    }
+
+                    &.inProgress {
+                        color: var(--main-color);
+                    }
+                }
             }
         }
     }
 
-    .btnWrap {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
+    @media (max-width: 768px) {
+        .productInfoWrap {
+            .priceWrap {
+                flex-wrap: wrap;
+                gap: 8px 16px;
+
+                .count {
+                    margin-left: 0;
+                }
+
+                .btnWrap {
+                    width: 100%;
+                    justify-content: flex-end;
+                    margin-top: 4px;
+                }
+            }
+        }
     }
 }

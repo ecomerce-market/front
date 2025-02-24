@@ -108,17 +108,17 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
                         <p className={cx("orgPrice")}>{formattedOrgPrice}</p>
                     )}
                     <p className={cx("count")}>{count}</p>
+                    <div className={cx("btnWrap")}>
+                        <p
+                            className={cx("deliveryStatus", {
+                                completed: isDeliveryCompleted,
+                                inProgress: !isDeliveryCompleted,
+                            })}
+                        >
+                            {deliveryStatusText}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div className={cx("btnWrap")}>
-                <p
-                    className={cx("deliveryStatus", {
-                        completed: isDeliveryCompleted,
-                        inProgress: !isDeliveryCompleted,
-                    })}
-                >
-                    {deliveryStatusText}
-                </p>
             </div>
         </div>
     );
