@@ -43,16 +43,43 @@
                     align-items: center;
                     gap: 16px;
 
-                    > div:last-child {
-                        margin-left: auto;
+                    .productCount {
                         display: flex;
-                        flex-direction: column;
-                        align-items: flex-end;
-                        gap: 8px;
+                        flex-direction: row;
+                        align-items: center;
+                        margin-left: auto;
 
-                        p {
-                            white-space: nowrap;
-                            margin: 0;
+                        .countBtn {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 26px;
+                            height: 26px;
+                            border: 1px solid var(--black-200);
+                            background: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 16px;
+
+                            &:hover {
+                                background-color: var(--black-50);
+                            }
+
+                            &:disabled {
+                                color: var(--black-200);
+                                cursor: not-allowed;
+                            }
+                        }
+
+                        .quantity {
+                            margin: 0 8px;
+                            min-width: 40px;
+                            text-align: center;
+                        }
+
+                        .price {
+                            margin-left: 12px;
+                            font-weight: 500;
                         }
                     }
                 }

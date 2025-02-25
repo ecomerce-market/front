@@ -5,13 +5,13 @@ import cn from "classnames/bind";
 import Radio from "@/components/radio/radio";
 import { FiMapPin } from "react-icons/fi";
 import OneBtn from "@/components/btn/oneBtn";
+import { FaTrashAlt } from "react-icons/fa";
 
 const cx = cn.bind(styles);
 
 interface CartItem {
     id: number;
     title: string;
-    // address: string;
     price: number;
     quantity: number;
     discount: number;
@@ -68,9 +68,21 @@ const Cart = () => {
                     : item
             )
         );
-        // 모든 아이템 선택 확인해 전체 선택 상태 업데이트
         const allItemsSelected = cartItems.every((item) => item.isSelected);
         setAllSelected(allItemsSelected);
+    };
+
+    // 상품 수량 변경 함수
+    const handleQuantityChange = (itemId: number, change: number) => {
+        setCartItems(
+            cartItems.map((item) => {
+                if (item.id === itemId) {
+                    const newQuantity = Math.max(1, item.quantity + change);
+                    return { ...item, quantity: newQuantity };
+                }
+                return item;
+            })
+        );
     };
 
     // 금액 계산 로직
@@ -114,14 +126,19 @@ const Cart = () => {
             <h1 className={cx("title")}>장바구니</h1>
             <div className={cx("cartSection")}>
                 <div className={cx("productList")}>
-                    <div className={cx("selectAll")}>
-                        <Radio
-                            title={"전체 선택"}
-                            name={"select"}
-                            value={"select"}
-                            onChange={handleSelectAll}
-                            checked={allSelected}
-                        />
+                    <div className={cx("cartSectionHeader")}>
+                        <div className={cx("selectAll")}>
+                            <Radio
+                                title={"전체 선택"}
+                                name={"select"}
+                                value={"select"}
+                                onChange={handleSelectAll}
+                                checked={allSelected}
+                            />
+                        </div>
+                        <div>
+                            <FaTrashAlt />
+                        </div>
                     </div>
                     {cartItems.map((item) => (
                         <div className={cx("product")} key={item.id}>
@@ -136,13 +153,32 @@ const Cart = () => {
                                     onChange={() => handleRadioChange(item.id)}
                                     checked={item.isSelected}
                                 />
-                                <div>
-                                    <p>{item.quantity}개</p>
-                                    <p>
+                                <div className={cx("productCount")}>
+                                    <p
+                                        className={cx("countBtn")}
+                                        onClick={() =>
+                                            handleQuantityChange(item.id, -1)
+                                        }
+                                        disabled={item.quantity <= 1}
+                                    >
+                                        -
+                                    </p>
+                                    <span className={cx("quantity")}>
+                                        {item.quantity}개
+                                    </span>
+                                    <p
+                                        className={cx("countBtn")}
+                                        onClick={() =>
+                                            handleQuantityChange(item.id, 1)
+                                        }
+                                    >
+                                        +
+                                    </p>
+                                    <span className={cx("price")}>
                                         {formatPrice(
                                             item.price * item.quantity
                                         )}
-                                    </p>
+                                    </span>
                                 </div>
                             </div>
                         </div>
