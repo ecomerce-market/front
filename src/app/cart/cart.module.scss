@@ -1,93 +1,150 @@
 .cartWrapper {
+    max-width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+
     .title {
         margin: 0 auto;
         padding: 30px 0;
-        font-size: 24px;
+        font-size: clamp(20px, 5vw, 24px);
         text-align: center;
     }
 
     .cartSection {
         display: flex;
+        flex-direction: column;
         max-width: 1000px;
         margin: 0 auto;
-        gap: 32px;
+        gap: 50px;
+
+        .cartSectionHeader {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--black-500);
+            width: 100%;
+        }
 
         .productList {
-            flex: 1;
+            width: 100%;
 
             .selectAll {
-                padding: 30px 0;
-                border-bottom: 1px solid var(--black-500);
+                padding: 20px 0;
             }
 
             .product {
-                padding: 24px 0;
+                padding: 16px 0;
                 border-bottom: 1px solid var(--black-100);
 
                 .selectProduct {
                     display: flex;
                     width: 100%;
                     align-items: center;
-                    gap: 20px;
+                    gap: 16px;
 
-                    > div:last-child {
-                        margin-left: auto;
+                    .productCount {
                         display: flex;
-                        gap: 20px;
+                        flex-direction: row;
+                        align-items: center;
+                        margin-left: auto;
 
-                        p {
-                            white-space: nowrap;
+                        .countBtn {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 26px;
+                            height: 26px;
+                            border: 1px solid var(--black-200);
+                            background: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 16px;
+
+                            &:hover {
+                                background-color: var(--black-50);
+                            }
+
+                            &:disabled {
+                                color: var(--black-200);
+                                cursor: not-allowed;
+                            }
+                        }
+
+                        .quantity {
+                            margin: 0 8px;
+                            min-width: 40px;
+                            text-align: center;
+                        }
+
+                        .finalPrice {
+                            margin: 0 12px;
+                            font-weight: 500;
+                        }
+
+                        .originalPrice {
+                            text-decoration: line-through;
+                            color: var(--black-500);
                         }
                     }
                 }
             }
         }
+
         .stickyContainer {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
+            width: 100%;
 
             .paymentSection {
                 width: 100%;
-                max-width: 250px;
-
-                :global(.card) {
-                    padding: 20px;
-                }
+                background-color: var(--white);
+                border-radius: 8px;
+                padding: 20px;
+                border: 1px solid var(--black-100);
 
                 .addressWrapper {
                     display: flex;
                     flex-direction: column;
-                    gap: 20px;
-                    padding-bottom: 20px;
+                    align-items: flex-start;
+                    padding: 16px 0;
                     border-bottom: 1px solid var(--black-100);
 
                     .shipping {
                         display: flex;
                         align-items: center;
-                        gap: 10px;
+                        gap: 8px;
+
+                        p {
+                            font-weight: 500;
+                            margin: 0;
+                        }
                     }
 
                     .address {
                         color: var(--gray-600);
                         font-size: 14px;
+                        text-align: left;
+                        margin: 0;
                     }
                 }
 
                 .paymentWrapper {
-                    padding-top: 20px;
+                    padding-top: 16px;
 
                     .paymentInfo {
                         display: flex;
                         flex-direction: column;
                         gap: 12px;
-                        padding-bottom: 20px;
-                        border-bottom: 1px solid var(--black-100);
+                        padding-bottom: 16px;
 
                         div {
                             display: flex;
                             justify-content: space-between;
                             font-size: 14px;
+                            margin: 0;
+
+                            p {
+                                margin: 0;
+                            }
                         }
                     }
 
@@ -95,10 +152,15 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        padding: 35px 0 5px;
+                        padding: 16px 0;
+                        border-top: 1px solid var(--black-100);
                         font-weight: 500;
 
-                        span:last-child {
+                        p {
+                            margin: 0;
+                        }
+
+                        p:last-child {
                             font-size: 18px;
                             font-weight: 600;
                         }
@@ -108,9 +170,40 @@
 
             .cartBtn {
                 display: flex;
-                padding-top: 10px;
+                margin-top: 16px;
                 justify-content: center;
+
+                :global(.oneBtn) {
+                    width: 100%;
+                    height: 48px;
+                    border-radius: 4px;
+                }
             }
         }
     }
+
+    @media (min-width: 768px) {
+        .cartSection {
+            flex-direction: row;
+            gap: 32px;
+
+            .productList {
+                flex: 1;
+            }
+
+            .stickyContainer {
+                flex: 0 0 300px;
+                position: sticky;
+                top: 100px;
+                height: fit-content;
+            }
+        }
+    }
+}
+
+.emptyCart {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    font-size: 15px;
 }
