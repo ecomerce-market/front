@@ -5,19 +5,22 @@ import Image from "next/image";
 
 const cx = cn.bind(styles);
 
-interface DetailProductCardProps {
+interface PaymentCardProps {
     productName: string;
+    optionName?: string;
     orgPrice: number;
     finalPrice?: number;
     amount: number;
     mainImgUrl?: string;
 }
 
-const DetailProductCard: React.FC<DetailProductCardProps> = ({
+const PaymentCard: React.FC<PaymentCardProps> = ({
     productName,
+    optionName,
     orgPrice,
     finalPrice,
     amount,
+    mainImgUrl,
 }) => {
     const formatPrice = (price: number) => {
         return price.toLocaleString("ko-KR");
@@ -33,11 +36,20 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
                 <Image
                     width={70}
                     height={86}
-                    // src={mainImgUrl}
                     src={"/images/example.png"}
                     alt={productName}
                 />
-                <p className={cx("title")}>{productName}</p>
+                <div className={cx("productInfo")}>
+                    <p className={cx("title")}>
+                        {productName}
+                        {optionName && (
+                            <span className={cx("option")}>
+                                {" "}
+                                - {optionName}
+                            </span>
+                        )}
+                    </p>
+                </div>
             </div>
             <div className={cx("priceWrap")}>
                 {finalPrice && finalPrice !== orgPrice && (
@@ -60,4 +72,4 @@ const DetailProductCard: React.FC<DetailProductCardProps> = ({
     );
 };
 
-export default DetailProductCard;
+export default PaymentCard;
