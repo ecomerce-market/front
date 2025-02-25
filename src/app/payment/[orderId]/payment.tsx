@@ -1,4 +1,6 @@
 "use client";
+
+import React from "react";
 import styles from "./payment.module.scss";
 import cn from "classnames/bind";
 import TextInput from "@/components/input/textInput";
@@ -7,81 +9,24 @@ import PaymentCard from "@/components/productCard/payment/paymentCard";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { FiXCircle } from "react-icons/fi";
 import Radio from "@/components/radio/radio";
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { PaymentProps, AddressType } from "./paymentType";
 
 const cx = cn.bind(styles);
 
-interface ProductType {
-    productId: {
-        productName: string;
-        orgPrice: number;
-        finalPrice: number;
-        mainImgUrl: string;
-    };
-    amount: number;
-}
-
-interface AddressType {
-    addressId: string;
-    address: string;
-    extraAddr: string;
-    defaultAddr: boolean;
-}
-
-interface UserDataType {
-    _id: string;
-    name: string;
-    email: string;
-}
-
-interface OrderType {
-    products: ProductType[];
-    totalPrice: number;
-    totalOrgPrice: number;
-    totalDiscountedPrice: number;
-    addressInfo: {
-        userAddress: {
-            address: string;
-            extraAddr: string;
-            defaultAddr: boolean;
-        };
-    };
-    userInfo: {
-        user: UserDataType;
-    };
-    usedPoints: number;
-    paymentMethod: string;
-}
-interface ApproveResponse {
-    totalPaidPrice: number;
-    addedPoints: number;
-    orderId: string;
-}
-interface PaymentProps {
-    onFetchUserData: () => Promise<UserDataType>;
-    onFetchAddresses: () => Promise<AddressType[]>;
-    onFetchOrderDetails: () => Promise<OrderType>;
-    onUpdateOrder: (updateData: {
-        usePoint?: number;
-        userAddressId?: string;
-        paymentMethod?: string;
-        couponId?: string;
-    }) => Promise<OrderType>;
-    onApproveOrder: () => Promise<ApproveResponse>;
-}
-const Payment = ({
+const PaymentUI: React.FC<PaymentProps> = ({
     onFetchUserData,
     onFetchAddresses,
     onFetchOrderDetails,
     onUpdateOrder,
     onApproveOrder,
-}: PaymentProps) => {
-    const router = useRouter();
+}) => {
+    // usePayment 훅을 사용하지 않고 props 그대로 사용
+    // (page.tsx에서 usePayment 훅을 사용하여 props를 전달받는 형태)
 
-    const [userData, setUserData] = useState<UserDataType | null>(null);
-    const [addresses, setAddresses] = useState<AddressType[]>([]);
-    const [orderDetails, setOrderDetails] = useState<OrderType>(() => ({
+    // 상태 관리
+    const [userData, setUserData] = React.useState(null);
+    const [addresses, setAddresses] = React.useState([]);
+    const [orderDetails, setOrderDetails] = React.useState({
         products: [
             {
                 productId: {
@@ -90,6 +35,7 @@ const Payment = ({
                     finalPrice: 0,
                     mainImgUrl: "",
                 },
+                optionName: "",
                 amount: 0,
             },
         ],
@@ -112,20 +58,19 @@ const Payment = ({
         },
         usedPoints: 0,
         paymentMethod: "none",
-    }));
-    const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(
-        null
-    );
-    const [isLoading, setIsLoading] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [pointsToUse, setPointsToUse] = useState<number>(0);
-    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-    const [error, setError] = useState<string>("");
-    const [isUpdating, setIsUpdating] = useState(false);
-    const [isApproving, setIsApproving] = useState(false);
+    });
+    const [selectedAddress, setSelectedAddress] = React.useState(null);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [isExpanded, setIsExpanded] = React.useState(false);
+    const [pointsToUse, setPointsToUse] = React.useState(0);
+    const [isAddressModalOpen, setIsAddressModalOpen] = React.useState(false);
+    const [error, setError] = React.useState("");
+    const [isUpdating, setIsUpdating] = React.useState(false);
+    const [isApproving, setIsApproving] = React.useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] =
-        useState<string>("none");
-    useEffect(() => {
+        React.useState("none");
+
+    React.useEffect(() => {
         const fetchInitialData = async () => {
             setIsLoading(true);
             setError("");
@@ -138,11 +83,23 @@ const Payment = ({
 
                 setUserData(userData);
                 setAddresses(addressesData);
+
+                const productsWithOptions = orderData.products.map(
+                    (product) => {
+                        return {
+                            ...product,
+                            optionName: product.optionName,
+                        };
+                    }
+                );
+
                 const updatedOrderData = {
                     ...orderData,
+                    products: productsWithOptions,
                     paymentMethod: orderData.paymentMethod || "none",
                 };
-                setOrderDetails(orderData);
+
+                setOrderDetails(updatedOrderData);
                 setSelectedPaymentMethod(updatedOrderData.paymentMethod);
 
                 const defaultAddress =
@@ -175,7 +132,8 @@ const Payment = ({
         fetchInitialData();
     }, [onFetchUserData, onFetchAddresses, onFetchOrderDetails, onUpdateOrder]);
 
-    const calculations = useMemo(() => {
+    // 가격 계산 로직
+    const calculations = React.useMemo(() => {
         try {
             // 각 상품의 할인 금액 계산
             const productDiscount = orderDetails.products.reduce(
@@ -221,7 +179,7 @@ const Payment = ({
     }, [orderDetails]);
 
     // 숫자 포맷팅
-    const formatPrice = (price?: number) => {
+    const formatPrice = (price) => {
         if (price === undefined || price === null) return "0";
         return price.toLocaleString("ko-KR");
     };
@@ -241,7 +199,7 @@ const Payment = ({
     const handleAddressModal = () => setIsAddressModalOpen((prev) => !prev);
 
     // 주소 수정
-    const handleAddressSelect = async (selectedAddr: AddressType) => {
+    const handleAddressSelect = async (selectedAddr) => {
         if (isUpdating) return;
         setIsUpdating(true);
         setError("");
@@ -263,13 +221,9 @@ const Payment = ({
                 },
             };
 
-            console.log("배송지 변경 성공:", {
-                변경된_주문_정보: updatedOrderWithAddress,
-            });
-
             setOrderDetails(updatedOrderWithAddress);
             setSelectedAddress(selectedAddr);
-        } catch (error: any) {
+        } catch (error) {
             setError(error.message || "배송지 변경에 실패했습니다.");
         } finally {
             setIsUpdating(false);
@@ -291,27 +245,15 @@ const Payment = ({
                 ...prevDetails,
                 paymentMethod: newMethod,
             }));
-        } catch (error: any) {
+        } catch (error) {
             console.error("결제 수단 변경 실패:", error);
-
             setSelectedPaymentMethod("none");
-
             alert(`결제 수단 변경 실패: ${error.message}`);
         }
     };
 
     const handleApproveOrder = async () => {
-        console.log("handleApproveOrder 시작");
-        console.log("현재 상태:", {
-            isApproving,
-            currentPaymentMethod:
-                orderDetails.paymentMethod || selectedPaymentMethod,
-            userData,
-            orderDetails,
-        });
-
         if (isApproving) {
-            console.log("이미 승인 진행 중");
             return;
         }
 
@@ -319,8 +261,6 @@ const Payment = ({
             orderDetails.paymentMethod || selectedPaymentMethod;
 
         if (currentPaymentMethod === "none") {
-            console.log("결제수단 미선택");
-            alert("결제수단을 선택해주세요.");
             return;
         }
 
@@ -330,34 +270,21 @@ const Payment = ({
         try {
             const approveResponse = await onApproveOrder();
 
-            console.log("결제:", {
-                totalAmount: calculations.finalAmount,
-                products: orderDetails.products.map(
-                    (p) => p.productId.productName
-                ),
-                userEmail: userData?.email,
-                orderId: approveResponse.orderId,
-                paymentMethod: currentPaymentMethod,
-            });
-
             alert("결제가 완료되었습니다.");
             const addedPoints = approveResponse.addedPoints || 0;
             const totalPaidPrice =
                 approveResponse.totalPaidPrice || calculations.finalAmount;
             const orderId = approveResponse.orderId;
-            router.push(
+            window.location.href =
                 `/payment/complete/${orderId}?` +
-                    `addedPoints=${encodeURIComponent(addedPoints)}` +
-                    `&totalPaidPrice=${encodeURIComponent(totalPaidPrice)}`
-            );
-        } catch (error: any) {
+                `addedPoints=${encodeURIComponent(addedPoints)}` +
+                `&totalPaidPrice=${encodeURIComponent(totalPaidPrice)}`;
+        } catch (error) {
             console.error("결제 오류:", error);
             const errorMessage = error.message || "결제 진행에 실패했습니다.";
-
             setError(errorMessage);
             alert(`결제 실패: ${error.message}`);
         } finally {
-            console.log("승인 프로세스 종료");
             setIsApproving(false);
         }
     };
@@ -369,22 +296,32 @@ const Payment = ({
                 <section className={cx("section")}>
                     <h2 className={cx("sectionTitle")}>주문상품</h2>
                     <div className={cx("product")}>
-                        <PaymentCard
-                            key={orderDetails.products[0].productId.productName}
-                            productName={
-                                orderDetails.products[0].productId.productName
-                            }
-                            orgPrice={
-                                orderDetails.products[0].productId.orgPrice
-                            }
-                            finalPrice={
-                                orderDetails.products[0].productId.finalPrice
-                            }
-                            amount={orderDetails.products[0].amount}
-                            mainImgUrl={
-                                orderDetails.products[0].productId.mainImgUrl
-                            }
-                        />
+                        {orderDetails.products[0] && (
+                            <PaymentCard
+                                key={
+                                    orderDetails.products[0].productId
+                                        .productName
+                                }
+                                productName={
+                                    orderDetails.products[0].productId
+                                        .productName
+                                }
+                                optionName={orderDetails.products[0].optionName}
+                                orgPrice={
+                                    orderDetails.products[0].productId.orgPrice
+                                }
+                                finalPrice={
+                                    orderDetails.products[0].productId
+                                        .finalPrice
+                                }
+                                amount={orderDetails.products[0].amount}
+                                mainImgUrl={
+                                    orderDetails.products[0].productId
+                                        .mainImgUrl
+                                }
+                            />
+                        )}
+
                         {orderDetails.products.length > 1 && (
                             <div className={cx("productAccordion")}>
                                 <div
@@ -421,6 +358,7 @@ const Payment = ({
                                                     product.productId
                                                         .productName
                                                 }
+                                                optionName={product.optionName}
                                                 orgPrice={
                                                     product.productId.orgPrice
                                                 }
@@ -444,10 +382,6 @@ const Payment = ({
                         <span>주문자</span>
                         <span>{userData?.name}</span>
                     </div>
-                    {/* <div className={cx("infoRow")}>
-                        <span>휴대폰</span>
-                        <span>{userData?.phone}</span>
-                    </div> */}
                     <div className={cx("infoRow")}>
                         <span>이메일</span>
                         <span>{userData?.email}</span>
@@ -486,7 +420,6 @@ const Payment = ({
                                     <div className={cx("inputWrapper")}>
                                         <TextInput
                                             value={String(pointsToUse)}
-                                            // onChange={handlePointsInput}
                                             placeholder="0"
                                             readOnly={isUpdating}
                                         />
@@ -504,7 +437,6 @@ const Payment = ({
                                         title="모두 사용"
                                         width="100"
                                         height="42"
-                                        // onClick={handleUseAllPoints}
                                         disabled={isUpdating}
                                     />
                                 </div>
@@ -660,56 +592,4 @@ const Payment = ({
     );
 };
 
-export default Payment;
-
-// // 적립금 사용 핸들러 (적립금 2차 개발이라 기능 제외)
-// const handlePointsUpdate = async (points: number) => {
-//     if (isUpdating) return;
-//     setIsUpdating(true);
-//     setError("");
-//
-//     try {
-//         const updatedOrder = await onUpdateOrder({ usePoint: points });
-//
-//         setOrderDetails(updatedOrder);
-//         setPointsToUse(points);
-//     } catch (error: any) {
-//
-//         setError(error.message || "적립금 적용에 실패했습니다.");
-//         setPointsToUse(orderDetails?.usedPoints || 0);
-//     } finally {
-//         setIsUpdating(false);
-//     }
-// };
-
-// // 적립금 전체 사용 핸들러 수정
-// const handleUseAllPoints = async () => {
-//     const maxPoints = orderDetails?.usedPoints || 0;
-//     await handlePointsUpdate(maxPoints);
-// };
-
-// // 적립금 입력 핸들러 수정
-// const handlePointsInput = async (
-//     e: React.ChangeEvent<HTMLInputElement>
-// ) => {
-//     if (!orderDetails) return;
-//     const value = Math.max(0, parseInt(e.target.value) || 0);
-//     const points = Math.min(value, orderDetails.usedPoints || 0);
-//     await handlePointsUpdate(points);
-// };
-
-// // 쿠폰 적용 핸들러 추가 (포인트 2차 개발이라 기능 제외)
-// const handleCouponApply = async (couponId: string) => {
-//     if (isUpdating) return;
-//     setIsUpdating(true);
-//     setError("");
-
-//     try {
-//         const updatedOrder = await onUpdateOrder({ couponId });
-//         setOrderDetails(updatedOrder);
-//     } catch (error: any) {
-//         setError(error.message || "쿠폰 적용에 실패했습니다.");
-//     } finally {
-//         setIsUpdating(false);
-//     }
-// };
+export default PaymentUI;

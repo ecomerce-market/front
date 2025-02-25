@@ -1,148 +1,199 @@
 .paymentWrapper {
     max-width: 1050px;
     margin: 0 auto;
-    padding: 30px 0;
+    padding: 30px 15px 100px;
+    width: 100%;
 
     .paymentTitle {
         margin: 0 auto;
-        padding: 30px 0;
-        font-size: 24px;
+        padding: 20px 0;
+        font-size: clamp(20px, 5vw, 24px);
         text-align: center;
     }
 
     .paymentForm {
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
 
         .section {
             background-color: var(--white);
-            padding: 30px;
+            padding: clamp(15px, 4vw, 30px);
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
             .sectionTitle {
-                font-size: 20px;
+                font-size: clamp(18px, 4vw, 20px);
                 font-weight: 500;
                 padding-bottom: 15px;
                 margin-bottom: 15px;
                 border-bottom: 1px solid var(--black-600);
             }
         }
+
         .infoRow {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             margin-bottom: 15px;
+            gap: 10px;
 
             span:first-child {
                 color: var(--black-500);
-                width: 120px;
+                min-width: 120px;
+                width: auto;
             }
         }
 
         .addressRow {
             justify-content: space-between;
+
+            > span:nth-child(2) {
+                flex: 1;
+            }
+
+            button {
+                flex-shrink: 0;
+            }
         }
 
         .paymenDetails {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
 
             .leftColumn {
                 display: flex;
                 flex-direction: column;
-                gap: 30px;
+                gap: 20px;
+                flex: 1 1 300px;
             }
 
             .couponInput {
                 display: flex;
+                flex-wrap: wrap;
                 align-items: center;
                 gap: 15px;
                 margin-top: 15px;
 
                 span {
                     color: var(--black-500);
-                    width: 120px;
+                    min-width: 120px;
+                    width: auto;
+                }
+
+                > div {
+                    flex: 1;
+                    min-width: 150px;
                 }
             }
 
             .pointSection {
                 display: flex;
+                flex-wrap: wrap;
                 align-items: flex-start;
                 gap: 15px;
                 margin-top: 15px;
 
                 span {
                     color: var(--black-500);
-                    width: 120px;
+                    min-width: 120px;
+                    width: auto;
                 }
             }
 
             .pointInput {
                 display: flex;
+                flex-wrap: wrap;
                 gap: 15px;
                 flex: 1;
+                min-width: 200px;
 
                 .inputWrapper {
                     flex: 1;
+                    min-width: 150px;
 
                     p {
                         color: var(--black-500);
                         font-size: 14px;
                         margin-top: 8px;
                     }
+
+                    .error {
+                        color: var(--red-color);
+                    }
+                }
+
+                button {
+                    flex-shrink: 0;
                 }
             }
-        }
-        .paymentMethod {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 15px;
 
-            span {
-                color: var(--black-500);
-                width: 120px;
-            }
-        }
-
-        .paymentSummary {
-            background-color: var(--black-100);
-            padding: 25px;
-            border: 1px solidvar(--black-100);
-            border-radius: 5px;
-            height: fit-content;
-
-            .summaryTitle {
-                font-size: 20px;
-                font-weight: 500;
-                margin-bottom: 20px;
-            }
-
-            .summaryContent {
+            .paymentMethod {
                 display: flex;
-                flex-direction: column;
+                flex-wrap: wrap;
+                align-items: center;
                 gap: 15px;
+                margin-top: 15px;
 
-                .summaryRow {
+                span {
+                    color: var(--black-500);
+                    min-width: 120px;
+                    width: auto;
+                }
+
+                button {
+                    flex-shrink: 0;
+                }
+            }
+
+            .paymentSummary {
+                background-color: var(--black-100);
+                padding: clamp(15px, 4vw, 25px);
+                border: 1px solid var(--black-100);
+                border-radius: 5px;
+                flex: 1 1 250px;
+                min-width: 250px;
+                height: fit-content;
+                position: sticky;
+                top: 20px;
+
+                .summaryTitle {
+                    font-size: clamp(18px, 4vw, 20px);
+                    font-weight: 500;
+                    margin-bottom: 20px;
+                }
+
+                .summaryContent {
                     display: flex;
-                    justify-content: space-between;
-                    align-items: center;
+                    flex-direction: column;
+                    gap: 15px;
 
-                    span:first-child {
-                        color: var(--black-500);
-                    }
+                    .summaryRow {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        gap: 5px;
 
-                    &.sub-row {
-                        padding-left: 20px;
-                    }
+                        span:first-child {
+                            color: var(--black-500);
+                        }
 
-                    &.total {
-                        font-weight: 500;
-                        margin-top: 10px;
-                        padding-top: 15px;
-                        border-top: 1px solid var(--black-800);
+                        span:last-child {
+                            margin-left: auto;
+                        }
+
+                        &.subRow {
+                            padding-left: 20px;
+                        }
+
+                        &.total {
+                            font-weight: 500;
+                            margin-top: 10px;
+                            padding-top: 15px;
+                            border-top: 1px solid var(--black-800);
+                        }
                     }
                 }
             }
@@ -152,12 +203,18 @@
             display: flex;
             justify-content: center;
             margin-top: 30px;
+
+            button {
+                width: clamp(250px, 80%, 320px);
+            }
         }
     }
 }
 
 // 상품 아코디언
 .productAccordion {
+    width: 100%;
+
     .accordionHeader {
         display: flex;
         align-items: center;
@@ -180,6 +237,7 @@
             transition: transform 0.2s ease;
             color: var(--black-600);
             margin-left: 8px;
+            flex-shrink: 0;
 
             &.expanded {
                 transform: rotate(180deg);
@@ -217,6 +275,7 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 15px;
 }
 
 .modalContent {
@@ -226,18 +285,24 @@
     max-width: 520px;
     padding: 0;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 
     .modalHeader {
         padding: 20px;
-        border-bottom: 1px solid var(--balck-50);
+        border-bottom: 1px solid var(--black-50);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: sticky;
+        top: 0;
+        background: var(--white);
+        z-index: 1;
 
         h2 {
-            font-size: 18px;
+            font-size: clamp(16px, 4vw, 18px);
             font-weight: 500;
-            color: var(--balck-800);
+            color: var(--black-800);
         }
 
         .closeBtn {
@@ -251,6 +316,17 @@
 
     .addressList {
         padding: 0 20px;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    .addressItem {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--black-100);
+
+        &.selected {
+            background-color: var(--black-50);
+        }
     }
 
     .confirmBtn {
@@ -264,5 +340,7 @@
         font-weight: 500;
         cursor: pointer;
         margin-top: 20px;
+        position: sticky;
+        bottom: 0;
     }
 }
