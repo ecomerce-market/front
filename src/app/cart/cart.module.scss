@@ -1,93 +1,118 @@
 .cartWrapper {
+    max-width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+
     .title {
         margin: 0 auto;
         padding: 30px 0;
-        font-size: 24px;
+        font-size: clamp(20px, 5vw, 24px);
         text-align: center;
     }
 
     .cartSection {
         display: flex;
+        flex-direction: column;
         max-width: 1000px;
         margin: 0 auto;
-        gap: 32px;
+        gap: 50px;
+
+        .cartSectionHeader {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--black-500);
+            width: 100%;
+        }
 
         .productList {
-            flex: 1;
+            width: 100%;
 
             .selectAll {
-                padding: 30px 0;
-                border-bottom: 1px solid var(--black-500);
+                padding: 20px 0;
             }
 
             .product {
-                padding: 24px 0;
+                padding: 16px 0;
                 border-bottom: 1px solid var(--black-100);
 
                 .selectProduct {
                     display: flex;
                     width: 100%;
                     align-items: center;
-                    gap: 20px;
+                    gap: 16px;
 
                     > div:last-child {
                         margin-left: auto;
                         display: flex;
-                        gap: 20px;
+                        flex-direction: column;
+                        align-items: flex-end;
+                        gap: 8px;
 
                         p {
                             white-space: nowrap;
+                            margin: 0;
                         }
                     }
                 }
             }
         }
+
         .stickyContainer {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
+            width: 100%;
+            position: static;
 
             .paymentSection {
                 width: 100%;
-                max-width: 250px;
-
-                :global(.card) {
-                    padding: 20px;
-                }
+                background-color: var(--white);
+                border-radius: 8px;
 
                 .addressWrapper {
                     display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-                    padding-bottom: 20px;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 16px 0;
                     border-bottom: 1px solid var(--black-100);
 
                     .shipping {
                         display: flex;
                         align-items: center;
-                        gap: 10px;
+                        gap: 8px;
+
+                        p {
+                            font-weight: 500;
+                            margin: 0;
+                        }
                     }
 
                     .address {
                         color: var(--gray-600);
                         font-size: 14px;
+                        text-align: right;
+                        margin: 0;
                     }
                 }
 
                 .paymentWrapper {
-                    padding-top: 20px;
+                    padding-top: 16px;
 
                     .paymentInfo {
                         display: flex;
                         flex-direction: column;
                         gap: 12px;
-                        padding-bottom: 20px;
-                        border-bottom: 1px solid var(--black-100);
+                        padding-bottom: 16px;
 
                         div {
                             display: flex;
                             justify-content: space-between;
                             font-size: 14px;
+                            margin: 0;
+
+                            p {
+                                margin: 0;
+                            }
                         }
                     }
 
@@ -95,10 +120,15 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        padding: 35px 0 5px;
+                        padding: 16px 0;
+                        border-top: 1px solid var(--black-100);
                         font-weight: 500;
 
-                        span:last-child {
+                        p {
+                            margin: 0;
+                        }
+
+                        p:last-child {
                             font-size: 18px;
                             font-weight: 600;
                         }
@@ -108,8 +138,50 @@
 
             .cartBtn {
                 display: flex;
-                padding-top: 10px;
+                margin-top: 16px;
                 justify-content: center;
+
+                :global(.oneBtn) {
+                    width: 100%;
+                    height: 48px;
+                    border-radius: 4px;
+                }
+            }
+        }
+    }
+
+    /* 태블릿/데스크탑 뷰는 768px 이상에서 적용 */
+    @media (min-width: 768px) {
+        .cartSection {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: clamp(16px, 3vw, 32px);
+            align-items: flex-start;
+
+            .productList {
+                flex: 1 1 400px;
+                min-width: 0;
+            }
+
+            .stickyContainer {
+                flex: 0 0 300px;
+                position: sticky;
+                top: 100px;
+                height: fit-content;
+
+                .paymentSection {
+                    border: 1px solid var(--black-100);
+                    padding: 20px;
+
+                    .addressWrapper {
+                        flex-direction: column;
+                        align-items: flex-start;
+
+                        .address {
+                            text-align: left;
+                        }
+                    }
+                }
             }
         }
     }
