@@ -2,7 +2,9 @@ import {
     CartApiResponse,
     AddressApiResponse,
     OrderApiResponse,
-    ProductApiResponse,
+    CartItem,
+    OrderRequestProduct,
+    Address,
 } from "./cartType";
 
 // 배송지 조회
@@ -42,41 +44,19 @@ export const fetchCartData = async (): Promise<CartItem[]> => {
         return [];
     }
 
-    const cartItemsWithDetails = await Promise.all(
-        data.carts.map(async (cartItem) => {
-            const productResponse = await fetch(
-                `http://localhost:3001/api/v1/products/${cartItem.productId}`
-            );
+    const cartItems = data.carts.map((cartItem) => ({
+        id: cartItem.productId,
+        title: cartItem.productName,
+        price: cartItem.orgPrice,
+        finalPrice: cartItem.finalPrice,
+        quantity: cartItem.amount,
+        discount: cartItem.orgPrice - cartItem.finalPrice,
+        img: "/images/example.png",
+        isSelected: false,
+        optionName: cartItem.optionName,
+    }));
 
-            if (!productResponse.ok) {
-                throw new Error(
-                    `상품 ID ${cartItem.productId}에 대한 정보를 불러오는데 실패했습니다.`
-                );
-            }
-
-            const productData: ProductApiResponse =
-                await productResponse.json();
-            const product = productData.product;
-
-            return {
-                id: cartItem.productId,
-                title: product.productName,
-                price: product.orgPrice,
-                finalPrice: product.finalPrice,
-                quantity: cartItem.amount,
-                discount: product.orgPrice - product.finalPrice,
-                img: "/images/example.png",
-                isSelected: false,
-                optionName:
-                    cartItem.optionName ||
-                    (product.options.length > 0
-                        ? product.options[0].optName
-                        : null),
-            };
-        })
-    );
-
-    return cartItemsWithDetails;
+    return cartItems;
 };
 
 // 장바구니 삭제 / 전체 삭제
