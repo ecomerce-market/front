@@ -19,29 +19,19 @@ export interface CartApiResponse {
         amount: number;
         createAt: string;
         optionName: string | null;
-    }[];
-}
-
-// 상품 상세 정보 응답 타입
-export interface ProductApiResponse {
-    message: string;
-    product: {
-        productId: string;
         productName: string;
         orgPrice: number;
         finalPrice: number;
-        discount: {
-            discountType: string;
-            discountAmount: number;
-        };
         mainImgUrl: string;
-        options: {
-            optName: string;
-            optOrgPrice: number;
-            additionalPrice: number;
-            optAmount: number;
-        }[];
-    };
+        optOrgPrice: number;
+        additionalPrice: number;
+        deliveryInfo: string;
+        deliveryFee: number;
+    }[];
+    totalPrice: number;
+    totalDeliveryFee: number;
+    totalDiscountPrice: number;
+    finalPrice: number;
 }
 
 // 배송지 정보 타입
