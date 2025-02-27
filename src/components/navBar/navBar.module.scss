@@ -113,17 +113,19 @@
     .navBar-container {
       border: 1px solid var(--black-100);
       flex-direction: column;
-      gap: 10px;
-      padding: 20px 10px;
+      gap: 5px;
+      padding: 10px 20px;
       .noticeCategory {
         display: none;
       }
       .subCategory {
         padding-top: 10px;
+        gap: 10px;
         p {
+          width: 100%;
           border: 1px solid var(--black-100);
-          padding: 10px;
-          font-size: 12px;
+          padding: 10px 5px;
+          font-size: 10px;
           border-radius: 20px;
         }
       }
@@ -136,5 +138,6 @@
     display: grid !important;
     grid-template-columns: repeat(1, 4fr);
     flex-wrap: wrap;
+    gap: 10px !important;
   }
 }
