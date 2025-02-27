@@ -56,7 +56,10 @@
                 flex-shrink: 0;
             }
         }
-
+        .changeBtn {
+            width: 100%;
+            max-width: 100px;
+        }
         .paymenDetails {
             display: flex;
             flex-wrap: wrap;
@@ -200,13 +203,13 @@
         }
 
         .submitButton {
+            width: 100%;
+            max-width: 310px;
+            margin: 0 auto;
             display: flex;
+            align-items: center;
             justify-content: center;
             margin-top: 30px;
-
-            button {
-                width: clamp(250px, 80%, 320px);
-            }
         }
     }
 }
