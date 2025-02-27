@@ -1,8 +1,13 @@
 import { ReactNode } from "react";
+import styles from "./oneBtn.module.scss";
+import cn from "classnames/bind";
+import classNames from "classnames";
+
+const cx = cn.bind(styles);
 
 interface OneBtnProps {
   title: ReactNode;
-  width: string;
+
   height?: string;
   bgcolor?: string;
   color?: string;
@@ -20,7 +25,7 @@ interface OneBtnProps {
 
 const OneBtn: React.FC<OneBtnProps> = ({
   title,
-  width,
+
   bgcolor,
   color,
   onClick,
@@ -36,8 +41,8 @@ const OneBtn: React.FC<OneBtnProps> = ({
   className,
 }) => {
   return (
-    <div>
-      {icon}{" "}
+    <div className={cx("button-components-wrap")}>
+      {icon}
       <button
         className={className}
         disabled={disabled}
@@ -45,7 +50,7 @@ const OneBtn: React.FC<OneBtnProps> = ({
         onClick={onClick} // 추가
         style={{
           // 가로
-          width: `${width}px`,
+          // width: `${width}px`,
           // 세로
           height: `${height}px`,
           //배경색

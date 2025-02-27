@@ -143,12 +143,11 @@ const LogIn = () => {
         <NotFoundPage />
       ) : (
         <div className={cx("loginContainer")}>
-          <h2>로그인</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className={cx("form")}>
+            <h2>로그인</h2>
             <div className={cx("inputWrapper")}>
               <TextInput
                 height="46"
-                width="332"
                 placeholder="아이디를 입력해주세요"
                 name="loginId"
                 value={form.loginId}
@@ -157,7 +156,6 @@ const LogIn = () => {
 
               <TextInput
                 height="46"
-                width="332"
                 placeholder="비밀번호를 입력해주세요"
                 name="loginPw"
                 value={form.loginPw}
@@ -171,29 +169,27 @@ const LogIn = () => {
                 color="--white"
                 bgcolor="--main-color"
                 title="로그인"
-                width="350"
                 height="46"
                 onClick={loginApi} // 버튼 클릭 시 로그인 실행
               />
+
               <Link href={"/signUp"}>
                 <OneBtn
                   color="--main-color"
                   bgcolor="--white"
                   title="회원가입"
-                  width="350"
                   height="46"
                   border="--main-color"
                   borderSize="1"
-                />
+                />{" "}
               </Link>
             </div>
+            <div className={cx("sidebar")}>
+              <Link href={"/findId"}>아이디 찾기</Link>
+              <span>l</span>
+              <Link href={"/findPw"}>비밀번호 찾기</Link>
+            </div>
           </form>
-
-          <div className={cx("sidebar")}>
-            <Link href={"/findId"}>아이디 찾기</Link>
-            <span>l</span>
-            <Link href={"/findPw"}>비밀번호 찾기</Link>
-          </div>
         </div>
       )}
     </>

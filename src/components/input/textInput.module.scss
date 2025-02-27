@@ -1,8 +1,22 @@
-.inputField {
-  transition: all 0.2s ease-in-out;
-  border: 1px solid var(--black-200);
+.input-components-wrap {
+  width: 100%;
+  input {
+    width: 100%;
+  }
+  .inputField {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid var(--black-200);
+  }
+
+  .inputField:focus {
+    border: 1px solid var(--black-800);
+  }
 }
 
-.inputField:focus {
-  border: 1px solid var(--black-800);
+@media (max-width: 346px) {
+  .input-components-wrap {
+    input {
+      font-size: 12px;
+    }
+  }
 }
