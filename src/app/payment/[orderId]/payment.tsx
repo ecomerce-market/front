@@ -392,12 +392,13 @@ const PaymentUI: React.FC<PaymentProps> = ({
                     <div className={cx("infoRow", "addressRow")}>
                         <span>배송지</span>
                         <span>{getSelectedAddressText()}</span>
-                        <OneBtn
-                            title="변경"
-                            width="100"
-                            height="42"
-                            onClick={handleAddressModal}
-                        />
+                        <div className={cx("changeBtn")}>
+                            <OneBtn
+                                title="변경"
+                                height="42"
+                                onClick={handleAddressModal}
+                            />
+                        </div>
                     </div>
                 </section>
                 <div className={cx("paymenDetails")}>
@@ -433,12 +434,13 @@ const PaymentUI: React.FC<PaymentProps> = ({
                                             </p>
                                         )}
                                     </div>
-                                    <OneBtn
-                                        title="모두 사용"
-                                        width="100"
-                                        height="42"
-                                        disabled={isUpdating}
-                                    />
+                                    <div>
+                                        <OneBtn
+                                            title="모두 사용"
+                                            height="42"
+                                            disabled={isUpdating}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -446,28 +448,29 @@ const PaymentUI: React.FC<PaymentProps> = ({
                             <h2 className={cx("sectionTitle")}>결제수단</h2>
                             <div className={cx("paymentMethod")}>
                                 <span>결제 수단 선택</span>
-                                <OneBtn
-                                    title="신용카드"
-                                    width="100"
-                                    height="42"
-                                    onClick={handlePaymentMethodSelect}
-                                    bgcolor={
-                                        selectedPaymentMethod === "card"
-                                            ? "--main-color"
-                                            : "--white"
-                                    }
-                                    color={
-                                        selectedPaymentMethod === "card"
-                                            ? "--white"
-                                            : "--black"
-                                    }
-                                    border={
-                                        selectedPaymentMethod === "card"
-                                            ? "--white"
-                                            : "--main-color"
-                                    }
-                                    borderSize="1"
-                                />
+                                <div>
+                                    <OneBtn
+                                        title="신용카드"
+                                        height="42"
+                                        onClick={handlePaymentMethodSelect}
+                                        bgcolor={
+                                            selectedPaymentMethod === "card"
+                                                ? "--main-color"
+                                                : "--white"
+                                        }
+                                        color={
+                                            selectedPaymentMethod === "card"
+                                                ? "--white"
+                                                : "--black"
+                                        }
+                                        border={
+                                            selectedPaymentMethod === "card"
+                                                ? "--white"
+                                                : "--main-color"
+                                        }
+                                        borderSize="1"
+                                    />
+                                </div>
                             </div>
                         </section>
                     </div>
@@ -529,7 +532,6 @@ const PaymentUI: React.FC<PaymentProps> = ({
                         title={`${formatPrice(
                             calculations.finalAmount
                         )}원 결제하기`}
-                        width="320"
                         height="42"
                         onClick={handleApproveOrder}
                         disabled={isApproving}

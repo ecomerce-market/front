@@ -60,6 +60,9 @@
         }
 
         .submitBtn {
+            width: 100%;
+            max-width: 410px;
+            margin: 0 auto;
             display: flex;
             justify-content: center;
             padding-top: clamp(30px, 5vh, 50px);
@@ -72,4 +75,9 @@
     font-size: clamp(13px, 1.2vw, 13px);
     margin: 0;
     padding: 0;
+}
+
+.textInput {
+    width: 100%;
+    max-width: 310px;
 }

@@ -63,11 +63,19 @@
                     }
                 }
             }
+            .submitInput div {
+                width: 100%;
+                max-width: 310px;
+            }
         }
 
         .submitBtn {
+            width: 100%;
+            max-width: 310px;
             display: flex;
             justify-content: center;
+            align-items: center;
+            margin: 0 auto;
             margin-top: clamp(30px, 7%, 40px);
         }
     }

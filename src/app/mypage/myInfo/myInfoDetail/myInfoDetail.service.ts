@@ -90,9 +90,8 @@ export const userService = {
         const formattedData = {
             ...updateData,
             phone: updateData.phone?.replace(/\D/g, ""),
-            birthDate: updateData.birthDate?.replace(/\//g, "-"),
+            birth: updateData.birthDate,
         };
-
         const response = await fetch(`${BASE_URL}/users/profiles`, {
             method: "PATCH",
             credentials: "include",
@@ -103,11 +102,9 @@ export const userService = {
             },
             body: JSON.stringify(formattedData),
         });
-
         await handleApiError(response);
         const data = await response.json();
-
-        if (data.message !== "success") {
+        if (data.message !== "success" && data.message !== "update success") {
             throw new Error(ERROR_MESSAGES.UPDATE_PROFILE_FAIL);
         }
     },
