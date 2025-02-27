@@ -127,13 +127,15 @@ const Header = () => {
         </div>
 
         <div className={cx("logo-mobile")}>
-          <Image
-            width={70}
-            height={28}
-            src={"/images/Logo1.png"}
-            alt={"Logo"}
-            className={cx("logo1")}
-          />
+          <Link href={"/"}>
+            <Image
+              width={70}
+              height={28}
+              src={"/images/Logo1.png"}
+              alt={"Logo"}
+              className={cx("logo1")}
+            />
+          </Link>
         </div>
 
         <div className={cx("searchBar")}>
