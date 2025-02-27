@@ -1,5 +1,6 @@
 .category-wrapper {
-  width: 1440px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
 
   .main-title {
@@ -22,6 +23,7 @@
     padding: 20px;
 
     .category-item {
+      width: 100%;
       color: var(--black-600);
       padding: 10px;
       cursor: pointer;
@@ -36,5 +38,18 @@
     .mainSelect {
       color: var(--main-color);
     }
+  }
+}
+
+@media (max-width: 700px) {
+  .category-item {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 495px) {
+  .sub-title-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-rows: repeat(2, auto) !important;
   }
 }

@@ -5,8 +5,14 @@ import cn from "classnames/bind";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CategoryLists from "./CategoryLists/CategoryLists";
-import { Category } from "@/app/@types/product";
+
 const cx = cn.bind(styles);
+type Category = {
+  depth: number;
+  name: string;
+  _id: string;
+  fullPath: any;
+};
 
 type CategoriseGridProps = {
   main: string;
