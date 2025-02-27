@@ -111,6 +111,7 @@ const CategoryLists = ({ params }: CategoriseGridProps) => {
             rightBtnHref="#"
             onClose={handlePopupClose}
             onRightBtnClick={() => handleRightBtnClick(selectedProduct)}
+            isOpen={false}
           />
         </div>
       )}

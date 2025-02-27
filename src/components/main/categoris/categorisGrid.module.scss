@@ -41,9 +41,19 @@
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 860px) {
   .category-item {
-    font-size: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 700px) {
+  .sub-title-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-rows: repeat(2, auto) !important;
+  }
+  .category-item {
+    font-size: 10px;
   }
 }
 
