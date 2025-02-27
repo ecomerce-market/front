@@ -36,7 +36,7 @@ const DetailSelect = ({ data, productName, id }: selectProps) => {
         <span className={cx("infomation-type")}>상품</span>{" "}
         <div className={cx("infomation-detail")}>
           {data.length > 0 ? (
-            <div>
+            <div className={cx("select-box")}>
               <select
                 className={cx("select")}
                 defaultValue={"0"}
@@ -51,7 +51,7 @@ const DetailSelect = ({ data, productName, id }: selectProps) => {
               </select>
             </div>
           ) : (
-            <div>
+            <div className={cx("select-box")}>
               <select
                 className={cx("select")}
                 defaultValue={"0"}

@@ -91,10 +91,10 @@ const BannerSwiper = () => {
             >
               <Link href={banner.link}>
                 <Banner
-                  src={banner.imgUrl}
+                  src={"/images/banner-1.png"}
                   alt={banner.name}
-                  width={1440}
-                  height={253}
+                  width={1280}
+                  height={250}
                 />
               </Link>
             </SwiperSlide>
