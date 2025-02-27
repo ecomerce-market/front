@@ -26,7 +26,7 @@ export const FormField: React.FC<FormFieldProps> = ({
     return (
         <div>
             <span>{field.label}</span>
-            <div>
+            <div className={cx("textInput")}>
                 <TextInput
                     {...inputSize}
                     type={field.type || "text"}
