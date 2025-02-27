@@ -65,16 +65,6 @@ const Header = () => {
   }, [hamburger]);
   return (
     <div className={cx("headerWrapper")}>
-      <div className={cx("logo-header")}>
-        <Image
-          width={80}
-          height={30}
-          src={"/images/Logo2.png"}
-          alt={"Logo"}
-          className={cx("Logo2")}
-        />
-      </div>
-
       <div className={cx("userServices")}>
         {loading ? (
           <p className={cx("signup")}>열심히 일하는 중..</p>

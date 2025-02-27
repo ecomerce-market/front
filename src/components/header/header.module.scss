@@ -96,10 +96,6 @@
   }
 }
 
-.logo-header {
-  display: none;
-}
-
 .hamburger-menu {
   display: none;
 }
@@ -116,7 +112,7 @@
     display: none !important;
   }
   .logo-mobile {
-    display: block;
+    display: block !important;
   }
 }
 
@@ -128,12 +124,7 @@
       display: none !important;
     }
   }
-  .logo {
-    display: none !important;
-  }
-  .logo-mobile {
-    display: block !important;
-  }
+
   .subMenu {
     display: none !important;
   }
