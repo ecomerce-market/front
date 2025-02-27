@@ -50,13 +50,21 @@
     align-items: center;
     width: 100%;
     max-width: 1280px;
+    gap: 20px;
 
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 20px;
+      a {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
     }
-
+    .searchBar {
+      width: 100%;
+      max-width: 500px;
+    }
     .subMenu {
       display: flex;
       font-size: 30px;
@@ -65,6 +73,9 @@
         display: flex;
         align-items: center;
       }
+    }
+    .logo-mobile {
+      display: none;
     }
   }
 }
@@ -84,29 +95,12 @@
     cursor: pointer;
   }
 }
-.logo-mobile {
-  display: none;
-}
-
-.logo-header {
-  display: none;
-}
 
 .hamburger-menu {
   display: none;
 }
-.searchBar-medium {
-  display: none;
-}
-.searchBar-end-small {
-  display: none !important;
-}
 
-.searchBar-small {
-  display: none !important;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 843px) {
   .userServices {
     .signup,
     .login,
@@ -118,20 +112,11 @@
     display: none !important;
   }
   .logo-mobile {
-    display: block;
-  }
-  .searchBar {
-    margin: 0 auto;
+    display: block !important;
   }
 }
 
 @media (max-width: 600px) {
-  .logo-header {
-    margin-top: 10px;
-    display: block;
-    display: flex;
-    justify-content: center;
-  }
   .userServices {
     .signup,
     .login,
@@ -139,9 +124,7 @@
       display: none !important;
     }
   }
-  .logo-mobile {
-    display: none;
-  }
+
   .subMenu {
     display: none !important;
   }
@@ -157,37 +140,4 @@
       background-color: var(--main-color);
     }
   }
-  .searchBar {
-    display: none !important;
-  }
-  .searchBar-medium {
-    margin: auto;
-    display: flex;
-  }
-}
-
-@media (max-width: 540px) {
-  .searchBar-medium {
-    display: none;
-  }
-  .searchBar-small {
-    display: block !important;
-    margin: 0 auto !important;
-  }
-}
-
-@media (max-width: 400px) {
-  .searchBar-medium {
-    display: none;
-  }
-  .searchBar-small {
-    display: none !important;
-  }
-  .searchBar-end-small {
-    margin: 0 auto;
-    display: block !important;
-  }
-}
-
-@media (min-width: 320px) {
 }

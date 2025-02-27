@@ -3,6 +3,11 @@ import CategoriseGrid from "@/components/main/categoris/categorisGrid";
 import { fetchCategoryData } from "@/utils/category/fetchCategory";
 import { useEffect, useState } from "react";
 
+import styles from "./categoris.module.scss";
+import cn from "classnames/bind";
+
+const cx = cn.bind(styles);
+
 type Category = {
   _id: string;
   name: string;
@@ -46,7 +51,7 @@ const Categorise = ({ params }: CategoryProps) => {
   console.log("subCat", subCat);
 
   return (
-    <div>
+    <div className={cx("categori-wrap")}>
       <CategoriseGrid
         categoriesData={categoriesData}
         main={mainCat}

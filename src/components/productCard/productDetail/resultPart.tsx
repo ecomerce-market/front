@@ -147,70 +147,33 @@ const ResultPart = ({ selectedOptions, counts, product }: ResultPartProps) => {
         </span>
       </h3>
       <div className={cx("btn-wrap")}>
-        <OneBtn
-          color="--main-color"
-          bgcolor="--white"
-          border="--main-color"
-          borderSize="1"
-          title={<IoMdHeartEmpty />}
-          width={"50"}
-          height={"46"}
-          fontSize={"18"}
-        />
-        <OneBtn
-          color="--main-color"
-          bgcolor="--white"
-          border="--main-color"
-          borderSize="1"
-          title={<LuBell />}
-          width={"50"}
-          height={"46"}
-        />
+        <div className={cx("option-btn")}>
+          <OneBtn
+            color="--main-color"
+            bgcolor="--white"
+            border="--main-color"
+            borderSize="1"
+            title={<IoMdHeartEmpty />}
+            height={"46"}
+            fontSize={"18"}
+          />
+          <OneBtn
+            color="--main-color"
+            bgcolor="--white"
+            border="--main-color"
+            borderSize="1"
+            title={<LuBell />}
+            height={"46"}
+          />
+        </div>
 
-        <div className="buy">
+        <div className={cx("buy")}>
           <OneBtn
             onClick={handlePostData}
             fontWeight="700"
             fontSize="19"
             title={"구매하기"}
-            width={"393"}
             height={"46"}
-          />
-        </div>
-      </div>
-      <div className={cx("btn-wrap-tablet")}>
-        <OneBtn
-          color="--main-color"
-          bgcolor="--white"
-          border="--main-color"
-          borderSize="1"
-          title={<IoMdHeartEmpty />}
-          width={"35"}
-          height={"40"}
-          fontSize={"14"}
-          padding={"5px"}
-        />
-        <OneBtn
-          color="--main-color"
-          bgcolor="--white"
-          border="--main-color"
-          borderSize="1"
-          title={<LuBell />}
-          width={"35"}
-          height={"40"}
-          fontSize={"14"}
-          padding={"5px"}
-        />
-
-        <div className="buy">
-          <OneBtn
-            onClick={handlePostData}
-            fontWeight="700"
-            fontSize="16"
-            title={"구매하기"}
-            width={"200"}
-            height={"40"}
-            padding={"5px"}
           />
         </div>
       </div>
